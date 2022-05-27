@@ -33,16 +33,14 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                GameType = "FH",
-                ExternalGameId = query.ExternalGameId,
-                Language = query.Language,
-            };
+            var data = new LoginAndLaunchGame(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                GameType: "FH",
+                ExternalGameId: query.ExternalGameId,
+                Language: query.Language);
 
             var result = new LoginAndLaunchGameResult(
                 Success: true,
@@ -87,16 +85,14 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                GameType = "FH",
-                ExternalGameId = query.ExternalGameId,
-                Language = query.Language,
-            };
+            var data = new LoginAndLaunchGame(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                GameType: "FH",
+                ExternalGameId: query.ExternalGameId,
+                Language: query.Language);
 
             _ = fakeClient.LoginAndLaunchGameAsync(
                 apiUrl: Arg.Is(apiUrl),
@@ -131,16 +127,14 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                GameType = "FH",
-                ExternalGameId = query.ExternalGameId,
-                Language = query.Language,
-            };
+            var data = new LoginAndLaunchGame(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                GameType: "FH",
+                ExternalGameId: query.ExternalGameId,
+                Language: query.Language);
 
             var result = new LoginAndLaunchGameResult(
                 Success: true,

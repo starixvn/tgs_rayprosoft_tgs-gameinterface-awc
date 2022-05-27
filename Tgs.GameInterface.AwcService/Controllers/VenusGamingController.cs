@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.AwcService.Common;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Interfaces;
@@ -133,52 +132,6 @@ namespace Tgs.GameInterface.AwcService.Controllers
         }
 
         /// <summary>
-        /// Lobbies the game URL by live asynchronous.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <b>Example</b><br />
-        ///
-        ///     Post
-        ///         {
-        ///             "apiUrl": "https://tttint.onlinegames22.com/",
-        ///             "agentId": "cnygpivenus",
-        ///             "cert": "DfyfVhwJ8akfz2aGo3K",
-        ///             "playerCode": "4ucmqplxb029",
-        ///             "isMobileLogin": false,
-        ///             "externalURL": "https://dev-t1.rpgp.cc/",
-        ///             "betLimit": "{\"VENUS\":{\"LIVE\":{\"limitId\":[280303,280304,280305]}}}",
-        ///             "language": "cn"
-        ///         }
-        ///
-        /// </remarks>
-        [HttpPost("lobby/live")]
-        public async ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync(
-            [FromServices] IGetService<GameUrlByLiveQuery, GameUrlResult> service,
-            GameUrlByLiveQueryViewModel model)
-
-        {
-            var result = await service.GetAsync(new GameUrlByLiveQuery(
-                ApiUrl: model.ApiUrl,
-                AgentId: model.AgentId,
-                Cert: model.Cert,
-                PlayerCode: model.PlayerCode,
-                IsMobileLogin: model.IsMobileLogin,
-                ExternalURL: model.ExternalURL,
-                Platform: AwcPlatforms.AWC_VENUS,
-                BetLimit: model.BetLimit,
-                Language: model.Language)).ConfigureAwait(false);
-
-            return new GameUrlResultViewModel(
-                Success: result.Success,
-                Message: result.Message,
-                IsPlayerExist: result.IsPlayerExist,
-                GameUrl: result.GameUrl);
-        }
-
-        /// <summary>
         /// Kicks the player asynchronous.
         /// </summary>
         /// <param name="service">The service.</param>
@@ -202,6 +155,52 @@ namespace Tgs.GameInterface.AwcService.Controllers
             model.AgentId,
             model.Cert,
             model.PlayerCode));
+
+        /// <summary>
+        /// Lobbies the game URL by live asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "cnygpivenus",
+        ///             "cert": "DfyfVhwJ8akfz2aGo3K",
+        ///             "playerCode": "4ucmqplxb029",
+        ///             "isMobileLogin": false,
+        ///             "externalURL": "https://dev-t1.rpgp.cc/",
+        ///             "betLimit": "{\"VENUS\":{\"LIVE\":{\"limitId\":[280303,280304,280305]}}}",
+        ///             "language": "cn"
+        ///         }
+        ///
+        /// </remarks>
+        [HttpPost("lobby/live")]
+        public async ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync(
+            [FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service,
+            GameUrlByLiveLobbyQueryViewModel model)
+
+        {
+            var result = await service.GetAsync(new GameUrlByLiveLobbyQuery(
+                ApiUrl: model.ApiUrl,
+                AgentId: model.AgentId,
+                Cert: model.Cert,
+                PlayerCode: model.PlayerCode,
+                IsMobileLogin: model.IsMobileLogin,
+                ExternalURL: model.ExternalURL,
+                Platform: AwcPlatforms.AWC_VENUS,
+                BetLimit: model.BetLimit,
+                Language: model.Language)).ConfigureAwait(false);
+
+            return new GameUrlResultViewModel(
+                Success: result.Success,
+                Message: result.Message,
+                IsPlayerExist: result.IsPlayerExist,
+                GameUrl: result.GameUrl);
+        }
 
         /// <summary>
         /// Players the balance asynchronous.

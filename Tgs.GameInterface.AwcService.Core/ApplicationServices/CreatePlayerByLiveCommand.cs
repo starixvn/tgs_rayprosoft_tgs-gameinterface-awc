@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
+﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
     public record CreatePlayerByLiveCommand(
         Uri ApiUrl,

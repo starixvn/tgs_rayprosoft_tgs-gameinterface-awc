@@ -32,7 +32,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 }
             });
 
-            var query = new GameUrlByLiveQuery(
+            var query = new GameUrlByLiveLobbyQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -45,15 +45,13 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-                BetLimit = betLimit
-            };
+            var data = new LoginAndLaunchGameByLiveLobby(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                BetLimit: betLimit,
+                Language: query.Language);
 
             var result = new LoginAndLaunchGameResult(
                 Success: true,
@@ -67,7 +65,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 cert: Arg.Is(cert),
                 data: Arg.Is(data)).Returns(result);
 
-            var service = new GameUrlByLiveGetService(fakeClient);
+            var service = new GameUrlByLiveLobbyGetService(fakeClient);
 
             var actual = await service.GetAsync(query).ConfigureAwait(false);
 
@@ -95,7 +93,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 }
             });
 
-            var query = new GameUrlByLiveQuery(
+            var query = new GameUrlByLiveLobbyQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -108,15 +106,13 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-                BetLimit = query.BetLimit,
-            };
+            var data = new LoginAndLaunchGameByLiveLobby(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                BetLimit: query.BetLimit,
+                Language: query.Language);
 
             _ = fakeClient.LoginAndLaunchGameAsync(
                 apiUrl: Arg.Is(apiUrl),
@@ -124,7 +120,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 cert: Arg.Is(cert),
                 data: Arg.Is(data)).Throws<Exception>();
 
-            var service = new GameUrlByLiveGetService(fakeClient);
+            var service = new GameUrlByLiveLobbyGetService(fakeClient);
 
             _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.GetAsync(query).AsTask()).ConfigureAwait(false);
         }
@@ -148,7 +144,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 }
             });
 
-            var query = new GameUrlByLiveQuery(
+            var query = new GameUrlByLiveLobbyQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -161,15 +157,13 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-                BetLimit = query.BetLimit
-            };
+            var data = new LoginAndLaunchGameByLiveLobby(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                BetLimit: query.BetLimit,
+                Language: query.Language);
 
             var result = new LoginAndLaunchGameResult(
                 Success: true,
@@ -183,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 cert: Arg.Is(cert),
                 data: Arg.Is(data)).Returns(result);
 
-            var service = new GameUrlByLiveGetService(fakeClient);
+            var service = new GameUrlByLiveLobbyGetService(fakeClient);
 
             var actual = await service.GetAsync(query).ConfigureAwait(false);
 

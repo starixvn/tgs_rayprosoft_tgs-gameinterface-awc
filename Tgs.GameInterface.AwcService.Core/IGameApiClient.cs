@@ -91,7 +91,7 @@ namespace Tgs.GameInterface.AwcService.Core
         /// <param name="data">The data.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameData data, CancellationToken cancellationToken = default);
+        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGame data, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Logins the and launch game asynchronous.
@@ -102,7 +102,7 @@ namespace Tgs.GameInterface.AwcService.Core
         /// <param name="data">The data.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveData data, CancellationToken cancellationToken = default);
+        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveLobby data, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Logins the and launch game asynchronous.
@@ -113,7 +113,18 @@ namespace Tgs.GameInterface.AwcService.Core
         /// <param name="data">The data.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLottoData data, CancellationToken cancellationToken = default);
+        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLottoLobby data, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Logins the and launch game asynchronous.
+        /// </summary>
+        /// <param name="apiUrl">The API URL.</param>
+        /// <param name="agentId">The agent identifier.</param>
+        /// <param name="cert">The cert.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLive data, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Logouts the asynchronous.

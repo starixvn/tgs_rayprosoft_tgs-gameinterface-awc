@@ -275,7 +275,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 );
         }
 
-        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameData data, CancellationToken cancellationToken = default)
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGame data, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -293,7 +293,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
             return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
         }
 
-        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveData data, CancellationToken cancellationToken = default)
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveLobby data, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -311,7 +311,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
             return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
         }
 
-        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLottoData data, CancellationToken cancellationToken = default)
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLottoLobby data, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -328,6 +328,24 @@ namespace Tgs.GameInterface.AwcService.Repositories
             return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
         }
 
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLive data, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = data.PlayerCode,
+                ["isMobileLogin"] = data.IsMobileLogin.ToString(),
+                ["externalURL"] = data.ExternalURL,
+                ["platform"] = data.Platform,
+                ["gameType"] = AwcGameTypes.LIVE.ToString(),
+                ["gameCode"] = data.ExternalGameId,
+                ["language"] = data.Language,
+                ["betLimit"] = data.BetLimit
+            };
+
+            return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
+        }
 
         public async ValueTask LogoutAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
         {

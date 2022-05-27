@@ -14,15 +14,14 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
         public async ValueTask<GameUrlResult> GetAsync(GameUrlByLiveQuery query, CancellationToken cancellationToken = default)
         {
-            var data = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-                BetLimit = query.BetLimit
-            };
+            var data = new LoginAndLaunchGameByLive(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                ExternalGameId: query.ExternalGameId,
+                BetLimit: query.BetLimit,
+                Language: query.Language);
 
             var reslut = await _client.LoginAndLaunchGameAsync(
                 query.ApiUrl,

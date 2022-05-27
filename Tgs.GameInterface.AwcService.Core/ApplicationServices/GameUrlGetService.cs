@@ -27,16 +27,14 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                 _ => throw new NotImplementedException(),
             };
 
-            var data = new LoginAndLaunchGameData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                GameType = gameType,
-                ExternalGameId = query.ExternalGameId,
-                Language = query.Language
-            };
+            var data = new LoginAndLaunchGame(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                GameType: gameType,
+                ExternalGameId: query.ExternalGameId,
+                Language: query.Language);
 
             var reslut = await _client.LoginAndLaunchGameAsync(
                 query.ApiUrl,

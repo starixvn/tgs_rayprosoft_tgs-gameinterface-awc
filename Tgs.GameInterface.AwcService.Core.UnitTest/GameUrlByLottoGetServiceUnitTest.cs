@@ -21,7 +21,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var playerCode = "4ucmqplxb029";
             var cultureCode = "cn";
 
-            var query = new GameUrlByLottoQuery(
+            var query = new GameUrlByLottoLobbyQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -33,14 +33,12 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLottoData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-            };
+            var data = new LoginAndLaunchGameByLottoLobby(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                Language: query.Language);
 
             var result = new LoginAndLaunchGameResult(
                 Success: true,
@@ -54,7 +52,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 cert: Arg.Is(cert),
                 data: Arg.Is(data)).Returns(result);
 
-            var service = new GameUrlByLottoGetService(fakeClient);
+            var service = new GameUrlByLottoLobbyGetService(fakeClient);
 
             var actual = await service.GetAsync(query).ConfigureAwait(false);
 
@@ -72,7 +70,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var playerCode = "4ucmqplxb029";
             var cultureCode = "cn";
 
-            var query = new GameUrlByLottoQuery(
+            var query = new GameUrlByLottoLobbyQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -84,14 +82,12 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLottoData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-            };
+            var data = new LoginAndLaunchGameByLottoLobby(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                Language: query.Language);
 
             _ = fakeClient.LoginAndLaunchGameAsync(
                 apiUrl: Arg.Is(apiUrl),
@@ -99,7 +95,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 cert: Arg.Is(cert),
                 data: Arg.Is(data)).Throws<Exception>();
 
-            var service = new GameUrlByLottoGetService(fakeClient);
+            var service = new GameUrlByLottoLobbyGetService(fakeClient);
 
             _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.GetAsync(query).AsTask()).ConfigureAwait(false);
         }
@@ -113,7 +109,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var playerCode = "4ucmqplxb029";
             var cultureCode = "cn";
 
-            var query = new GameUrlByLottoQuery(
+            var query = new GameUrlByLottoLobbyQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -125,14 +121,12 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLottoData()
-            {
-                PlayerCode = query.PlayerCode,
-                IsMobileLogin = query.IsMobileLogin,
-                ExternalURL = query.ExternalURL,
-                Platform = query.Platform,
-                Language = query.Language,
-            };
+            var data = new LoginAndLaunchGameByLottoLobby(
+                PlayerCode: query.PlayerCode,
+                IsMobileLogin: query.IsMobileLogin,
+                ExternalURL: query.ExternalURL,
+                Platform: query.Platform,
+                Language: query.Language);
 
             var result = new LoginAndLaunchGameResult(
                 Success: true,
@@ -146,7 +140,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 cert: Arg.Is(cert),
                 data: Arg.Is(data)).Returns(result);
 
-            var service = new GameUrlByLottoGetService(fakeClient);
+            var service = new GameUrlByLottoLobbyGetService(fakeClient);
 
             var actual = await service.GetAsync(query).ConfigureAwait(false);
 

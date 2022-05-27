@@ -25,16 +25,14 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var playerCode = "4ucmqplxb029";
             var cultureCode = "cn";
 
-            var request = new LoginAndLaunchGameData()
-            {
-                PlayerCode = playerCode,
-                IsMobileLogin = false,
-                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
-                Platform = "YL",
-                GameType = "FH",
-                ExternalGameId = "YL-FISH-001",
-                Language = cultureCode
-            };
+            var request = new LoginAndLaunchGame(
+                PlayerCode: playerCode,
+                IsMobileLogin: false,
+                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                Platform: "YL",
+                GameType: "FH",
+                ExternalGameId: "YL-FISH-001",
+                Language: cultureCode);
 
             var response = new
             {
@@ -68,16 +66,14 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var playerCode = "4ucmqplxb029";
             var cultureCode = "cn";
 
-            var request = new LoginAndLaunchGameData()
-            {
-                PlayerCode = playerCode,
-                IsMobileLogin = false,
-                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
-                Platform = "YL",
-                GameType = "FH",
-                ExternalGameId = "YL-FISH-001",
-                Language = cultureCode
-            };
+            var request = new LoginAndLaunchGame(
+                PlayerCode: playerCode,
+                IsMobileLogin: false,
+                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                Platform: "YL",
+                GameType: "FH",
+                ExternalGameId: "YL-FISH-001",
+                Language: cultureCode);
 
             var response = new
             {
@@ -127,15 +123,13 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
                 }
             });
 
-            var request = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = playerCode,
-                IsMobileLogin = false,
-                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
-                Platform = "HORSEBOOK",
-                Language = cultureCode,
-                BetLimit = JsonSerializer.Serialize(betLimit),
-            };
+            var request = new LoginAndLaunchGameByLiveLobby(
+                PlayerCode: playerCode,
+                IsMobileLogin: false,
+                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                Platform: "HORSEBOOK",
+                BetLimit: JsonSerializer.Serialize(betLimit),
+                Language: cultureCode);
 
             var response = new
             {
@@ -184,15 +178,14 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
                 }
             });
 
-            var request = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = playerCode,
-                IsMobileLogin = false,
-                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
-                Platform = "SV388",
-                Language = cultureCode,
-                BetLimit = JsonSerializer.Serialize(betLimit),
-            };
+            var request = new LoginAndLaunchGameByLive(
+                PlayerCode: playerCode,
+                IsMobileLogin: false,
+                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                Platform: "SV388",
+                ExternalGameId: "SV-LIVE-001",
+                BetLimit: JsonSerializer.Serialize(betLimit),
+                Language: cultureCode); ;
 
             var response = new
             {
@@ -237,15 +230,13 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
                 }
             });
 
-            var request = new LoginAndLaunchGameByLiveData()
-            {
-                PlayerCode = playerCode,
-                IsMobileLogin = false,
-                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
-                Platform = "VENUS",
-                Language = cultureCode,
-                BetLimit = JsonSerializer.Serialize(betLimit),
-            };
+            var request = new LoginAndLaunchGameByLiveLobby(
+                PlayerCode: playerCode,
+                IsMobileLogin: false,
+                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                Platform: "VENUS",
+                BetLimit: JsonSerializer.Serialize(betLimit),
+                Language: cultureCode);
 
             var response = new
             {
@@ -280,15 +271,12 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var playerCode = "4ucmqplxb029";
             var cultureCode = "cn";
 
-
-            var request = new LoginAndLaunchGameByLottoData()
-            {
-                PlayerCode = playerCode,
-                IsMobileLogin = false,
-                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
-                Platform = "AE",
-                Language = cultureCode,
-            };
+            var request = new LoginAndLaunchGameByLottoLobby(
+                PlayerCode: playerCode,
+                IsMobileLogin: false,
+                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                Platform: "AE",
+                Language: cultureCode);
 
             var response = new
             {

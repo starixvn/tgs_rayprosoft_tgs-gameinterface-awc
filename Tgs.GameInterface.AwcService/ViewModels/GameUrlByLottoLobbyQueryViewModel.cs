@@ -1,12 +1,11 @@
 ﻿namespace Tgs.GameInterface.AwcService.ViewModels
 {
-    public record GameUrlByLiveQueryViewModel(
+    public record GameUrlByLottoLobbyQueryViewModel(
         Uri ApiUrl,
         string AgentId,
         string Cert,
         string PlayerCode,
         bool IsMobileLogin,
         string ExternalURL,
-        string BetLimit,
         string Language);
 }

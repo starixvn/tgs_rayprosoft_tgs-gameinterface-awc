@@ -14,6 +14,6 @@ namespace Tgs.GameInterface.AwcService.Interfaces
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPost("lobby/live")]
-        ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync([FromServices] IGetService<GameUrlByLiveQuery, GameUrlResult> service, GameUrlByLiveQueryViewModel model);
+        ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync([FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service, GameUrlByLiveLobbyQueryViewModel model);
     }
 }

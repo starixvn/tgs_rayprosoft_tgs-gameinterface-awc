@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
+﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
     public record GameUrlByLiveQuery(
         Uri ApiUrl,
@@ -14,6 +8,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
         bool IsMobileLogin,
         string ExternalURL,
         string Platform,
+        string ExternalGameId,
         string BetLimit,
         string Language);
 }
