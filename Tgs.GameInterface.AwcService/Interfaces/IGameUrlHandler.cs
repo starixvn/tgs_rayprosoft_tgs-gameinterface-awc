@@ -5,9 +5,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Interfaces
 {
-    public interface IGameUrlHandler<TQueryModel>
+    public interface IGameUrlHandler
     {
         [HttpPost("gameurl")]
-        ValueTask<GameUrlResultViewModel> GameUrlAsync([FromServices] IGetService<GameUrlQuery, GameUrlResult> service, TQueryModel model);
+        ValueTask<GameUrlResultViewModel> GameUrlAsync([FromServices] IGetService<GameUrlQuery, GameUrlResult> service, GameUrlQueryViewModel model);
     }
 }

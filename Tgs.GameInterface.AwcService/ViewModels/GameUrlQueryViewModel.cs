@@ -7,7 +7,6 @@
         string PlayerCode,
         bool IsMobileLogin,
         string ExternalURL,
-        string GameType,
         string ExternalGameId,
         string Language);
 }

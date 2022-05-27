@@ -28,7 +28,6 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin: false,
                 ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
-                GameType: "FH",
                 ExternalGameId: "YL-FISH-001",
                 Language: cultureCode);
 
@@ -40,7 +39,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin = query.IsMobileLogin,
                 ExternalURL = query.ExternalURL,
                 Platform = query.Platform,
-                GameType = query.GameType,
+                GameType ="FH",
                 ExternalGameId = query.ExternalGameId,
                 Language = query.Language,
             };
@@ -83,7 +82,6 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin: false,
                 ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
-                GameType: "FH",
                 ExternalGameId: "YL-FISH-001",
                 Language: cultureCode);
 
@@ -95,7 +93,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin = query.IsMobileLogin,
                 ExternalURL = query.ExternalURL,
                 Platform = query.Platform,
-                GameType = query.GameType,
+                GameType = "FH",
                 ExternalGameId = query.ExternalGameId,
                 Language = query.Language,
             };
@@ -128,7 +126,6 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin: false,
                 ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
-                GameType: "FH",
                 ExternalGameId: "YL-FISH-001",
                 Language: cultureCode);
 
@@ -140,7 +137,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin = query.IsMobileLogin,
                 ExternalURL = query.ExternalURL,
                 Platform = query.Platform,
-                GameType = query.GameType,
+                GameType = "FH",
                 ExternalGameId = query.ExternalGameId,
                 Language = query.Language,
             };

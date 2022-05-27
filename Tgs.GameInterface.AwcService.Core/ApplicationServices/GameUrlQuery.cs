@@ -8,7 +8,6 @@
         bool IsMobileLogin,
         string ExternalURL,
         string Platform,
-        string GameType,
         string ExternalGameId,
         string Language);
 }

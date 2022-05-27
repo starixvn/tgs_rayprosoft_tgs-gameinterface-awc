@@ -14,7 +14,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IFundHandler,
         IKickPlayerHandler,
         ICreatePlayerHandler,
-        IGameUrlHandler<YouLianGameUrlQueryViewModel>
+        IGameUrlHandler
     {
         /// <summary>
         /// Creates the player asynchronous.
@@ -165,15 +165,8 @@ namespace Tgs.GameInterface.AwcService.Controllers
         [HttpPost("gameurl")]
         public async ValueTask<GameUrlResultViewModel> GameUrlAsync(
                 [FromServices] IGetService<GameUrlQuery, GameUrlResult> service,
-                YouLianGameUrlQueryViewModel model)
+                GameUrlQueryViewModel model)
         {
-            var gameCodeSplits = model.GameCode.Split("-");
-            var gameType = gameCodeSplits[2].ToUpper() switch
-            {
-                "FISH" => AwcGameTypes.FH.ToString(),
-                "FH" => AwcGameTypes.FH.ToString(),
-                _ => AwcGameTypes.EGAME.ToString(),
-            };
             var result = await service.GetAsync(new GameUrlQuery(
                 ApiUrl: model.ApiUrl,
                 AgentId: model.AgentId,
@@ -182,8 +175,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 IsMobileLogin: model.IsMobileLogin,
                 ExternalURL: model.ExternalURL,
                 Platform: AwcPlatforms.AWC_YL,
-                GameType: gameType,
-                ExternalGameId: model.GameCode,
+                ExternalGameId: model.ExternalGameId,
                 Language: model.Language
                 )).ConfigureAwait(false);
 
