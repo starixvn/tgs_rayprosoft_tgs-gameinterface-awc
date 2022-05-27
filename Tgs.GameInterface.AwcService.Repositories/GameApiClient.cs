@@ -1,0 +1,465 @@
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
+using Polly;
+using Tgs.GameInterface.AwcService.Core;
+using Tgs.GameInterface.AwcService.Core.Models;
+using Tgs.GameInterface.AwcService.Repositories.Models;
+using Tgs.Logging;
+
+namespace Tgs.GameInterface.AwcService.Repositories
+{
+    internal class GameApiClient : IGameApiClient
+    {
+        private static readonly JsonSerializerOptions? _SerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters =
+            {
+                new JsonStringEnumConverter()
+            }
+        };
+
+        private readonly HttpClient _client;
+        private readonly ILogger<GameApiClient> _logger;
+        private readonly ITgsLog _tgsLog;
+
+        public GameApiClient(
+            HttpClient client,
+            ILogger<GameApiClient> logger,
+            ITgsLog tgsLog
+            )
+        {
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _tgsLog = tgsLog ?? throw new ArgumentNullException(nameof(tgsLog));
+        }
+
+        public async ValueTask CreatePlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string language = "en", CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = playerCode,
+                ["currency"] = currency,
+                ["betLimit"] = string.Empty,
+                ["language"] = language,
+                ["userName"] = userName,
+            };
+
+            var document = await PostAsync(
+                apiUrl,
+                "/wallet/createMember",
+                parameters,
+                "createMember",
+                cancellationToken).ConfigureAwait(false);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").GetString();
+
+            if (status != ((int)GameApiClientError.Success).ToString("d4") &&
+                status != ((int)GameApiClientError.AccountExisted).ToString("d4"))
+            {
+                throw new Exception($"Failed to create player.({playerCode})");
+            }
+        }
+
+        public async ValueTask CreatePlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string betLimit, string language = "en", CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = playerCode,
+                ["currency"] = currency,
+                ["betLimit"] = betLimit,
+                ["language"] = language,
+                ["userName"] = userName,
+            };
+
+            var document = await PostAsync(
+                apiUrl,
+                "/wallet/createMember",
+                parameters,
+                "createMember",
+                cancellationToken).ConfigureAwait(false);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").GetString();
+
+            if (status != ((int)GameApiClientError.Success).ToString("d4") &&
+                  status != ((int)GameApiClientError.AccountExisted).ToString("d4")
+                )
+            {
+                throw new Exception($"Failed to create player.({playerCode})");
+            }
+        }
+
+        public async ValueTask<FundResult> FundInAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, int withdrawType = 0, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = playerCode,
+                ["withdrawType"] = withdrawType.ToString(),
+                ["txCode"] = transactionId,
+                ["transferAmount"] = amount.ToString()
+            };
+
+            var document = await PostAsync(
+                apiUrl,
+                "/wallet/withdraw",
+                parameters,
+                "withdraw",
+                cancellationToken).ConfigureAwait(false);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").GetString();
+
+            return status != ((int)GameApiClientError.Success).ToString("d4")
+                ? new FundResult(
+                    Success: false,
+                    TransactionId: string.Empty,
+                    GameProductTransactionId: string.Empty,
+                    Amount: decimal.Zero,
+                    CurrentBalance: decimal.Zero)
+                : !document.RootElement.TryGetProperty("databaseId", out var jsonGameProductTransactionId) ||
+                !document.RootElement.TryGetProperty("txCode", out var jsonTransactionId) ||
+                !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
+                !document.RootElement.TryGetProperty("amount", out var jsonAmount)
+                ? throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})")
+                : !decimal.TryParse(jsonAmount.GetString(), out var reslutAmount) ||
+                !decimal.TryParse(jsonCurrentBalance.GetString(), out var reslutCurrentBalance)
+                ? throw new Exception($"Decimal parsing failed.({JsonSerializer.Serialize(document)})")
+                : new FundResult(
+                Success: true,
+                TransactionId: jsonTransactionId.ToString(),
+                GameProductTransactionId: jsonGameProductTransactionId.ToString(),
+                Amount: reslutAmount,
+                CurrentBalance: reslutCurrentBalance);
+        }
+
+        public async ValueTask<bool> FundOrderCheckingAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["txCode"] = transactionId
+            };
+
+            var document = await PostAsync(
+               apiUrl,
+               "/wallet/checkTransferOperation",
+               parameters,
+               "checkTransferOperation",
+               cancellationToken).ConfigureAwait(false);
+
+            return document is null
+                ? throw new Exception("Document is empty.")
+                : document.RootElement.GetProperty("status").GetString() == ((int)GameApiClientError.Success).ToString("d4") &&
+                  document.RootElement.GetProperty("txStatus").ToString() == "1";
+        }
+
+        public async ValueTask<FundResult> FundOutAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = playerCode,
+                ["txCode"] = transactionId,
+                ["transferAmount"] = amount.ToString()
+            };
+
+            var document = await PostAsync(
+               apiUrl,
+               "/wallet/deposit",
+               parameters,
+               "deposit",
+               cancellationToken).ConfigureAwait(false);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").GetString();
+
+            return status != ((int)GameApiClientError.Success).ToString("d4")
+                ? new FundResult(
+                    Success: false,
+                    TransactionId: string.Empty,
+                    GameProductTransactionId: string.Empty,
+                    Amount: decimal.Zero,
+                    CurrentBalance: decimal.Zero)
+                : !document.RootElement.TryGetProperty("databaseId", out var jsonGameProductTransactionId) ||
+                !document.RootElement.TryGetProperty("txCode", out var jsonTransactionId) ||
+                !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
+                !document.RootElement.TryGetProperty("amount", out var jsonAmount)
+                ? throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})")
+                : !decimal.TryParse(jsonAmount.GetString(), out var reslutAmount) ||
+                !decimal.TryParse(jsonCurrentBalance.GetString(), out var reslutCurrentBalance)
+                ? throw new Exception($"Decimal parsing failed.({JsonSerializer.Serialize(document)})")
+                : new FundResult(
+                Success: true,
+                TransactionId: jsonTransactionId.ToString(),
+                GameProductTransactionId: jsonGameProductTransactionId.ToString(),
+                Amount: reslutAmount,
+                CurrentBalance: reslutCurrentBalance);
+        }
+
+        public async ValueTask<GetBalanceResult> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["alluser"] = 0.ToString(),
+                ["userIds"] = playerCode,
+            };
+
+            var document = await PostAsync(
+                apiUrl,
+                "/wallet/getBalance",
+                parameters,
+                "getBalance",
+                cancellationToken).ConfigureAwait(false);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").ToString();
+
+            if (status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4"))
+            {
+                return new GetBalanceResult(Success: true);
+            }
+
+            if (status != ((int)GameApiClientError.Success).ToString("d4"))
+            {
+                return new GetBalanceResult(Success: false);
+            }
+
+            if (!document.RootElement.TryGetProperty(("results"), out JsonElement results))
+            {
+                throw new Exception("JsonElement parsing failed.");
+            }
+            var result = results.Deserialize<IEnumerable<BalanceModel>>(_SerializerOptions)!.Single(x => x.UserId == playerCode);
+
+            return new GetBalanceResult(
+                Success: true,
+                IsPlayerExist: true,
+                Balance: decimal.Parse(result.Balance)
+                );
+        }
+
+        public async ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameData data, CancellationToken cancellationToken = default)
+        {
+            var tryCount = 3;
+            var seconds = 1;
+
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = data.PlayerCode,
+                ["isMobileLogin"] = data.IsMobileLogin.ToString(),
+                ["externalURL"] = data.ExternalURL,
+                ["platform"] = data.Platform,
+                ["gameType"] = data.GameType,
+                ["gameCode"] = data.ExternalGameId,
+                ["language"] = data.Language
+            };
+
+            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+             .WaitAndRetryAsync(tryCount,
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 (result, retryTime, context) =>
+                 {
+                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                         DateTime.Now.ToString("o"),
+                         parameters,
+                         result,
+                         retryTime);
+                 });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/doLoginAndLaunchGame", parameters, "GetGamingLoginGameAsync"));
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").ToString();
+
+            return status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4")
+                ? new LoginAndLaunchGameResult(
+                    Success: true)
+                : status != ((int)GameApiClientError.Success).ToString("d4")
+                ? new LoginAndLaunchGameResult(
+                    Success: false,
+                    Message: document.RootElement.GetProperty("desc").ToString())
+                : !document.RootElement.TryGetProperty("url", out JsonElement jsonUrl)
+                ? throw new Exception("JsonElement parsing failed.")
+                : new LoginAndLaunchGameResult(
+                    Success: true,
+                    IsPlayerExist: true,
+                    GameUrl: jsonUrl.GetString());
+        }
+
+        public async ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveData data, CancellationToken cancellationToken = default)
+        {
+            var tryCount = 3;
+            var seconds = 1;
+
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = data.PlayerCode,
+                ["isMobileLogin"] = data.IsMobileLogin.ToString(),
+                ["externalURL"] = data.ExternalURL,
+                ["platform"] = data.Platform,
+                ["gameType"] = data.GameType,
+                ["language"] = data.Language,
+                ["betLimit"] = data.BetLimit
+            };
+
+            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+             .WaitAndRetryAsync(tryCount,
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 (result, retryTime, context) =>
+                 {
+                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                         DateTime.Now.ToString("o"),
+                         parameters,
+                         result,
+                         retryTime);
+                 });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/doLoginAndLaunchGame", parameters, "GetGamingLoginGameAsync"));
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").ToString();
+
+            return status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4")
+                ? new LoginAndLaunchGameResult(
+                    Success: true)
+                : status != ((int)GameApiClientError.Success).ToString("d4")
+                ? new LoginAndLaunchGameResult(
+                    Success: false,
+                    Message: document.RootElement.GetProperty("desc").ToString())
+                : !document.RootElement.TryGetProperty("url", out JsonElement jsonUrl)
+                ? throw new Exception("JsonElement parsing failed.")
+                : new LoginAndLaunchGameResult(
+                    Success: true,
+                    IsPlayerExist: true,
+                    GameUrl: jsonUrl.GetString());
+        }
+
+        public async ValueTask LogoutAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userIds"] = playerCode,
+            };
+
+            var document = await PostAsync(
+                apiUrl,
+                "/wallet/logout",
+                parameters,
+                "logout",
+                cancellationToken).ConfigureAwait(false);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").GetString();
+
+            if (status != ((int)GameApiClientError.Success).ToString("d4"))
+            {
+                throw new Exception($"The player has failed to kick the line.({playerCode})");
+            }
+        }
+
+        private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
+        {
+            logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
+
+            var sw = Stopwatch.StartNew();
+            var url = new Uri(apiUrl, path);
+
+            HttpContent content = new FormUrlEncodedContent(parameters);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+            {
+                CharSet = "UTF-8"
+            };
+
+            var httpResponseMessage = await _client.PostAsync(url, content, cancellationToken);
+
+            sw.Stop();
+
+            var responseMessage = default(string);
+            using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
+            {
+                responseMessage = await sr.ReadToEndAsync() ?? string.Empty;
+            }
+
+            var apiLogEvent = new ApiLogEvent
+            {
+                Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
+                Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
+                Prefix = logPrefix,
+                ServerName = Environment.MachineName.NoLongerThan(128),
+                RequestHeaders = httpResponseMessage.RequestMessage?.Headers + httpResponseMessage.RequestMessage?.Content?.Headers?.ToString(),
+                RequestContent = (await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)).NoLongerThan(4096),
+                ResponseHeaders = httpResponseMessage.Headers.ToString(),
+                ResponseContent = responseMessage.NoLongerThan(4096),
+                ResponseCode = (short)httpResponseMessage.StatusCode,
+                ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
+                RecordedOn = DateTimeOffset.UtcNow
+            };
+            _tgsLog.LogApi(apiLogEvent);
+            _logger.LogInformation("{apiLogEvent}", System.Text.Json.JsonSerializer.Serialize(apiLogEvent));
+
+            _ = httpResponseMessage.EnsureSuccessStatusCode();
+
+            return JsonDocument.Parse(responseMessage);
+        }
+    }
+}
