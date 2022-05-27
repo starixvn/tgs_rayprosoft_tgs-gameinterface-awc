@@ -39,7 +39,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 IsMobileLogin = query.IsMobileLogin,
                 ExternalURL = query.ExternalURL,
                 Platform = query.Platform,
-                GameType ="FH",
+                GameType = "FH",
                 ExternalGameId = query.ExternalGameId,
                 Language = query.Language,
             };

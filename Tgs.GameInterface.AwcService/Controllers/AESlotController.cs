@@ -161,7 +161,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "gameCode": "AWS-SLOT-001",
         ///             "language": "cn"
         ///         }
-        ///         
+        ///
         ///     Post
         ///         {
         ///             "apiUrl": "https://tttint.onlinegames22.com/",
