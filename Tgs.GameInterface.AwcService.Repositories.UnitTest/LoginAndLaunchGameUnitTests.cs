@@ -133,7 +133,6 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
                 IsMobileLogin = false,
                 ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
                 Platform = "HORSEBOOK",
-                GameType = "LIVE",
                 Language = cultureCode,
                 BetLimit = JsonSerializer.Serialize(betLimit),
             };
@@ -191,7 +190,6 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
                 IsMobileLogin = false,
                 ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
                 Platform = "SV388",
-                GameType = "LIVE",
                 Language = cultureCode,
                 BetLimit = JsonSerializer.Serialize(betLimit),
             };
@@ -245,9 +243,51 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
                 IsMobileLogin = false,
                 ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
                 Platform = "VENUS",
-                GameType = "LIVE",
                 Language = cultureCode,
                 BetLimit = JsonSerializer.Serialize(betLimit),
+            };
+
+            var response = new
+            {
+                status = ((int)GameApiClientError.Success).ToString("d4"),
+                desc = GameApiClientError.Success.ToString(),
+                url = "http://localhost"
+            };
+
+            var content = JsonSerializer.Serialize(response);
+            var handler = new MockHttpMessageHandler();
+            _ = handler.Expect(HttpMethod.Post, "/wallet/doLoginAndLaunchGame")
+            .Respond(HttpStatusCode.OK, new StringContent(content));
+
+            var fakeHttpClient = handler.ToHttpClient();
+            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeTgsLog = Substitute.For<ITgsLog>();
+            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+
+            var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
+
+            Assert.IsTrue(result.Success);
+            Assert.IsTrue(result.IsPlayerExist);
+            Assert.AreEqual(response.url, result.GameUrl);
+        }
+
+        [TestMethod]
+        public async Task Normal_Process_Is_Lotto_AE()
+        {
+            var apiUrl = new Uri("http://localhost/");
+            var agentId = "testagentid";
+            var cert = "testcert";
+            var playerCode = "4ucmqplxb029";
+            var cultureCode = "cn";
+
+
+            var request = new LoginAndLaunchGameByLottoData()
+            {
+                PlayerCode = playerCode,
+                IsMobileLogin = false,
+                ExternalURL = "https://dev-t1.rpgp.cc/zh-CN",
+                Platform = "AE",
+                Language = cultureCode,
             };
 
             var response = new

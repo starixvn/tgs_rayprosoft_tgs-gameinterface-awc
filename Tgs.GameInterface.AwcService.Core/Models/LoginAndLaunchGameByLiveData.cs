@@ -19,10 +19,6 @@
         /// </summary>
         public string Platform { get; set; } = default!;
         /// <summary>
-        /// 平台游戏类型.
-        /// </summary>
-        public string GameType { get; set; } = default!;
-        /// <summary>
         /// Default is English预设为英文.
         /// </summary>
         public string Language { get; set; } = "en";

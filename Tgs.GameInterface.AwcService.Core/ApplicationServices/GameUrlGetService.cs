@@ -16,13 +16,14 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
         public async ValueTask<GameUrlResult> GetAsync(GameUrlQuery query, CancellationToken cancellationToken = default)
         {
             var gameCodeSplits = query.ExternalGameId.Split("-");
-            var gameType = gameCodeSplits[2].ToUpper() switch
+            var gameType = gameCodeSplits[1].ToUpper() switch
             {
                 "SLOT" => AwcGameTypes.SLOT.ToString(),
                 "FISH" => AwcGameTypes.FH.ToString(),
                 "FH" => AwcGameTypes.FH.ToString(),
                 "EGAME" => AwcGameTypes.EGAME.ToString(),
                 "TABLE" => AwcGameTypes.TABLE.ToString(),
+                "LOTTO" => AwcGameTypes.LOTTO.ToString(),
                 _ => throw new NotImplementedException(),
             };
 

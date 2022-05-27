@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Tgs.GameInterface.AwcService.Common;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.GameInterface.AwcService.Repositories.Models;
@@ -263,20 +264,19 @@ namespace Tgs.GameInterface.AwcService.Repositories
             {
                 throw new Exception("JsonElement parsing failed.");
             }
-            var result = results.Deserialize<IEnumerable<BalanceModel>>(_SerializerOptions)!.Single(x => x.UserId == playerCode);
+            var result = results.Deserialize<IEnumerable<BalanceModel>>(_SerializerOptions)!.FirstOrDefault(x => x.UserId == playerCode);
 
-            return new GetBalanceResult(
+            return result == null
+                ? new GetBalanceResult(Success: true)
+                : new GetBalanceResult(
                 Success: true,
                 IsPlayerExist: true,
                 Balance: decimal.Parse(result.Balance)
                 );
         }
 
-        public async ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameData data, CancellationToken cancellationToken = default)
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameData data, CancellationToken cancellationToken = default)
         {
-            var tryCount = 3;
-            var seconds = 1;
-
             var parameters = new Dictionary<string, string>
             {
                 ["cert"] = cert,
@@ -290,51 +290,11 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["language"] = data.Language
             };
 
-            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
-            {
-                var status = r?.RootElement.GetProperty("status").GetString();
-                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
-            })
-             .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(seconds),
-                 (result, retryTime, context) =>
-                 {
-                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                         DateTime.Now.ToString("o"),
-                         parameters,
-                         result,
-                         retryTime);
-                 });
-
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/doLoginAndLaunchGame", parameters, "GetGamingLoginGameAsync"));
-
-            if (document is null)
-            {
-                throw new Exception("Document is empty.");
-            }
-
-            var status = document.RootElement.GetProperty("status").ToString();
-
-            return status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4")
-                ? new LoginAndLaunchGameResult(
-                    Success: true)
-                : status != ((int)GameApiClientError.Success).ToString("d4")
-                ? new LoginAndLaunchGameResult(
-                    Success: false,
-                    Message: document.RootElement.GetProperty("desc").ToString())
-                : !document.RootElement.TryGetProperty("url", out JsonElement jsonUrl)
-                ? throw new Exception("JsonElement parsing failed.")
-                : new LoginAndLaunchGameResult(
-                    Success: true,
-                    IsPlayerExist: true,
-                    GameUrl: jsonUrl.GetString());
+            return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
         }
 
-        public async ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveData data, CancellationToken cancellationToken = default)
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveData data, CancellationToken cancellationToken = default)
         {
-            var tryCount = 3;
-            var seconds = 1;
-
             var parameters = new Dictionary<string, string>
             {
                 ["cert"] = cert,
@@ -343,50 +303,31 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["isMobileLogin"] = data.IsMobileLogin.ToString(),
                 ["externalURL"] = data.ExternalURL,
                 ["platform"] = data.Platform,
-                ["gameType"] = data.GameType,
+                ["gameType"] = AwcGameTypes.LIVE.ToString(),
                 ["language"] = data.Language,
                 ["betLimit"] = data.BetLimit
             };
 
-            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
-            {
-                var status = r?.RootElement.GetProperty("status").GetString();
-                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
-            })
-             .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(seconds),
-                 (result, retryTime, context) =>
-                 {
-                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                         DateTime.Now.ToString("o"),
-                         parameters,
-                         result,
-                         retryTime);
-                 });
-
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/doLoginAndLaunchGame", parameters, "GetGamingLoginGameAsync"));
-
-            if (document is null)
-            {
-                throw new Exception("Document is empty.");
-            }
-
-            var status = document.RootElement.GetProperty("status").ToString();
-
-            return status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4")
-                ? new LoginAndLaunchGameResult(
-                    Success: true)
-                : status != ((int)GameApiClientError.Success).ToString("d4")
-                ? new LoginAndLaunchGameResult(
-                    Success: false,
-                    Message: document.RootElement.GetProperty("desc").ToString())
-                : !document.RootElement.TryGetProperty("url", out JsonElement jsonUrl)
-                ? throw new Exception("JsonElement parsing failed.")
-                : new LoginAndLaunchGameResult(
-                    Success: true,
-                    IsPlayerExist: true,
-                    GameUrl: jsonUrl.GetString());
+            return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
         }
+
+        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLottoData data, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["userId"] = data.PlayerCode,
+                ["isMobileLogin"] = data.IsMobileLogin.ToString(),
+                ["externalURL"] = data.ExternalURL,
+                ["platform"] = data.Platform,
+                ["gameType"] = AwcGameTypes.LOTTO.ToString(),
+                ["language"] = data.Language,
+            };
+
+            return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
+        }
+
 
         public async ValueTask LogoutAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
         {
@@ -415,6 +356,50 @@ namespace Tgs.GameInterface.AwcService.Repositories
             {
                 throw new Exception($"The player has failed to kick the line.({playerCode})");
             }
+        }
+
+        private async ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, IEnumerable<KeyValuePair<string, string>> parameters, CancellationToken cancellationToken = default)
+        {
+            var tryCount = 3;
+            var seconds = 1;
+            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+             .WaitAndRetryAsync(tryCount,
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 (result, retryTime, context) =>
+                 {
+                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                         DateTime.Now.ToString("o"),
+                         parameters,
+                         result,
+                         retryTime);
+                 });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/doLoginAndLaunchGame", parameters, "GetGamingLoginGameAsync", cancellationToken));
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").ToString();
+
+            return status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4")
+                ? new LoginAndLaunchGameResult(
+                    Success: true)
+                : status != ((int)GameApiClientError.Success).ToString("d4")
+                ? new LoginAndLaunchGameResult(
+                    Success: false,
+                    Message: document.RootElement.GetProperty("desc").ToString())
+                : !document.RootElement.TryGetProperty("url", out JsonElement jsonUrl)
+                ? throw new Exception("JsonElement parsing failed.")
+                : new LoginAndLaunchGameResult(
+                    Success: true,
+                    IsPlayerExist: true,
+                    GameUrl: jsonUrl.GetString());
         }
 
         private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
