@@ -1,6 +1,6 @@
-﻿namespace Tgs.GameInterface.AwcService.ViewModels
+﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record CreatePlayerByLiveViewModel(
+    public record CreatePlayerByBetLimitCommand(
         Uri ApiUrl,
         string AgentId,
         string Cert,

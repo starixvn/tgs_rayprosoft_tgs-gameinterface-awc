@@ -3,7 +3,7 @@
     public record LoginAndLaunchGameByLottoLobby(
           string PlayerCode,
           bool IsMobileLogin,
-          string ExternalURL,
+          string BackUrl,
           string Platform,
           string Language = "en");
 }

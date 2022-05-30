@@ -9,7 +9,7 @@ using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 namespace Tgs.GameInterface.AwcService.Core.UnitTest
 {
     [TestClass]
-    public class CreatePlayerByLiveCommandServiceUnitTest
+    public class CreatePlayerByBetLimitCommandServiceUnitTest
     {
         [TestMethod]
         public async Task Failed_To_Create_Member()
@@ -32,7 +32,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 }
             });
 
-            var query = new CreatePlayerByLiveCommand(
+            var query = new CreatePlayerByBetLimitCommand(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -54,7 +54,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 betLimit: Arg.Is(betLimit),
                 language: Arg.Is(cultureCode)).Throws<Exception>();
 
-            var service = new CreatePlayerByLiveCommandService(fakeClient);
+            var service = new CreatePlayerByBetLimitCommandService(fakeClient);
 
             _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.ExecuteAsync(query).AsTask()).ConfigureAwait(false);
         }
@@ -80,7 +80,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 }
             });
 
-            var query = new CreatePlayerByLiveCommand(
+            var query = new CreatePlayerByBetLimitCommand(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -102,7 +102,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 betLimit: Arg.Is(betLimit),
                 language: Arg.Is(cultureCode));
 
-            var service = new CreatePlayerByLiveCommandService(fakeClient);
+            var service = new CreatePlayerByBetLimitCommandService(fakeClient);
 
             await service.ExecuteAsync(query).ConfigureAwait(false);
         }

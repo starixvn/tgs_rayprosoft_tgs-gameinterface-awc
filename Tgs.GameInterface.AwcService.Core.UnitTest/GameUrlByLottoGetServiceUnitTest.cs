@@ -27,7 +27,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: AwcPlatforms.AWC_AELOTTO,
                 Language: cultureCode);
 
@@ -36,7 +36,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGameByLottoLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 Language: query.Language);
 
@@ -76,7 +76,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: AwcPlatforms.AWC_AELOTTO,
                 Language: cultureCode);
 
@@ -85,7 +85,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGameByLottoLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 Language: query.Language);
 
@@ -115,7 +115,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: AwcPlatforms.AWC_AELOTTO,
                 Language: cultureCode);
 
@@ -124,7 +124,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGameByLottoLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 Language: query.Language);
 

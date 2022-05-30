@@ -5,9 +5,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Interfaces
 {
-    public interface ICreatePlayerByLiveHandler
+    public interface ICreatePlayerByBetLimitHandler
     {
         [HttpPost("create")]
-        ValueTask CreatePlayerAsync([FromServices] ICommandService<CreatePlayerByLiveCommand> service, CreatePlayerByLiveViewModel model);
+        ValueTask CreatePlayerAsync([FromServices] ICommandService<CreatePlayerByBetLimitCommand> service, CreatePlayerByBetLimitViewModel model);
     }
 }
