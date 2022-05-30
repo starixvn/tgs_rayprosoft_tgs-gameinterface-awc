@@ -67,7 +67,7 @@ builder.Services
         .ConfigQueueOptions((options, sp) =>
         {
             var configuration = sp.GetRequiredService<IConfiguration>();
-            options.Url = configuration.GetConnectionString("NatsMQ");
+            options.Url = configuration.GetConnectionString("Nats");
         });
     })
     .AddNatsGlobPatternExchange("*");
