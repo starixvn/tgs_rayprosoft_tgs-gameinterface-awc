@@ -26,7 +26,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
                 ExternalGameId: "YL-FISH-001",
                 Language: cultureCode);
@@ -36,7 +36,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGame(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 GameType: "FH",
                 ExternalGameId: query.ExternalGameId,
@@ -78,7 +78,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
                 ExternalGameId: "YL-FISH-001",
                 Language: cultureCode);
@@ -88,7 +88,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGame(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 GameType: "FH",
                 ExternalGameId: query.ExternalGameId,
@@ -120,7 +120,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
                 ExternalGameId: "YL-FISH-001",
                 Language: cultureCode);
@@ -130,7 +130,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGame(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 GameType: "FH",
                 ExternalGameId: query.ExternalGameId,

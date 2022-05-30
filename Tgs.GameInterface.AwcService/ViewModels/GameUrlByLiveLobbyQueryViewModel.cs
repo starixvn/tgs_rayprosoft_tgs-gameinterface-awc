@@ -6,7 +6,7 @@
         string Cert,
         string PlayerCode,
         bool IsMobileLogin,
-        string ExternalURL,
+        string BackUrl,
         string BetLimit,
         string Language);
 }

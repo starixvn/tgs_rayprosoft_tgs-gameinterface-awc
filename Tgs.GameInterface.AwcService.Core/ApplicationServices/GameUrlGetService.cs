@@ -30,7 +30,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
             var data = new LoginAndLaunchGame(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 GameType: gameType,
                 ExternalGameId: query.ExternalGameId,

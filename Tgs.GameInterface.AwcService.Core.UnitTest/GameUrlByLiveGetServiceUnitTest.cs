@@ -38,7 +38,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: AwcPlatforms.AWC_VENUS,
                 Language: cultureCode,
                 BetLimit: betLimit);
@@ -48,7 +48,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGameByLiveLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 BetLimit: betLimit,
                 Language: query.Language);
@@ -99,7 +99,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: AwcPlatforms.AWC_VENUS,
                 Language: cultureCode,
                 BetLimit: betLimit);
@@ -109,7 +109,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGameByLiveLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 BetLimit: query.BetLimit,
                 Language: query.Language);
@@ -150,7 +150,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Cert: cert,
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: AwcPlatforms.AWC_VENUS,
                 Language: cultureCode,
                 BetLimit: betLimit);
@@ -160,7 +160,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var data = new LoginAndLaunchGameByLiveLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 BetLimit: query.BetLimit,
                 Language: query.Language);

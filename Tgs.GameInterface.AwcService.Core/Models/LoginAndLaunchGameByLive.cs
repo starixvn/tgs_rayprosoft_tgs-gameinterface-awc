@@ -3,7 +3,7 @@
     public record LoginAndLaunchGameByLive(
           string PlayerCode,
           bool IsMobileLogin,
-          string ExternalURL,
+          string BackUrl,
           string Platform,
           string ExternalGameId,
           string BetLimit,

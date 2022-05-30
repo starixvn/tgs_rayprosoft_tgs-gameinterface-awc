@@ -17,7 +17,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
             var data = new LoginAndLaunchGameByLottoLobby(
                 PlayerCode: query.PlayerCode,
                 IsMobileLogin: query.IsMobileLogin,
-                ExternalURL: query.ExternalURL,
+                BackUrl: query.BackUrl,
                 Platform: query.Platform,
                 Language: query.Language);
 

@@ -3,7 +3,7 @@
     public record LoginAndLaunchGame(
          string PlayerCode,
          bool IsMobileLogin,
-         string ExternalURL,
+         string BackUrl,
          string Platform,
          string GameType,
          string ExternalGameId,

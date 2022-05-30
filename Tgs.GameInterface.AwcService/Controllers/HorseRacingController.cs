@@ -13,7 +13,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IBalanceHandler,
         IFundHandler,
         IKickPlayerHandler,
-        ICreatePlayerByLiveHandler
+        ICreatePlayerByBetLimitHandler
     {
         /// <summary>
         /// Creates the player asynchronous.
@@ -38,9 +38,9 @@ namespace Tgs.GameInterface.AwcService.Controllers
         /// </remarks>
         [HttpPost("create")]
         public ValueTask CreatePlayerAsync(
-                    [FromServices] ICommandService<CreatePlayerByLiveCommand> service,
-                    CreatePlayerByLiveViewModel model)
-                    => service.ExecuteAsync(new CreatePlayerByLiveCommand(
+                    [FromServices] ICommandService<CreatePlayerByBetLimitCommand> service,
+                    CreatePlayerByBetLimitViewModel model)
+                    => service.ExecuteAsync(new CreatePlayerByBetLimitCommand(
                         model.ApiUrl,
                         model.AgentId,
                         model.Cert,
@@ -131,6 +131,41 @@ namespace Tgs.GameInterface.AwcService.Controllers
         }
 
         /// <summary>
+        /// Players the balance asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "cnygpircb",
+        ///             "cert": "zGHFiBqpNt7pfg9WV2M",
+        ///             "playerCode": "4ucmqplxb029"
+        ///         }
+        /// </remarks>
+        [HttpPost("balance")]
+        public async ValueTask<BalanceResultViewModel> GetBalanceAsync(
+                [FromServices] IGetService<BalanceQuery, BalanceResult> service,
+                BalanceQueryViewModel model)
+        {
+            var result = await service.GetAsync(new BalanceQuery(
+                model.ApiUrl,
+                model.AgentId,
+                model.Cert,
+                model.PlayerCode
+                )).ConfigureAwait(false);
+
+            return new BalanceResultViewModel(
+                result.Success,
+                result.IsPlayerExist,
+                result.Balance);
+        }
+
+        /// <summary>
         /// Kicks the player asynchronous.
         /// </summary>
         /// <param name="service">The service.</param>
@@ -171,7 +206,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "cert": "zGHFiBqpNt7pfg9WV2M",
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
-        ///             "externalURL": "https://dev-t1.rpgp.cc/",
+        ///             "backUrl": "https://dev-t1.rpgp.cc/",
         ///             "betLimit": "{\"HORSEBOOK\":{\"LIVE\":{\"minbet\":10,\"maxbet\":3000,\"maxBetSumPerHorse\":10000,\"minorMinbet\":10, \"minorMaxbet\":1000, \"minorMaxBetSumPerHorse\":10000}}}",
         ///             "language": "cn"
         ///         }
@@ -189,7 +224,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 Cert: model.Cert,
                 PlayerCode: model.PlayerCode,
                 IsMobileLogin: model.IsMobileLogin,
-                ExternalURL: model.ExternalURL,
+                BackUrl: model.BackUrl,
                 Platform: AwcPlatforms.AWC_RCB,
                 ExternalGameId: "HRB-LIVE-001",
                 BetLimit: model.BetLimit,
@@ -200,41 +235,6 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 Message: result.Message,
                 IsPlayerExist: result.IsPlayerExist,
                 GameUrl: result.GameUrl);
-        }
-
-        /// <summary>
-        /// Players the balance asynchronous.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <b>Example</b><br />
-        ///
-        ///     Post
-        ///         {
-        ///             "apiUrl": "https://tttint.onlinegames22.com/",
-        ///             "agentId": "cnygpircb",
-        ///             "cert": "zGHFiBqpNt7pfg9WV2M",
-        ///             "playerCode": "4ucmqplxb029"
-        ///         }
-        /// </remarks>
-        [HttpPost("balance")]
-        public async ValueTask<BalanceResultViewModel> PlayerBalanceAsync(
-                [FromServices] IGetService<BalanceQuery, BalanceResult> service,
-                BalanceQueryViewModel model)
-        {
-            var result = await service.GetAsync(new BalanceQuery(
-                model.ApiUrl,
-                model.AgentId,
-                model.Cert,
-                model.PlayerCode
-                )).ConfigureAwait(false);
-
-            return new BalanceResultViewModel(
-                result.Success,
-                result.IsPlayerExist,
-                result.Balance);
         }
     }
 }

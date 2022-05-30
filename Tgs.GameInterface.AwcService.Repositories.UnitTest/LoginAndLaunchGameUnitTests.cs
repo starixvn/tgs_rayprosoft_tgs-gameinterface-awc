@@ -28,7 +28,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var request = new LoginAndLaunchGame(
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
                 GameType: "FH",
                 ExternalGameId: "YL-FISH-001",
@@ -69,7 +69,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var request = new LoginAndLaunchGame(
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "YL",
                 GameType: "FH",
                 ExternalGameId: "YL-FISH-001",
@@ -126,7 +126,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var request = new LoginAndLaunchGameByLiveLobby(
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "HORSEBOOK",
                 BetLimit: JsonSerializer.Serialize(betLimit),
                 Language: cultureCode);
@@ -181,7 +181,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var request = new LoginAndLaunchGameByLive(
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "SV388",
                 ExternalGameId: "SV-LIVE-001",
                 BetLimit: JsonSerializer.Serialize(betLimit),
@@ -233,7 +233,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var request = new LoginAndLaunchGameByLiveLobby(
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "VENUS",
                 BetLimit: JsonSerializer.Serialize(betLimit),
                 Language: cultureCode);
@@ -274,7 +274,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var request = new LoginAndLaunchGameByLottoLobby(
                 PlayerCode: playerCode,
                 IsMobileLogin: false,
-                ExternalURL: "https://dev-t1.rpgp.cc/zh-CN",
+                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
                 Platform: "AE",
                 Language: cultureCode);
 

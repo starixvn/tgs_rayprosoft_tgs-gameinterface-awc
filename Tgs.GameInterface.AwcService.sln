@@ -20,7 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Core.UnitTest", "Tgs.GameInterface.AwcService.Core.UnitTest\Tgs.GameInterface.AwcService.Core.UnitTest.csproj", "{D97D0755-CBD1-4611-8486-868BCDB758C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.AwcService.Common", "Tgs.GameInterface.AwcService.Common\Tgs.GameInterface.AwcService.Common.csproj", "{C13238C6-108C-42C6-BD8F-E8223C582024}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Common", "Tgs.GameInterface.AwcService.Common\Tgs.GameInterface.AwcService.Common.csproj", "{C13238C6-108C-42C6-BD8F-E8223C582024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.AwcService.Client", "Tgs.GameInterface.AwcService.Client\Tgs.GameInterface.AwcService.Client.csproj", "{85422421-F984-4FF5-BF82-6F7D204F90A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +54,10 @@ Global
 		{C13238C6-108C-42C6-BD8F-E8223C582024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C13238C6-108C-42C6-BD8F-E8223C582024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C13238C6-108C-42C6-BD8F-E8223C582024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

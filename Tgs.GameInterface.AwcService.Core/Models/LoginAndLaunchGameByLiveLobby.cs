@@ -3,7 +3,7 @@
     public record LoginAndLaunchGameByLiveLobby(
           string PlayerCode,
           bool IsMobileLogin,
-          string ExternalURL,
+          string BackUrl,
           string Platform,
           string BetLimit,
           string Language = "en");
