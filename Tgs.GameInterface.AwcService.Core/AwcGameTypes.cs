@@ -1,4 +1,4 @@
-﻿namespace Tgs.GameInterface.AwcService.Common
+﻿namespace Tgs.GameInterface.AwcService.Core
 {
     public enum AwcGameTypes
     {

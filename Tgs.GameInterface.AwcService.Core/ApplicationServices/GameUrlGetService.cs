@@ -1,5 +1,4 @@
-﻿using Tgs.GameInterface.AwcService.Common;
-using Tgs.GameInterface.AwcService.Core.Models;
+﻿using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices

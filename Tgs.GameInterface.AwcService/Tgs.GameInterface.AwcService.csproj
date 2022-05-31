@@ -20,6 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Protos\gameinterfaceawcroundservice.proto" />
 	  <None Remove="Protos\gameinterfaceawcservice.proto" />
 	</ItemGroup>
 
@@ -37,16 +38,17 @@
 		<PackageReference Include="PhoenixToolkits.Protobuf.ExtendTypes" Version="0.0.6" />
 		<PackageReference Include="ProfileViewer.OpenTelemetry.Exporter" Version="0.2.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 		<PackageReference Include="Tgs.Interceptors" Version="0.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Tgs.GameInterface.AwcService.Common\Tgs.GameInterface.AwcService.Common.csproj" />
 		<ProjectReference Include="..\Tgs.GameInterface.AwcService.Core\Tgs.GameInterface.AwcService.Core.csproj" />
 		<ProjectReference Include="..\Tgs.GameInterface.AwcService.Repositories\Tgs.GameInterface.AwcService.Repositories.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Protobuf Include="Protos\gameinterfaceawcroundservice.proto" GrpcServices="Server" />
 	  <Protobuf Include="Protos\gameinterfaceawcservice.proto" GrpcServices="Server" />
 	</ItemGroup>
 

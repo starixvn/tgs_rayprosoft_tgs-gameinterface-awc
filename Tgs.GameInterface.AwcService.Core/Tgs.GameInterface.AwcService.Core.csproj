@@ -12,8 +12,4 @@
     <PackageReference Include="TGS.ServiceUtility" Version="0.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Tgs.GameInterface.AwcService.Common\Tgs.GameInterface.AwcService.Common.csproj" />
-  </ItemGroup>
-
 </Project>

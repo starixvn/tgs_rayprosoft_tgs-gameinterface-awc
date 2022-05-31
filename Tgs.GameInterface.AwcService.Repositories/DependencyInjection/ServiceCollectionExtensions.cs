@@ -1,4 +1,5 @@
-﻿using Tgs.GameInterface.AwcService.Core;
+﻿using System.Net;
+using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Repositories;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -8,6 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAwcServiceRepositories(this IServiceCollection services)
             => services
                 .AddHttpClient<IGameApiClient, GameApiClient>()
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                })
                 .Services;
     }
 }
