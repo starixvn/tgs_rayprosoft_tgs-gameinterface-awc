@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService", "Tgs.GameInterface.AwcService\Tgs.GameInterface.AwcService.csproj", "{D2713843-F89A-4FD3-9827-8F467B8167FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Core", "Tgs.GameInterface.AwcService.Core\Tgs.GameInterface.AwcService.Core.csproj", "{5E9A5EC6-980A-43B1-8B05-874F775FE09D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12E32FC9-CCE6-4CFE-ADD4-08B5B888EE2B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		CodeMaid.config = CodeMaid.config
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Repositories", "Tgs.GameInterface.AwcService.Repositories\Tgs.GameInterface.AwcService.Repositories.csproj", "{86D78569-AE88-49ED-AB6A-76F02A053276}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Repositories.UnitTest", "Tgs.GameInterface.AwcService.Repositories.UnitTest\Tgs.GameInterface.AwcService.Repositories.UnitTest.csproj", "{94EA47F3-0C3F-46C2-AD9A-E124E9A0D391}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Core.UnitTest", "Tgs.GameInterface.AwcService.Core.UnitTest\Tgs.GameInterface.AwcService.Core.UnitTest.csproj", "{D97D0755-CBD1-4611-8486-868BCDB758C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.AwcService.Client", "Tgs.GameInterface.AwcService.Client\Tgs.GameInterface.AwcService.Client.csproj", "{85422421-F984-4FF5-BF82-6F7D204F90A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2713843-F89A-4FD3-9827-8F467B8167FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2713843-F89A-4FD3-9827-8F467B8167FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2713843-F89A-4FD3-9827-8F467B8167FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2713843-F89A-4FD3-9827-8F467B8167FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E9A5EC6-980A-43B1-8B05-874F775FE09D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E9A5EC6-980A-43B1-8B05-874F775FE09D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E9A5EC6-980A-43B1-8B05-874F775FE09D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E9A5EC6-980A-43B1-8B05-874F775FE09D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86D78569-AE88-49ED-AB6A-76F02A053276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86D78569-AE88-49ED-AB6A-76F02A053276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86D78569-AE88-49ED-AB6A-76F02A053276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86D78569-AE88-49ED-AB6A-76F02A053276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94EA47F3-0C3F-46C2-AD9A-E124E9A0D391}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94EA47F3-0C3F-46C2-AD9A-E124E9A0D391}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94EA47F3-0C3F-46C2-AD9A-E124E9A0D391}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94EA47F3-0C3F-46C2-AD9A-E124E9A0D391}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D97D0755-CBD1-4611-8486-868BCDB758C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D97D0755-CBD1-4611-8486-868BCDB758C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D97D0755-CBD1-4611-8486-868BCDB758C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D97D0755-CBD1-4611-8486-868BCDB758C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85422421-F984-4FF5-BF82-6F7D204F90A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D757BF9-B376-47D4-B00C-7766473F4DA4}
+	EndGlobalSection
+EndGlobal
