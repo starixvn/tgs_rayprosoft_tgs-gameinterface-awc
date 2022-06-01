@@ -31,7 +31,26 @@ public static class ServiceCollectionExtensions
             })
             .AddInterceptor<LoggingInterceptor>()
             .Services
+            .AddGrpcClient<GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceClient>((sp, configureClient) =>
+            {
+                var options = sp.GetRequiredService<IOptions<GameInterfaceAwcServiceClientOptions>>().Value;
+                configureClient.Address = options.BaseUrl;
+            })
+            .ConfigureChannel((sp, configureChannel) =>
+            {
+                var handler = new SocketsHttpHandler
+                {
+                    PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                    KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+                    KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+                    EnableMultipleHttp2Connections = true
+                };
+                configureChannel.HttpHandler = handler;
+            })
+            .AddInterceptor<LoggingInterceptor>()
+            .Services
             .AddSingleton<DiagnosticsInterceptorOptions>()
             .AddSingleton<LoggingInterceptor>()
-            .AddTransient<IGameInterfaceAwcServiceGrpc, GameInterfaceAwcServiceGrpc>();
+            .AddTransient<IGameInterfaceAwcServiceGrpc, GameInterfaceAwcServiceGrpc>()
+            .AddTransient<IGameInterfaceAwcRecordServiceGrpc, GameInterfaceAwcRecordServiceGrpc>();
 }

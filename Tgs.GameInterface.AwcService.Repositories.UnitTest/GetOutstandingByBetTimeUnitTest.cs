@@ -38,9 +38,9 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
             var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeLog = NullLogger<GameRecordApiClient>.Instance;
             var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var client = new GameRecordApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
             var result = await client.GetOutstandingByBetTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
 
@@ -88,9 +88,9 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
             var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeLog = NullLogger<GameRecordApiClient>.Instance;
             var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var client = new GameRecordApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
             var result = await client.GetOutstandingByBetTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
 

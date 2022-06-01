@@ -34,7 +34,7 @@
         /// <summary>
         /// The bet time(玩家下注时间)
         /// </summary>
-        public DateTimeOffset BetTime { get; set; }
+        public string BetTime { get; set; } = default!;
         /// <summary>
         /// The bet type(游戏平台的下注项目)
         /// </summary>

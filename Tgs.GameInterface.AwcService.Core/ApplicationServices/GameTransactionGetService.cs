@@ -5,9 +5,9 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
     internal class GameTransactionGetService : IQueryService<GameTransactionQuery, GameTransactionResult>
     {
-        private readonly IGameApiClient _client;
+        private readonly IGameRecordApiClient _client;
 
-        public GameTransactionGetService(IGameApiClient client)
+        public GameTransactionGetService(IGameRecordApiClient client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }

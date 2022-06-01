@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Protos\gameinterfaceawcroundservice.proto" />
+	  <None Remove="Protos\gameinterfaceawcrecordservice.proto" />
 	  <None Remove="Protos\gameinterfaceawcservice.proto" />
 	</ItemGroup>
 
@@ -48,7 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Protobuf Include="Protos\gameinterfaceawcroundservice.proto" GrpcServices="Server" />
+	  <Protobuf Include="Protos\gameinterfaceawcrecordservice.proto" GrpcServices="Server" />
 	  <Protobuf Include="Protos\gameinterfaceawcservice.proto" GrpcServices="Server" />
 	</ItemGroup>
 

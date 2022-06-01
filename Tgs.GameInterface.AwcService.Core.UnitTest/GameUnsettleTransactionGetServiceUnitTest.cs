@@ -29,7 +29,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 StartTime: startTime,
                 EndTime: endTime);
 
-            var fakeClient = Substitute.For<IGameApiClient>();
+            var fakeClient = Substitute.For<IGameRecordApiClient>();
 
             var result = new GetOutstandingByBetTimeResult(
                 Success: true,
@@ -42,7 +42,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                         RoundId= "42186783",
                         UserId= "testuser",
                         Currency= "THB",
-                        BetTime=DateTimeOffset.Parse( "2021-03-10T17:36:36+08:00"),
+                        BetTime= "2021-03-10T17:36:36+08:00",
                         BetType= "1",
                         BetAmount= 1,
                         RealBetAmount= 1,

@@ -28,7 +28,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 TimeFrom: timeFrom,
                 TransactionStatus: TransactionStatus.Bet);
 
-            var fakeClient = Substitute.For<IGameApiClient>();
+            var fakeClient = Substitute.For<IGameRecordApiClient>();
 
             var result = new GetTransactionByUpdateDateResult(
                 Success: true,
@@ -44,9 +44,9 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                         Currency= "CNY",
                         TxStatus= 1,
                         SettleStatus= 0,
-                        BetTime= DateTimeOffset.Parse("2021-03-10T15:49:00+08:00"),
-                        TxTime= DateTimeOffset.Parse("2021-03-10T15:49:00+08:00"),
-                        UpdateTime= DateTimeOffset.Parse("2021-03-10T15:49:24+08:00"),
+                        BetTime= "2021-03-10T15:49:00+08:00",
+                        TxTime= "2021-03-10T15:49:00+08:00",
+                        UpdateTime= "2021-03-10T15:49:24+08:00",
                         BetType= "Banker",
                         BetAmount= 50m,
                         RealBetAmount= 50m,

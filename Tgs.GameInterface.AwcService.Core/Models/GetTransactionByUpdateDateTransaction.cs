@@ -61,15 +61,15 @@
         /// <summary>
         /// The bet time(玩家下注时间)
         /// </summary>
-        public DateTimeOffset BetTime { get; set; }
+        public string BetTime { get; set; } = default!;
         /// <summary>
         /// The tx time(辨认交易时间依据 (遵循 ISO8601 格式))
         /// </summary>
-        public DateTimeOffset TxTime { get; set; }
+        public string TxTime { get; set; } = default!;
         /// <summary>
         /// The update time(更新时间 (遵循 ISO8601 格式))
         /// </summary>
-        public DateTimeOffset UpdateTime { get; set; }
+        public string UpdateTime { get; set; } = default!;
         /// <summary>
         /// The bet type(游戏平台的下注项目)
         /// </summary>

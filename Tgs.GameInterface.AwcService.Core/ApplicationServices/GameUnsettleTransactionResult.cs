@@ -10,7 +10,7 @@
         string RoundId,
         string UserId,
         string Currency,
-        DateTimeOffset BetTime,
+        string BetTime,
         string BetType,
         decimal BetAmount,
         decimal RealBetAmount,

@@ -13,6 +13,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
                 })
+                .Services
+                .AddHttpClient<IGameRecordApiClient, GameRecordApiClient>()
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                })
                 .Services;
     }
 }

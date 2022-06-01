@@ -12,7 +12,6 @@ RUN dotnet nuget remove source 'Microsoft Visual Studio Offline Packages' || tru
 WORKDIR /src
 COPY ["NuGet.config", "."]
 COPY ["Tgs.GameInterface.AwcService/Tgs.GameInterface.AwcService.csproj", "Tgs.GameInterface.AwcService/"]
-COPY ["Tgs.GameInterface.AwcService.Common/Tgs.GameInterface.AwcService.Common.csproj", "Tgs.GameInterface.AwcService.Common/"]
 COPY ["Tgs.GameInterface.AwcService.Repositories/Tgs.GameInterface.AwcService.Repositories.csproj", "Tgs.GameInterface.AwcService.Repositories/"]
 COPY ["Tgs.GameInterface.AwcService.Core/Tgs.GameInterface.AwcService.Core.csproj", "Tgs.GameInterface.AwcService.Core/"]
 RUN dotnet restore "Tgs.GameInterface.AwcService/Tgs.GameInterface.AwcService.csproj"
