@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Polly;
-using Tgs.GameInterface.AwcService.Common;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.GameInterface.AwcService.Repositories.Models;
@@ -438,9 +437,10 @@ namespace Tgs.GameInterface.AwcService.Repositories
             sw.Stop();
 
             var responseMessage = default(string);
+
             using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
             {
-                responseMessage = await sr.ReadToEndAsync() ?? string.Empty;
+                responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
             }
 
             var apiLogEvent = new ApiLogEvent
@@ -458,7 +458,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 RecordedOn = DateTimeOffset.UtcNow
             };
             _tgsLog.LogApi(apiLogEvent);
-            _logger.LogInformation("{apiLogEvent}", System.Text.Json.JsonSerializer.Serialize(apiLogEvent));
+            _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
             _ = httpResponseMessage.EnsureSuccessStatusCode();
 

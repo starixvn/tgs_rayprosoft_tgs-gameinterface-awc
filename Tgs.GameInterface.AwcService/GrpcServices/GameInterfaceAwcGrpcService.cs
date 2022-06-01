@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using Tgs.GameInterface.AwcService.Common;
+using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Protos;
 using Tgs.ServiceUtility;
