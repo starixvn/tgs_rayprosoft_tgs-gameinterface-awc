@@ -53,7 +53,7 @@ spec:
               readOnly: true
               subPath: appsettings.json
           ports:
-            - name: http
+            - name: grpc
               containerPort:  {{ .Values.servicegrpc.port }}
               protocol: TCP
             - name: http
