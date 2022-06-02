@@ -56,6 +56,9 @@ spec:
             - name: http
               containerPort:  {{ .Values.servicegrpc.port }}
               protocol: TCP
+            - name: http
+              containerPort: 80
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
