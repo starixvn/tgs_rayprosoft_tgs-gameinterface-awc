@@ -23,7 +23,8 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return new FundInResult(
-                Success: true,
+                Success: result.Success,
+                Message: result.Message,
                 TransactionId: result.TransactionId,
                 GameProductTransactionId: result.GameProductTransactionId,
                 Amount: result.Amount,

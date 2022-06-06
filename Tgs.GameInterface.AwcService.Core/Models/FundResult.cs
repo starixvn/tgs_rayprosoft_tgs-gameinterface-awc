@@ -2,8 +2,9 @@
 {
     public record FundResult(
         bool Success,
-        string TransactionId,
-        string GameProductTransactionId,
-        decimal Amount,
-        decimal CurrentBalance);
+        string? Message = null,
+        string? TransactionId = null,
+        string? GameProductTransactionId = null,
+        decimal? Amount = null,
+        decimal? CurrentBalance = null);
 }

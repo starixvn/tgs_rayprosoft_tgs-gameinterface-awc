@@ -135,10 +135,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
             return status != ((int)GameApiClientError.Success).ToString("d4")
                 ? new FundResult(
                     Success: false,
-                    TransactionId: string.Empty,
-                    GameProductTransactionId: string.Empty,
-                    Amount: decimal.Zero,
-                    CurrentBalance: decimal.Zero)
+                    Message: document.RootElement.GetProperty("desc").ToString())
                 : !document.RootElement.TryGetProperty("databaseId", out var jsonGameProductTransactionId) ||
                 !document.RootElement.TryGetProperty("txCode", out var jsonTransactionId) ||
                 !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
@@ -205,10 +202,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
             return status != ((int)GameApiClientError.Success).ToString("d4")
                 ? new FundResult(
                     Success: false,
-                    TransactionId: string.Empty,
-                    GameProductTransactionId: string.Empty,
-                    Amount: decimal.Zero,
-                    CurrentBalance: decimal.Zero)
+                    Message: document.RootElement.GetProperty("desc").ToString())
                 : !document.RootElement.TryGetProperty("databaseId", out var jsonGameProductTransactionId) ||
                 !document.RootElement.TryGetProperty("txCode", out var jsonTransactionId) ||
                 !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
@@ -251,12 +245,17 @@ namespace Tgs.GameInterface.AwcService.Repositories
 
             if (status == ((int)GameApiClientError.AccountIsNotExists).ToString("d4"))
             {
-                return new GetBalanceResult(Success: true);
+                return new GetBalanceResult(
+                    Success: true,
+                    Message: document.RootElement.GetProperty("desc").ToString(),
+                    IsPlayerExist: false);
             }
 
             if (status != ((int)GameApiClientError.Success).ToString("d4"))
             {
-                return new GetBalanceResult(Success: false);
+                return new GetBalanceResult(
+                    Success: false,
+                    Message: document.RootElement.GetProperty("desc").ToString());
             }
 
             if (!document.RootElement.TryGetProperty(("results"), out JsonElement results))
