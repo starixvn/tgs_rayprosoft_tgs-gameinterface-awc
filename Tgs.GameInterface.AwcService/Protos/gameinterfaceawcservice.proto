@@ -117,16 +117,18 @@ message GameInterfaceAwcServiceReply {
 }
 message GameInterfaceAwcServiceFundReply {
 	bool success = 1;
-	string transaction_id = 2;
-	string game_product_transaction_id = 3;
-	phoenix.protobuf.DecimalValue amount = 4;
-	phoenix.protobuf.DecimalValue current_balance = 5;
+	string message = 2;
+	string transaction_id = 3;
+	string game_product_transaction_id = 4;
+	phoenix.protobuf.DecimalValue amount = 5;
+	phoenix.protobuf.DecimalValue current_balance = 6;
 }
 
 message GameInterfaceAwcServiceBalanceReply {
 	bool success = 1;
-	bool is_player_exist = 2;
-	phoenix.protobuf.DecimalValue balance = 3;
+	string message = 2;
+	bool is_player_exist = 3;
+	phoenix.protobuf.DecimalValue balance = 4;
 }
 
 message GameInterfaceAwcServiceGameUrlReply {

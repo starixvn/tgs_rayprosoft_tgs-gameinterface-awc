@@ -85,6 +85,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
 
             return new FundResultViewModel(
                 result.Success,
+                result.Message,
                 result.TransactionId,
                 result.GameProductTransactionId,
                 result.Amount,
@@ -125,6 +126,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
 
             return new FundResultViewModel(
                 result.Success,
+                result.Message,
                 result.TransactionId,
                 result.GameProductTransactionId,
                 result.Amount,
@@ -286,6 +288,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
 
             return new BalanceResultViewModel(
                 result.Success,
+                result.Message,
                 result.IsPlayerExist,
                 result.Balance);
         }

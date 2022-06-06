@@ -22,6 +22,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
             return new BalanceResult(
                  Success: result.Success,
+                 Message: result.Message,
                  IsPlayerExist: result.IsPlayerExist,
                  Balance: result.Balance);
         }

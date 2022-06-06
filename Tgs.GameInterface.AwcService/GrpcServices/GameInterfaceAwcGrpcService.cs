@@ -92,6 +92,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceFundReply()
             {
                 Success = result.Success,
+                Message = result.Message,
                 TransactionId = result.TransactionId,
                 GameProductTransactionId = result.GameProductTransactionId,
                 Amount = result.Amount,
@@ -112,6 +113,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceFundReply()
             {
                 Success = result.Success,
+                Message = result.Message,
                 TransactionId = result.TransactionId,
                 GameProductTransactionId = result.GameProductTransactionId,
                 Amount = result.Amount,
@@ -430,6 +432,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceBalanceReply()
             {
                 Success = result.Success,
+                Message = result.Message,
                 IsPlayerExist = result.IsPlayerExist,
                 Balance = result.Balance
             };
