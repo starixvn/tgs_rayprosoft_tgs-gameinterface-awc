@@ -7,7 +7,7 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Controllers
 {
-    [Route("LUDO")]
+    [Route("AWC_LUDO")]
     [ApiController]
     public class LudoController : ControllerBase,
         IBalanceHandler,
@@ -92,6 +92,33 @@ namespace Tgs.GameInterface.AwcService.Controllers
         }
 
         /// <summary>
+        /// Funds the order checking asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Head
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "cnygpiludo",
+        ///             "cert": "wRZ6idEg1YleTSPN3Ra",
+        ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692D"
+        ///         }
+        /// </remarks>
+        [HttpPost("fundorderchecking")]
+        public ValueTask<bool> FundOrderCheckingAsync(
+            [FromServices] IGetService<FundOrderCheckingQuery, bool> service,
+            FundOrderCheckingViewModel model)
+                => service.GetAsync(new FundOrderCheckingQuery(
+                    model.ApiUrl,
+                    model.AgentId,
+                    model.Cert,
+                    model.TransactionId));
+
+        /// <summary>
         /// Funds the out asynchronous.
         /// </summary>
         /// <param name="service">The service.</param>
@@ -112,8 +139,8 @@ namespace Tgs.GameInterface.AwcService.Controllers
         /// </remarks>
         [HttpPost("fund-out")]
         public async ValueTask<FundResultViewModel> FundOutAsync(
-                [FromServices] IGetService<FundOutQuery, FundOutResult> service,
-                FundQueryViewModel model)
+            [FromServices] IGetService<FundOutQuery, FundOutResult> service,
+            FundQueryViewModel model)
         {
             var result = await service.GetAsync(new FundOutQuery(
                 model.ApiUrl,

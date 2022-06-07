@@ -7,7 +7,7 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Controllers
 {
-    [Route("PG")]
+    [Route("AWC_PGS")]
     [ApiController]
     public class PocketGamesSoftController : ControllerBase,
         IBalanceHandler,
@@ -90,6 +90,33 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Amount,
                 result.CurrentBalance);
         }
+
+        /// <summary>
+        /// Funds the order checking asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Head
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "cnygpipgs",
+        ///             "cert": "te2LfPbKlL4f4rQTEBV",
+        ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692D"
+        ///         }
+        /// </remarks>
+        [HttpPost("fundorderchecking")]
+        public ValueTask<bool> FundOrderCheckingAsync(
+            [FromServices] IGetService<FundOrderCheckingQuery, bool> service,
+            FundOrderCheckingViewModel model)
+                => service.GetAsync(new FundOrderCheckingQuery(
+                    model.ApiUrl,
+                    model.AgentId,
+                    model.Cert,
+                    model.TransactionId));
 
         /// <summary>
         /// Funds the out asynchronous.

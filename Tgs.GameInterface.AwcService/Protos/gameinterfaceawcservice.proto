@@ -9,12 +9,13 @@ package gameinterfaceawcservice;
 // The greeting service definition.
 service GameInterfaceAwcService {
   // Sends a greeting
+  rpc CreatePlayer (GameInterfaceAwcServiceCreatePlayerRequest) returns (GameInterfaceAwcServiceReply);
+  rpc CreatePlayerByBetLimit (GameInterfaceAwcServiceCreatePlayerByBetLimitRequest) returns (GameInterfaceAwcServiceReply);
   rpc FundIn (GameInterfaceAwcServiceFundRequest) returns (GameInterfaceAwcServiceFundReply);
+  rpc FundOrderChecking(GameInterfaceAwcServiceFundOrderCheckingRequest) returns (GameInterfaceAwcServiceFundOrderCheckingReply);
   rpc FundOut (GameInterfaceAwcServiceFundRequest) returns (GameInterfaceAwcServiceFundReply);
   rpc GetBalance (GameInterfaceAwcServiceBalanceRequest) returns (GameInterfaceAwcServiceBalanceReply);
   rpc KickPlayer (GameInterfaceAwcServiceKickPlayerRequest) returns (GameInterfaceAwcServiceReply);
-  rpc CreatePlayer (GameInterfaceAwcServiceCreatePlayerRequest) returns (GameInterfaceAwcServiceReply);
-  rpc CreatePlayerByBetLimit (GameInterfaceAwcServiceCreatePlayerByBetLimitRequest) returns (GameInterfaceAwcServiceReply);
   rpc GameUrlByLottoLobbyByAwcAeLotto (GameInterfaceAwcServiceGameUrlByLottoLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcAeLotto (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcAws (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
@@ -39,6 +40,13 @@ message GameInterfaceAwcServiceFundRequest {
 	string player_code = 4;
 	string transaction_id = 5;
 	phoenix.protobuf.DecimalValue amount = 6;
+}
+
+message GameInterfaceAwcServiceFundOrderCheckingRequest {
+	string api_url = 1 ;
+	string agent_id = 2;
+	string cert = 3;
+	string transaction_id = 4;
 }
 
 message GameInterfaceAwcServiceBalanceRequest {
@@ -109,12 +117,11 @@ message GameInterfaceAwcServiceGameUrlByLiveLobbyRequest {
 	string language = 8;
 }
 
-
-
 // The response message containing the greetings.
 message GameInterfaceAwcServiceReply {
 	bool success = 1;
 }
+
 message GameInterfaceAwcServiceFundReply {
 	bool success = 1;
 	string message = 2;
@@ -122,6 +129,10 @@ message GameInterfaceAwcServiceFundReply {
 	string game_product_transaction_id = 4;
 	phoenix.protobuf.DecimalValue amount = 5;
 	phoenix.protobuf.DecimalValue current_balance = 6;
+}
+
+message GameInterfaceAwcServiceFundOrderCheckingReply {
+	bool exist = 1;
 }
 
 message GameInterfaceAwcServiceBalanceReply {
