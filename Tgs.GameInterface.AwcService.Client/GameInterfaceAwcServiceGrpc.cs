@@ -51,6 +51,19 @@ namespace Tgs.GameInterface.AwcService.Client
                 Amount = amount,
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
+        public async ValueTask<bool> FundOrderCheckingAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default)
+        {
+            var reply = await _client.FundOrderCheckingAsync(new GameInterfaceAwcServiceFundOrderCheckingRequest()
+            {
+                ApiUrl = apiUrl.ToString(),
+                AgentId = agentId,
+                Cert = cert,
+                TransactionId = transactionId
+            }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            return reply.Exist;
+        }
+
         public async ValueTask<GameInterfaceAwcServiceFundReply> FundOutAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
             => await _client.FundOutAsync(new GameInterfaceAwcServiceFundRequest()
             {

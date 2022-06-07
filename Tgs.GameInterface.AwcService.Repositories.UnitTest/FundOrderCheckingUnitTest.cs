@@ -82,5 +82,39 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
 
             Assert.IsFalse(actual);
         }
+
+        [TestMethod]
+        public async Task Txcode_Is_Not_Exist()
+        {
+            var apiUrl = new Uri("http://localhost/");
+            var agentId = "testagentid";
+            var cert = "testcert";
+            string txCode = Guid.NewGuid().ToString("N");
+
+            var response = new
+            {
+                status = ((int)GameApiClientError.TxcodeIsNotExist).ToString("d4"),
+                desc = GameApiClientError.TxcodeIsNotExist.ToString()
+            };
+
+            var content = JsonSerializer.Serialize(response);
+            var handler = new MockHttpMessageHandler();
+            _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
+            .Respond(HttpStatusCode.OK, new StringContent(content));
+
+            var fakeHttpClient = handler.ToHttpClient();
+            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeTgsLog = Substitute.For<ITgsLog>();
+            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+
+            _ = await Assert.ThrowsExceptionAsync<Exception>(async () =>
+            {
+                _ = await client.FundOrderCheckingAsync(
+                    apiUrl,
+                    agentId,
+                    cert,
+                    txCode).AsTask().ConfigureAwait(false);
+            });
+        }
     }
 }

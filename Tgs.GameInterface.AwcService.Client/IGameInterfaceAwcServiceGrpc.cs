@@ -10,6 +10,8 @@ namespace Tgs.GameInterface.AwcService.Client
 
         ValueTask<GameInterfaceAwcServiceFundReply> FundInAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
 
+        ValueTask<bool> FundOrderCheckingAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default);
+
         ValueTask<GameInterfaceAwcServiceFundReply> FundOutAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
 
         ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAeLottoAsync(GameInterfaceAwcServiceGameUrlRequest request, CancellationToken cancellationToken = default);

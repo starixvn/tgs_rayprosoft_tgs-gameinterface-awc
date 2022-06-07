@@ -12,6 +12,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
         private readonly ICommandService<CreatePlayerByBetLimitCommand> _createPlayerByBetLimitService;
         private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
         private readonly IGetService<FundInQuery, FundInResult> _fundInService;
+        private readonly IGetService<FundOrderCheckingQuery, bool> _fundOrderCheckingService;
         private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
         private readonly IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> _gameUrlByLiveLobbyService;
         private readonly IGetService<GameUrlByLiveQuery, GameUrlResult> _gameUrlByLiveService;
@@ -21,6 +22,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
 
         public GameInterfaceAwcGrpcService(
             IGetService<FundInQuery, FundInResult> fundInService,
+            IGetService<FundOrderCheckingQuery, bool> fundOrderCheckingService,
             IGetService<FundOutQuery, FundOutResult> fundOutService,
             ICommandService<LogoutCommand> logoutService,
             IGetService<BalanceQuery, BalanceResult> balanceService,
@@ -33,6 +35,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             )
         {
             _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
+            _fundOrderCheckingService = fundOrderCheckingService ?? throw new ArgumentNullException(nameof(fundOrderCheckingService));
             _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
             _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
             _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
@@ -97,6 +100,21 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 GameProductTransactionId = result.GameProductTransactionId,
                 Amount = result.Amount,
                 CurrentBalance = result.CurrentBalance
+            };
+        }
+
+        public override async Task<GameInterfaceAwcServiceFundOrderCheckingReply> FundOrderChecking(GameInterfaceAwcServiceFundOrderCheckingRequest request, ServerCallContext context)
+
+        {
+            var result = await _fundOrderCheckingService.GetAsync(new FundOrderCheckingQuery(
+                new(request.ApiUrl),
+                request.AgentId,
+                request.Cert,
+                request.TransactionId)).ConfigureAwait(false);
+
+            return new GameInterfaceAwcServiceFundOrderCheckingReply()
+            {
+                Exist = result
             };
         }
 

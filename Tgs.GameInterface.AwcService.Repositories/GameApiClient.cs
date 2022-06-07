@@ -168,10 +168,21 @@ namespace Tgs.GameInterface.AwcService.Repositories
                "checkTransferOperation",
                cancellationToken).ConfigureAwait(false);
 
-            return document is null
-                ? throw new Exception("Document is empty.")
-                : document.RootElement.GetProperty("status").GetString() == ((int)GameApiClientError.Success).ToString("d4") &&
-                  document.RootElement.GetProperty("txStatus").ToString() == "1";
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").GetString();
+
+            if (status != ((int)GameApiClientError.Success).ToString("d4"))
+            {
+                throw new Exception($"This game manufacturer's transfer order number does not exist.({transactionId})");
+            }
+
+            var txStatus = document.RootElement.GetProperty("txStatus").GetInt32();
+
+            return txStatus == 1;
         }
 
         public async ValueTask<FundResult> FundOutAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
