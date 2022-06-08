@@ -95,11 +95,11 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceFundReply()
             {
                 Success = result.Success,
-                Message = result.Message,
-                TransactionId = result.TransactionId,
-                GameProductTransactionId = result.GameProductTransactionId,
-                Amount = result.Amount,
-                CurrentBalance = result.CurrentBalance
+                Message = result.Message ?? string.Empty,
+                TransactionId = result.TransactionId ?? string.Empty,
+                GameProductTransactionId = result.GameProductTransactionId ?? string.Empty,
+                Amount = result.Amount ?? decimal.MinusOne,
+                CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
             };
         }
 
@@ -131,11 +131,11 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceFundReply()
             {
                 Success = result.Success,
-                Message = result.Message,
-                TransactionId = result.TransactionId,
-                GameProductTransactionId = result.GameProductTransactionId,
-                Amount = result.Amount,
-                CurrentBalance = result.CurrentBalance
+                Message = result.Message ?? string.Empty,
+                TransactionId = result.TransactionId ?? string.Empty,
+                GameProductTransactionId = result.GameProductTransactionId ?? string.Empty,
+                Amount = result.Amount ?? decimal.MinusOne,
+                CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
             };
         }
 
@@ -156,9 +156,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -179,9 +179,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -202,9 +202,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -225,9 +225,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -248,9 +248,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -271,9 +271,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -294,9 +294,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -317,9 +317,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -340,9 +340,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -364,9 +364,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -388,9 +388,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -411,9 +411,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -433,9 +433,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceGameUrlReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl
+                GameUrl = result.GameUrl ?? string.Empty,
             };
         }
 
@@ -450,9 +450,9 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return new GameInterfaceAwcServiceBalanceReply()
             {
                 Success = result.Success,
-                Message = result.Message,
+                Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
-                Balance = result.Balance
+                Balance = result.Balance ?? decimal.Zero,
             };
         }
 
