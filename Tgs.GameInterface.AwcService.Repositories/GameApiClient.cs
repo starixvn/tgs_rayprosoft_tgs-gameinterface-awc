@@ -358,8 +358,6 @@ namespace Tgs.GameInterface.AwcService.Repositories
 
         public async ValueTask LogoutAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
         {
-
-
             var parameters = new Dictionary<string, string>
             {
                 ["cert"] = cert,
