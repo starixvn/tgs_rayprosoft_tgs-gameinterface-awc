@@ -381,7 +381,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
 
             if (status != ((int)GameApiClientError.Success).ToString("d4"))
             {
-                throw new Exception($"The player has failed to kick the line.({playerCode})");
+                throw new Exception($"The player has failed to kick the line.({playerCode}) |({JsonSerializer.Serialize(document)})");
             }
         }
 
