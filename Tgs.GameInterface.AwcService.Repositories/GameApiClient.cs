@@ -358,6 +358,8 @@ namespace Tgs.GameInterface.AwcService.Repositories
 
         public async ValueTask LogoutAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
         {
+
+
             var parameters = new Dictionary<string, string>
             {
                 ["cert"] = cert,
@@ -365,12 +367,25 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["userIds"] = playerCode,
             };
 
-            var document = await PostAsync(
-                apiUrl,
-                "/wallet/logout",
-                parameters,
-                "logout",
-                cancellationToken).ConfigureAwait(false);
+            var tryCount = 3;
+            var seconds = 20;
+            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+             .WaitAndRetryAsync(tryCount,
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 (result, retryTime, context) =>
+                 {
+                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                         DateTime.Now.ToString("o"),
+                         parameters,
+                         result,
+                         retryTime);
+                 });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/logout", parameters, "logout", cancellationToken));
 
             if (document is null)
             {
