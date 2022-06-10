@@ -11,6 +11,7 @@
         public static readonly string AWC_LUDO = "LUDO";
         public static readonly string AWC_PGS = "PG";
         public static readonly string AWC_RCB = "HORSEBOOK";
+        public static readonly string AWC_SG = "SEXYBCRT";
         public static readonly string AWC_SPADE = "SPADE";
         public static readonly string AWC_VENUS = "VENUS";
         public static readonly string AWC_YL = "YL";

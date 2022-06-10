@@ -370,7 +370,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             };
         }
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcRcb(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcRcb(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
         {
             var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
                 ApiUrl: new(request.ApiUrl),
@@ -394,7 +394,30 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             };
         }
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcVenus(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSg(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        {
+            var result = await _gameUrlByLiveLobbyService.GetAsync(new GameUrlByLiveLobbyQuery(
+                ApiUrl: new(request.ApiUrl),
+                AgentId: request.AgentId,
+                Cert: request.Cert,
+                PlayerCode: request.PlayerCode,
+                IsMobileLogin: request.IsMobileLogin,
+                BackUrl: request.BackUrl,
+                Platform: AwcPlatforms.AWC_SG,
+                BetLimit: request.BetLimit,
+                Language: request.Language
+                )).ConfigureAwait(false);
+
+            return new GameInterfaceAwcServiceGameUrlReply()
+            {
+                Success = result.Success,
+                Message = result.Message ?? string.Empty,
+                IsPlayerExist = result.IsPlayerExist,
+                GameUrl = result.GameUrl ?? string.Empty,
+            };
+        }
+
+        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenus(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
         {
             var result = await _gameUrlByLiveLobbyService.GetAsync(new GameUrlByLiveLobbyQuery(
                 ApiUrl: new(request.ApiUrl),
@@ -417,7 +440,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             };
         }
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByLottoLobbyByAwcAeLotto(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, ServerCallContext context)
+        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLottoLobbyByAwcAeLotto(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, ServerCallContext context)
         {
             var result = await _gameUrlByLottoLobbyService.GetAsync(new GameUrlByLottoLobbyQuery(
                 ApiUrl: new(request.ApiUrl),

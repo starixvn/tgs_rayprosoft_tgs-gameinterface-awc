@@ -22,6 +22,7 @@ service GameInterfaceAwcRecordService {
   rpc GameSettleByAwcKm (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
   rpc GameSettleByAwcLudo (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
   rpc GameSettleByAwcPgs (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
+  rpc GameSettleByAwcSg (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
   rpc GameSettleByAwcSpade (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
   rpc GameSettleByAwcVenus (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
   rpc GameSettleByAwcYl (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);

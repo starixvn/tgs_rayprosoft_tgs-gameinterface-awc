@@ -427,6 +427,51 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             return reply;
         }
 
+        public override async Task<GameSettleTransactionReply> GameSettleByAwcSg(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+        {
+            var result = await _gameSettleTransactionService.QueryAsync(new GameSettleTransactionQuery(
+                ApiUrl: new(request.ApiUrl),
+                AgentId: request.AgentId,
+                Cert: request.Cert,
+                Platform: AwcPlatforms.AWC_SG,
+                StartTime: request.StartTime.ToDateTimeOffset(),
+                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+
+            var reply = new GameSettleTransactionReply();
+
+            result.ForEach(transaction =>
+            {
+                reply.Items.Add(new GameSettleTransaction()
+                {
+                    ExternalRoundId = transaction.ExternalRoundId,
+                    Platform = transaction.Platform,
+                    PlatformTxId = transaction.PlatformTxId,
+                    GameType = transaction.GameType,
+                    GameCode = transaction.GameCode,
+                    GameName = transaction.GameName,
+                    RoundId = transaction.RoundId,
+                    UserId = transaction.UserId,
+                    Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
+                    BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
+                    BetType = transaction.BetType,
+                    BetAmount = transaction.BetAmount,
+                    RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
+                    JackpotBetAmount = transaction.JackpotBetAmount,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo,
+                });
+            });
+
+            return reply;
+        }
+
         public override async Task<GameSettleTransactionReply> GameSettleByAwcSpade(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
         {
             var result = await _gameSettleTransactionService.QueryAsync(new GameSettleTransactionQuery(
