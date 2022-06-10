@@ -47,15 +47,14 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["platform"] = platform
             };
 
-            var tryCount = 1;
-            var seconds = 20;
+            var tryCount = 3;
             var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
             {
                 var status = r?.RootElement.GetProperty("status").GetString();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
              .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
                  (result, retryTime, context) =>
                  {
                      _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
@@ -96,15 +95,14 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["platform"] = platform
             };
 
-            var tryCount = 1;
-            var seconds = 20;
+            var tryCount = 3;
             var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
             {
                 var status = r?.RootElement.GetProperty("status").GetString();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
              .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
                  (result, retryTime, context) =>
                  {
                      _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
@@ -145,15 +143,14 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["status"] = ((int)transactionStatus).ToString()
             };
 
-            var tryCount = 1;
-            var seconds = 20;
+            var tryCount = 3;
             var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
             {
                 var status = r?.RootElement.GetProperty("status").GetString();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
              .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(seconds),
+                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
                  (result, retryTime, context) =>
                  {
                      _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
