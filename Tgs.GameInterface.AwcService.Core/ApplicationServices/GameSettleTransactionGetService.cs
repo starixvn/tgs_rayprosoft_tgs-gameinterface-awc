@@ -37,20 +37,20 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
             {
                 yield return new GameSettleTransactionResult(
                     ExternalRoundId: string.Format("{0}-{1}", query.Platform, transaction.PlatformTxId),
-                    Platform: query.Platform,
-                    PlatformTxId: transaction.PlatformTxId,
-                    GameType: transaction.GameType,
-                    GameCode: transaction.GameCode,
-                    GameName: transaction.GameName,
-                    RoundId: transaction.RoundId,
-                    UserId: transaction.UserId,
-                    Currency: transaction.Currency,
+                    Platform: query.Platform ?? string.Empty,
+                    PlatformTxId: transaction.PlatformTxId ?? string.Empty,
+                    GameType: transaction.GameType ?? string.Empty,
+                    GameCode: transaction.GameCode ?? string.Empty,
+                    GameName: transaction.GameName ?? string.Empty,
+                    RoundId: transaction.RoundId ?? string.Empty,
+                    UserId: transaction.UserId ?? string.Empty,
+                    Currency: transaction.Currency ?? string.Empty,
                     TxStatus: transaction.TxStatus,
                     SettleStatus: transaction.SettleStatus,
-                    BetTime: transaction.BetTime,
-                    TxTime: transaction.TxTime,
-                    UpdateTime: transaction.UpdateTime,
-                    BetType: transaction.BetType,
+                    BetTime: transaction.BetTime ?? string.Empty,
+                    TxTime: transaction.TxTime ?? string.Empty,
+                    UpdateTime: transaction.UpdateTime ?? string.Empty,
+                    BetType: transaction.BetType ?? string.Empty,
                     BetAmount: transaction.BetAmount,
                     RealBetAmount: transaction.RealBetAmount,
                     Turnover: transaction.Turnover,
@@ -58,7 +58,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                     RealWinAmount: transaction.RealWinAmount,
                     JackpotBetAmount: transaction.JackpotBetAmount,
                     JackpotWinAmount: transaction.JackpotWinAmount,
-                    GameInfo: transaction.GameInfo);
+                    GameInfo: transaction.GameInfo ?? string.Empty);
             }
         }
     }
