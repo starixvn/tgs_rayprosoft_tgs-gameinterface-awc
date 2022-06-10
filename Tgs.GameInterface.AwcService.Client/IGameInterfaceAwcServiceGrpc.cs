@@ -34,11 +34,13 @@ namespace Tgs.GameInterface.AwcService.Client
 
         ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcCockfightAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
 
-        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcRcbAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
+        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcRcbAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
 
-        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcVenusAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
+        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSgAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
 
-        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLottoLobbyByAwcAeLottoAsync(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, CancellationToken cancellationToken = default);
+        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenusAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
+
+        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLottoLobbyByAwcAeLottoAsync(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, CancellationToken cancellationToken = default);
 
         ValueTask<GameInterfaceAwcServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);
 

@@ -144,6 +144,54 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
         }
 
         [TestMethod]
+        public async Task Normal_Process_Is_Live_SEXYBCRT()
+        {
+            var apiUrl = new Uri("http://localhost/");
+            var agentId = "testagentid";
+            var cert = "testcert";
+            var playerCode = "4ucmqplxb029";
+            var userName = "4ucmqplxb029";
+            var currencyCode = "HKD";
+            var cultureCode = "cn";
+            var betLimit = JsonSerializer.Serialize(new
+            {
+                SEXYBCRT = new
+                {
+                    LIVE = new
+                    {
+                        limitId = new[] { "280303", "280304", "280305" }
+                    }
+                }
+            });
+
+            var response = new
+            {
+                status = ((int)GameApiClientError.Success).ToString("d4"),
+                desc = GameApiClientError.Success.ToString()
+            };
+
+            var content = JsonSerializer.Serialize(response);
+            var handler = new MockHttpMessageHandler();
+            _ = handler.Expect(HttpMethod.Post, "/wallet/createMember")
+                    .Respond(HttpStatusCode.OK, new StringContent(content));
+
+            var fakeHttpClient = handler.ToHttpClient();
+            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeTgsLog = Substitute.For<ITgsLog>();
+            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+
+            await client.CreatePlayerAsync(
+                apiUrl: apiUrl,
+                agentId: agentId,
+                cert: cert,
+                playerCode: playerCode,
+                userName: userName,
+                currency: currencyCode,
+                betLimit: betLimit,
+                language: cultureCode);
+        }
+
+        [TestMethod]
         public async Task Normal_Process_Is_Live_SV388()
         {
             var apiUrl = new Uri("http://localhost/");

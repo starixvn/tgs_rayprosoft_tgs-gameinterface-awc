@@ -102,6 +102,16 @@ namespace Tgs.GameInterface.AwcService.Client
                 EndTime = endTime.ToTimestamp(),
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
+        public async ValueTask<GameSettleTransactionReply> GameSettleByAwcSgAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
+            => await _client.GameSettleByAwcSgAsync(new GameInterfaceAwcServiceGameSettleRequest()
+            {
+                ApiUrl = apiUrl.ToString(),
+                AgentId = agentId,
+                Cert = cert,
+                StartTime = startTime.ToTimestamp(),
+                EndTime = endTime.ToTimestamp(),
+            }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
         public async ValueTask<GameSettleTransactionReply> GameSettleByAwcSpadeAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
             => await _client.GameSettleByAwcSpadeAsync(new GameInterfaceAwcServiceGameSettleRequest()
             {
