@@ -30,11 +30,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_AELOTTO,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -62,7 +67,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -75,11 +80,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_AWS,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -107,7 +117,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -120,11 +130,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_COCKFIGHT,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -152,7 +167,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -165,11 +180,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_FACAI,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -197,7 +217,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -210,11 +230,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_FS,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -242,7 +267,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -255,11 +280,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_KM,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -287,7 +317,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -300,11 +330,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_LUDO,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -332,7 +367,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -345,11 +380,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_PGS,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -377,7 +417,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -390,11 +430,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_RCB,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -422,7 +467,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -435,11 +480,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_SG,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -467,7 +517,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -480,11 +530,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_SPADE,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -512,7 +567,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -525,11 +580,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_VENUS,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -557,7 +617,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -570,11 +630,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_YL,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameSettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameSettleTransaction()
                 {
@@ -602,7 +667,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotWinAmount = transaction.JackpotWinAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -615,11 +680,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_AELOTTO,
                 StartTime: request.StartTime.ToDateTimeOffset(),
-                EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
+                EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameUnsettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameUnsettleTransaction()
                 {
@@ -639,7 +709,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -652,11 +722,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Cert: request.Cert,
                 Platform: AwcPlatforms.AWC_COCKFIGHT,
                 TimeFrom: request.TimeFrom.ToDateTimeOffset(),
-                TransactionStatus: Core.TransactionStatus.Bet)).ToListAsync().ConfigureAwait(false);
+                TransactionStatus: Core.TransactionStatus.Bet)).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameUnsettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameUnsettleTransaction()
                 {
@@ -676,7 +751,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
@@ -693,7 +768,12 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
 
             var reply = new GameUnsettleTransactionReply();
 
-            result.ForEach(transaction =>
+            if (result is null)
+            {
+                return reply;
+            }
+
+            foreach (var transaction in result)
             {
                 reply.Items.Add(new GameUnsettleTransaction()
                 {
@@ -713,7 +793,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     GameInfo = transaction.GameInfo,
                 });
-            });
+            };
 
             return reply;
         }
