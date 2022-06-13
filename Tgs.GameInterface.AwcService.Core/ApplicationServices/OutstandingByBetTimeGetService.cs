@@ -1,20 +1,25 @@
 ﻿using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    internal class GameSettleTransactionGetService : IQueryService<GameSettleTransactionQuery, GameSettleTransactionResult>
+    public record OutstandingByBetTimeGetService : IQueryService<OutstandingByBetTimeQuery, OutstandingByBetTimeResult>
     {
+        private readonly ILogger<OutstandingByBetTimeGetService> _logger;
         private readonly IGameRecordApiClient _client;
 
-        public GameSettleTransactionGetService(IGameRecordApiClient client)
+        public OutstandingByBetTimeGetService(
+            ILogger<OutstandingByBetTimeGetService> logger,
+            IGameRecordApiClient client)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async IAsyncEnumerable<GameSettleTransactionResult> QueryAsync(GameSettleTransactionQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<OutstandingByBetTimeResult> QueryAsync(OutstandingByBetTimeQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var reslut = await _client.GetTransactionByTxTimeAsync(
+            var reslut = await _client.GetOutstandingByBetTimeAsync(
                 apiUrl: query.ApiUrl,
                 agentId: query.AgentId,
                 cert: query.Cert,
@@ -25,6 +30,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
             if (!reslut.Success)
             {
+                _logger.LogError("Logon:{logon} | Message:{message}", DateTime.UtcNow.ToString("O"), reslut.Message ?? string.Empty);
                 yield break;
             }
 
@@ -35,7 +41,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
             foreach (var transaction in reslut.Transactions)
             {
-                yield return new GameSettleTransactionResult(
+                yield return new OutstandingByBetTimeResult(
                     ExternalRoundId: string.Format("{0}-{1}", query.Platform, transaction.PlatformTxId),
                     Platform: query.Platform ?? string.Empty,
                     PlatformTxId: transaction.PlatformTxId ?? string.Empty,
@@ -45,19 +51,11 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                     RoundId: transaction.RoundId ?? string.Empty,
                     UserId: transaction.UserId ?? string.Empty,
                     Currency: transaction.Currency ?? string.Empty,
-                    TxStatus: transaction.TxStatus,
-                    SettleStatus: transaction.SettleStatus,
                     BetTime: transaction.BetTime ?? string.Empty,
-                    TxTime: transaction.TxTime ?? string.Empty,
-                    UpdateTime: transaction.UpdateTime ?? string.Empty,
                     BetType: transaction.BetType ?? string.Empty,
                     BetAmount: transaction.BetAmount,
                     RealBetAmount: transaction.RealBetAmount,
-                    Turnover: transaction.Turnover,
-                    WinAmount: transaction.WinAmount,
-                    RealWinAmount: transaction.RealWinAmount,
                     JackpotBetAmount: transaction.JackpotBetAmount,
-                    JackpotWinAmount: transaction.JackpotWinAmount,
                     GameInfo: transaction.GameInfo ?? string.Empty);
             }
         }

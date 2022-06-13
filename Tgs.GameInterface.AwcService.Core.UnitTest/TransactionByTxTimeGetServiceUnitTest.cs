@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
@@ -9,7 +10,7 @@ using Tgs.GameInterface.AwcService.Core.Models;
 namespace Tgs.GameInterface.AwcService.Core.UnitTest
 {
     [TestClass]
-    public class GameTransactionGetServiceUnitTest
+    public class TransactionByTxTimeGetServiceUnitTest
     {
         [TestMethod]
         public async Task Normal_Process()
@@ -18,22 +19,24 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var agentId = "testagentid";
             var cert = "testcert";
             var platform = "SEXYBCRT";
-            var timeFrom = DateTimeOffset.Now;
+            var startTime = DateTimeOffset.Now.AddMinutes(-5);
+            var endTime = DateTimeOffset.Now;
 
-            var query = new GameTransactionQuery(
+            var query = new TransactionByTxTimeQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
                 Platform: platform,
-                TimeFrom: timeFrom,
-                TransactionStatus: TransactionStatus.Bet);
+                StartTime: startTime,
+                EndTime: endTime);
 
+            var fakeLogger = NullLogger<TransactionByTxTimeGetService>.Instance;
             var fakeClient = Substitute.For<IGameRecordApiClient>();
 
-            var result = new GetTransactionByUpdateDateResult(
+            var result = new Models.GetTransactionByTxTimeResult(
                 Success: true,
-                Transactions: new GetTransactionByUpdateDateTransaction[] {
-                    new GetTransactionByUpdateDateTransaction(){
+                Transactions: new GetTransactionByTxTimeTransaction[] {
+                    new GetTransactionByTxTimeTransaction(){
                          Platform= "SEXYBCRT",
                         PlatformTxId= "BAC-133992630",
                         GameType= "LIVE",
@@ -58,15 +61,17 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                         GameInfo= "{\"result\":[\"C13\",\"D06\",\"\",\"D11\",\"D04\",\"C10\"],\"roundStartTime\":\"03/11/2021 13:35:57.648\",\"winner\":\"BANKER\",\"ip\":\"192.172.0.1\",\"odds\":-1.0,\"streamerId\":\"\",\"tableId\":1,\"dealerDomain\":\"Mexico\",\"winLoss\":-10.0,\"status\":\"LOSE\"}"
                     }
                 });
-            _ = fakeClient.GetTransactionByUpdateDate(
+            _ = fakeClient.GetTransactionByTxTimeAsync(
                 Arg.Is(apiUrl),
                 Arg.Is(agentId),
                 Arg.Is(cert),
                 Arg.Is(platform),
-                Arg.Is(timeFrom),
-                Arg.Is(TransactionStatus.Bet)).Returns(ValueTask.FromResult(result));
+                Arg.Is(startTime),
+                Arg.Is(endTime)).Returns(ValueTask.FromResult(result));
 
-            var service = new GameTransactionGetService(fakeClient);
+            var service = new TransactionByTxTimeGetService(
+                fakeLogger,
+                fakeClient);
 
             var actual = await service.QueryAsync(query).ToArrayAsync().ConfigureAwait(false);
 

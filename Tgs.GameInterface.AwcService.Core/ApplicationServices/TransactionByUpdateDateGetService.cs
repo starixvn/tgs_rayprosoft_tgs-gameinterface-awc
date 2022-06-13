@@ -1,30 +1,35 @@
 ﻿using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record GameUnsettleTransactionGetService : IQueryService<GameUnsettleTransactionQuery, GameUnsettleTransactionResult>
+    internal class TransactionByUpdateDateGetService : IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult>
     {
         private readonly IGameRecordApiClient _client;
+        private readonly ILogger<TransactionByUpdateDateGetService> _logger;
 
-        public GameUnsettleTransactionGetService(IGameRecordApiClient client)
+        public TransactionByUpdateDateGetService(
+            ILogger<TransactionByUpdateDateGetService> logger,
+            IGameRecordApiClient client)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async IAsyncEnumerable<GameUnsettleTransactionResult> QueryAsync(GameUnsettleTransactionQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<TransactionByUpdateDateResult> QueryAsync(TransactionByUpdateDateQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var reslut = await _client.GetOutstandingByBetTimeAsync(
+            var reslut = await _client.GetTransactionByUpdateDateAsync(
                 apiUrl: query.ApiUrl,
                 agentId: query.AgentId,
                 cert: query.Cert,
                 platform: query.Platform,
-                startTime: query.StartTime,
-                endTime: query.EndTime,
+                timeFrom: query.TimeFrom,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (!reslut.Success)
             {
+                _logger.LogError("Logon:{logon} | Message:{message}", DateTime.UtcNow.ToString("O"), reslut.Message ?? string.Empty);
                 yield break;
             }
 
@@ -35,7 +40,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
             foreach (var transaction in reslut.Transactions)
             {
-                yield return new GameUnsettleTransactionResult(
+                yield return new TransactionByUpdateDateResult(
                     ExternalRoundId: string.Format("{0}-{1}", query.Platform, transaction.PlatformTxId),
                     Platform: query.Platform ?? string.Empty,
                     PlatformTxId: transaction.PlatformTxId ?? string.Empty,
@@ -45,11 +50,19 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                     RoundId: transaction.RoundId ?? string.Empty,
                     UserId: transaction.UserId ?? string.Empty,
                     Currency: transaction.Currency ?? string.Empty,
+                    TxStatus: transaction.TxStatus,
+                    SettleStatus: transaction.SettleStatus,
                     BetTime: transaction.BetTime ?? string.Empty,
+                    TxTime: transaction.TxTime ?? string.Empty,
+                    UpdateTime: transaction.UpdateTime ?? string.Empty,
                     BetType: transaction.BetType ?? string.Empty,
                     BetAmount: transaction.BetAmount,
                     RealBetAmount: transaction.RealBetAmount,
+                    Turnover: transaction.Turnover,
+                    WinAmount: transaction.WinAmount,
+                    RealWinAmount: transaction.RealWinAmount,
                     JackpotBetAmount: transaction.JackpotBetAmount,
+                    JackpotWinAmount: transaction.JackpotWinAmount,
                     GameInfo: transaction.GameInfo ?? string.Empty);
             }
         }

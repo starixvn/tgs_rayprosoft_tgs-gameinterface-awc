@@ -15,6 +15,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IKickPlayerHandler,
         ICreatePlayerHandler,
         IGameUrlHandler,
+        IGamePullRecordHandler,
         IGameSettleHandler
     {
         /// <summary>
@@ -39,8 +40,8 @@ namespace Tgs.GameInterface.AwcService.Controllers
         /// </remarks>
         [HttpPost("create")]
         public ValueTask CreatePlayerAsync(
-                [FromServices] ICommandService<CreatePlayerCommand> service,
-                CreatePlayerViewModel model)
+            [FromServices] ICommandService<CreatePlayerCommand> service,
+            CreatePlayerViewModel model)
                 => service.ExecuteAsync(new CreatePlayerCommand(
                     model.ApiUrl,
                     model.AgentId,
@@ -160,72 +161,6 @@ namespace Tgs.GameInterface.AwcService.Controllers
         }
 
         /// <summary>
-        /// Gamesettles the asynchronous.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <b>Example</b><br />
-        ///
-        ///     Post
-        ///         {
-        ///             "apiUrl": "https://tttint.onlinegames22.com/",
-        ///             "agentId": "cnygpiyl",
-        ///             "cert": "lsOJIO5ejew2DYfjTDV",
-        ///             "startTime": "2022-05-31T07:00:00.000Z",
-        ///             "endTime": "2022-05-31T08:00:00.000Z"
-        ///         }
-        /// </remarks>
-        [HttpPost("game/settle")]
-        public async IAsyncEnumerable<GameSettleTransactionViewModel> GameSettleAsync(
-            [FromServices] IQueryService<GameSettleTransactionQuery, GameSettleTransactionResult> service,
-            GameSettleQueryViewModel model)
-
-        {
-            var result = await service.QueryAsync(new GameSettleTransactionQuery(
-                ApiUrl: model.ApiUrl,
-                AgentId: model.AgentId,
-                Cert: model.Cert,
-                Platform: AwcPlatforms.AWC_YL,
-                StartTime: model.StartTime,
-                EndTime: model.EndTime)).ToArrayAsync().ConfigureAwait(false);
-
-            if (!result.Any())
-            {
-                yield break;
-            }
-
-            foreach (var transaction in result)
-            {
-                yield return new GameSettleTransactionViewModel(
-                    ExternalRoundId: transaction.ExternalRoundId,
-                    Platform: transaction.Platform,
-                    PlatformTxId: transaction.PlatformTxId,
-                    GameType: transaction.GameType,
-                    GameCode: transaction.GameCode,
-                    GameName: transaction.GameName,
-                    RoundId: transaction.RoundId,
-                    UserId: transaction.UserId,
-                    Currency: transaction.Currency,
-                    TxStatus: transaction.TxStatus,
-                    SettleStatus: transaction.SettleStatus,
-                    BetTime: transaction.BetTime,
-                    TxTime: transaction.TxTime,
-                    UpdateTime: transaction.UpdateTime,
-                    BetType: transaction.BetType,
-                    BetAmount: transaction.BetAmount,
-                    RealBetAmount: transaction.RealBetAmount,
-                    Turnover: transaction.Turnover,
-                    WinAmount: transaction.WinAmount,
-                    RealWinAmount: transaction.RealWinAmount,
-                    JackpotBetAmount: transaction.JackpotBetAmount,
-                    JackpotWinAmount: transaction.JackpotWinAmount,
-                    GameInfo: transaction.GameInfo);
-            }
-        }
-
-        /// <summary>
         /// Games the URL asynchronous.
         /// </summary>
         /// <param name="service">The service.</param>
@@ -260,8 +195,8 @@ namespace Tgs.GameInterface.AwcService.Controllers
         /// </remarks>
         [HttpPost("gameurl")]
         public async ValueTask<GameUrlResultViewModel> GameUrlAsync(
-                [FromServices] IGetService<GameUrlQuery, GameUrlResult> service,
-                GameUrlQueryViewModel model)
+            [FromServices] IGetService<GameUrlQuery, GameUrlResult> service,
+            GameUrlQueryViewModel model)
         {
             var result = await service.GetAsync(new GameUrlQuery(
                 ApiUrl: model.ApiUrl,
@@ -301,8 +236,8 @@ namespace Tgs.GameInterface.AwcService.Controllers
         /// </remarks>
         [HttpPost("balance")]
         public async ValueTask<BalanceResultViewModel> GetBalanceAsync(
-                [FromServices] IGetService<BalanceQuery, BalanceResult> service,
-                BalanceQueryViewModel model)
+            [FromServices] IGetService<BalanceQuery, BalanceResult> service,
+            BalanceQueryViewModel model)
         {
             var result = await service.GetAsync(new BalanceQuery(
                 model.ApiUrl,
@@ -316,6 +251,138 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Message,
                 result.IsPlayerExist,
                 result.Balance);
+        }
+
+        /// <summary>
+        /// Gets the game pull record asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "cnygpiyl",
+        ///             "cert": "lsOJIO5ejew2DYfjTDV",
+        ///             "timeFrom": "2022-06-01T08:00:00.000Z"
+        ///         }
+        ///
+        /// </remarks>
+        [HttpPost("game/pullrecord")]
+        public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
+            [FromServices] IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> service,
+            GamePullRecordQueryViewModel model)
+
+        {
+            var result = await service.QueryAsync(new TransactionByUpdateDateQuery(
+                ApiUrl: model.ApiUrl,
+                AgentId: model.AgentId,
+                Cert: model.Cert,
+                Platform: AwcPlatforms.AWC_YL,
+                TimeFrom: model.TimeFrom)).ToArrayAsync().ConfigureAwait(false);
+
+            if (!result.Any())
+            {
+                yield break;
+            }
+
+            foreach (var transaction in result)
+            {
+                yield return new GamePullRecordResultViewModel(
+                    ExternalRoundId: transaction.ExternalRoundId,
+                    Platform: transaction.Platform,
+                    PlatformTxId: transaction.PlatformTxId,
+                    GameType: transaction.GameType,
+                    GameCode: transaction.GameCode,
+                    GameName: transaction.GameName,
+                    RoundId: transaction.RoundId,
+                    UserId: transaction.UserId,
+                    Currency: transaction.Currency,
+                    TxStatus: transaction.TxStatus,
+                    SettleStatus: transaction.SettleStatus,
+                    BetTime: transaction.BetTime,
+                    TxTime: transaction.TxTime,
+                    UpdateTime: transaction.UpdateTime,
+                    BetType: transaction.BetType,
+                    BetAmount: transaction.BetAmount,
+                    RealBetAmount: transaction.RealBetAmount,
+                    Turnover: transaction.Turnover,
+                    WinAmount: transaction.WinAmount,
+                    RealWinAmount: transaction.RealWinAmount,
+                    JackpotBetAmount: transaction.JackpotBetAmount,
+                    JackpotWinAmount: transaction.JackpotWinAmount,
+                    GameInfo: transaction.GameInfo);
+            }
+        }
+
+        /// <summary>
+        /// Gets the game settle asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "cnygpiyl",
+        ///             "cert": "lsOJIO5ejew2DYfjTDV",
+        ///             "startTime": "2022-06-10T05:30:00.000Z",
+        ///             "endTime": "2022-06-10T06:30:00.000Z"
+        ///         }
+        ///
+        /// </remarks>
+        [HttpPost("game/settle")]
+        public async IAsyncEnumerable<GameSettleTransactionViewModel> GetGameSettleAsync(
+            [FromServices] IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> service,
+            GameSettleQueryViewModel model)
+        {
+            var result = await service.QueryAsync(new TransactionByTxTimeQuery(
+                ApiUrl: model.ApiUrl,
+                AgentId: model.AgentId,
+                Cert: model.Cert,
+                Platform: AwcPlatforms.AWC_YL,
+                StartTime: model.StartTime,
+                EndTime: model.EndTime
+                )).ToArrayAsync().ConfigureAwait(false);
+
+            if (!result.Any())
+            {
+                yield break;
+            }
+
+            foreach (var transaction in result)
+            {
+                yield return new GameSettleTransactionViewModel(
+                    ExternalRoundId: transaction.ExternalRoundId,
+                    Platform: transaction.Platform,
+                    PlatformTxId: transaction.PlatformTxId,
+                    GameType: transaction.GameType,
+                    GameCode: transaction.GameCode,
+                    GameName: transaction.GameName,
+                    RoundId: transaction.RoundId,
+                    UserId: transaction.UserId,
+                    Currency: transaction.Currency,
+                    TxStatus: transaction.TxStatus,
+                    SettleStatus: transaction.SettleStatus,
+                    BetTime: transaction.BetTime,
+                    TxTime: transaction.TxTime,
+                    UpdateTime: transaction.UpdateTime,
+                    BetType: transaction.BetType,
+                    BetAmount: transaction.BetAmount,
+                    RealBetAmount: transaction.RealBetAmount,
+                    Turnover: transaction.Turnover,
+                    WinAmount: transaction.WinAmount,
+                    RealWinAmount: transaction.RealWinAmount,
+                    JackpotBetAmount: transaction.JackpotBetAmount,
+                    JackpotWinAmount: transaction.JackpotWinAmount,
+                    GameInfo: transaction.GameInfo);
+            }
         }
 
         /// <summary>
@@ -336,7 +403,9 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///         }
         /// </remarks>
         [HttpPost("kick")]
-        public ValueTask KickPlayerAsync([FromServices] ICommandService<LogoutCommand> service, KickPlayerViewModel model)
+        public ValueTask KickPlayerAsync(
+            [FromServices] ICommandService<LogoutCommand> service,
+            KickPlayerViewModel model)
         => service.ExecuteAsync(new LogoutCommand(
             model.ApiUrl,
             model.AgentId,

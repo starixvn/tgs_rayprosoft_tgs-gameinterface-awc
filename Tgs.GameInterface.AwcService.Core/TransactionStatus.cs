@@ -8,6 +8,6 @@
         Void = 2,
         SCRATCHInHorsebook = 3,
         RefundBetOfPlaceInHRB = 5,
-        InvalidTransactionInSV388 = 9,
+        InvalidTransactionInSV388 = 9
     }
 }

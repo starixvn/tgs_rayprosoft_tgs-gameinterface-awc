@@ -132,7 +132,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 Transactions: transactions.Deserialize<IEnumerable<GetTransactionByTxTimeTransaction>>(_SerializerOptions));
         }
 
-        public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDate(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, CancellationToken cancellationToken = default)
+        public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -141,6 +141,53 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["timeFrom"] = timeFrom.ToIso8601String(),
                 ["platform"] = platform,
                 ["status"] = ((int)transactionStatus).ToString()
+            };
+
+            var tryCount = 3;
+            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+             .WaitAndRetryAsync(tryCount,
+                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
+                 (result, retryTime, context) =>
+                 {
+                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                         DateTime.Now.ToString("o"),
+                         parameters,
+                         result,
+                         retryTime);
+                 });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/fetch/gzip/getTransactionByUpdateDate", parameters, "getTransactionByUpdateDate", cancellationToken));
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var status = document.RootElement.GetProperty("status").ToString();
+
+            return status != ((int)GameApiClientError.Success).ToString("d4")
+                ? new GetTransactionByUpdateDateResult(
+                    Success: false,
+                    Message: document.RootElement.GetProperty("desc").ToString())
+                : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
+                ? throw new Exception("JsonElement failed to parse transactions.")
+                : new GetTransactionByUpdateDateResult(
+                Success: true,
+                Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions));
+        }
+
+        public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cert"] = cert,
+                ["agentId"] = agentId,
+                ["timeFrom"] = timeFrom.ToIso8601String(),
+                ["platform"] = platform
             };
 
             var tryCount = 3;
