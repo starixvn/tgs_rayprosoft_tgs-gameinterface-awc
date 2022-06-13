@@ -281,6 +281,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///         }
         ///
         /// </remarks>
+        [HttpPost("game/settle")]
         public async IAsyncEnumerable<GameSettleTransactionViewModel> GetGameSettleAsync(
             [FromServices] IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> service,
             GameSettleQueryViewModel model)
