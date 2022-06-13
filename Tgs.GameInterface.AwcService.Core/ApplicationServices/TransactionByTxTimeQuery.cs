@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record GameSettleTransactionQuery(
+    public record TransactionByTxTimeQuery(
         Uri ApiUrl,
         string AgentId,
         string Cert,

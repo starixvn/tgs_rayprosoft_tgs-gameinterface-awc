@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
@@ -9,7 +10,7 @@ using Tgs.GameInterface.AwcService.Core.Models;
 namespace Tgs.GameInterface.AwcService.Core.UnitTest
 {
     [TestClass]
-    public class GameUnsettleTransactionGetServiceUnitTest
+    public class OutstandingByBetTimeGetServiceUnitTest
     {
         [TestMethod]
         public async Task Normal_Process()
@@ -21,7 +22,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var startTime = DateTimeOffset.Now.AddMinutes(-5);
             var endTime = DateTimeOffset.Now;
 
-            var query = new GameUnsettleTransactionQuery(
+            var query = new OutstandingByBetTimeQuery(
                 ApiUrl: apiUrl,
                 AgentId: agentId,
                 Cert: cert,
@@ -29,9 +30,10 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 StartTime: startTime,
                 EndTime: endTime);
 
+            var fakeLogger = NullLogger<OutstandingByBetTimeGetService>.Instance;
             var fakeClient = Substitute.For<IGameRecordApiClient>();
 
-            var result = new GetOutstandingByBetTimeResult(
+            var result = new Models.GetOutstandingByBetTimeResult(
                 Success: true,
                 Transactions: new GetOutstandingByBetTimeTransaction[] {
                     new GetOutstandingByBetTimeTransaction(){
@@ -58,7 +60,9 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 Arg.Is(startTime),
                 Arg.Is(endTime)).Returns(ValueTask.FromResult(result));
 
-            var service = new GameUnsettleTransactionGetService(fakeClient);
+            var service = new OutstandingByBetTimeGetService(
+                fakeLogger,
+                fakeClient);
 
             var actual = await service.QueryAsync(query).ToArrayAsync().ConfigureAwait(false);
 

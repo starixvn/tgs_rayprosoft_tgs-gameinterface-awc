@@ -10,22 +10,35 @@ package gameinterfaceawcrecordservice;
 // The greeting service definition.
 service GameInterfaceAwcRecordService {
   // Sends a greeting
-  rpc GameSettleByAwcAeLotto (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameUnsettleByAwcAeLotto (GameInterfaceAwcServiceGameUnsettleRequest) returns (GameUnsettleTransactionReply);
-  rpc GameSettleByAwcAws (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcCockfight (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameUnsettleByAwcCockfight (GameInterfaceAwcServiceCockFightGameUnsettleRequest) returns (GameUnsettleTransactionReply);
-  rpc GameSettleByAwcFacai (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcFs (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcRcb (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameUnsettleByAwcRcb (GameInterfaceAwcServiceGameUnsettleRequest) returns (GameUnsettleTransactionReply);
-  rpc GameSettleByAwcKm (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcLudo (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcPgs (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcSg (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcSpade (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcVenus (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
-  rpc GameSettleByAwcYl (GameInterfaceAwcServiceGameSettleRequest) returns (GameSettleTransactionReply);
+  rpc GamePullRecordByAwcAeLotto (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcAws (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcCockfight (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcFacai (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcFs (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcKm (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcLudo (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcPgs (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcRcb (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcSg (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcSpade (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcVenus (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GamePullRecordByAwcYl (GameInterfaceAwcServiceGamePullRecordeRequest) returns (GameInterfaceAwcServiceGamePullRecordReply);
+  rpc GameSettleByAwcAeLotto (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcAws (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcCockfight (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcFacai (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcFs (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcKm (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcLudo (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcPgs (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcRcb (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcSg (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcSpade (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcVenus (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameSettleByAwcYl (GameInterfaceAwcServiceGameSettleRequest) returns (GameInterfaceAwcServiceGameSettleRecordReply);
+  rpc GameUnsettleByAwcAeLotto (GameInterfaceAwcServiceGameUnsettleRequest) returns (GameInterfaceAwcServiceGameUnsettleRecordReply);
+  rpc GameUnsettleByAwcCockfight (GameInterfaceAwcServiceCockFightGameUnsettleRequest) returns (GameInterfaceAwcServiceGameUnsettleRecordReply);
+  rpc GameUnsettleByAwcRcb (GameInterfaceAwcServiceGameUnsettleRequest) returns (GameInterfaceAwcServiceGameUnsettleRecordReply);
 }
 
 // The request message containing the user's name.
@@ -52,14 +65,21 @@ message GameInterfaceAwcServiceCockFightGameUnsettleRequest {
 	google.protobuf.Timestamp time_from=4; 
 }
 
+message GameInterfaceAwcServiceGamePullRecordeRequest {
+	string api_url = 1 ;
+	string agent_id = 2;
+	string cert = 3;
+	google.protobuf.Timestamp time_from=4; 
+}
+
 
 
 // The response message containing the greetings.
-message GameSettleTransactionReply {
-	repeated GameSettleTransaction items = 1;
+message GameInterfaceAwcServiceGamePullRecordReply {
+	repeated GameInterfaceAwcServiceGamePullRecord items = 1;
 }
 
-message GameSettleTransaction {
+message GameInterfaceAwcServiceGamePullRecord {
 	string external_round_id = 1;
 	string platform = 2;
 	string platform_tx_id = 3;
@@ -85,11 +105,41 @@ message GameSettleTransaction {
 	string game_info = 23;
 }
 
-message GameUnsettleTransactionReply {
-	repeated GameUnsettleTransaction items = 1;
+message GameInterfaceAwcServiceGameSettleRecordReply {
+	repeated GameInterfaceAwcServiceGameSettleRecord items = 1;
 }
 
-message GameUnsettleTransaction {
+message GameInterfaceAwcServiceGameSettleRecord {
+	string external_round_id = 1;
+	string platform = 2;
+	string platform_tx_id = 3;
+	string game_type = 4;
+	string game_code = 5;
+	string game_name = 6;
+	string round_id = 7;
+	string user_id = 8;
+	string currency = 9;
+	int32 tx_status = 10;
+	int32 settle_status = 11;
+	string bet_time=12; 
+	string tx_time=13; 
+	string update_time=14; 
+	string bet_type = 15;
+	phoenix.protobuf.DecimalValue bet_amount = 16;
+	phoenix.protobuf.DecimalValue real_bet_amount = 17;
+	phoenix.protobuf.DecimalValue turnover = 18;
+	phoenix.protobuf.DecimalValue win_amount = 19;
+	phoenix.protobuf.DecimalValue real_win_amount = 20;
+	phoenix.protobuf.DecimalValue jackpot_bet_amount = 21;
+	phoenix.protobuf.DecimalValue jackpot_win_amount = 22;
+	string game_info = 23;
+}
+
+message GameInterfaceAwcServiceGameUnsettleRecordReply {
+	repeated GameInterfaceAwcServiceGameUnsettleRecord items = 1;
+}
+
+message GameInterfaceAwcServiceGameUnsettleRecord {
 	string external_round_id = 1;
 	string platform = 2;
 	string platform_tx_id = 3;
