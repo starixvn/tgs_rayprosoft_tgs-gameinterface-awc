@@ -54,12 +54,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -95,12 +103,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -136,12 +152,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -177,12 +201,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -218,12 +250,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -259,12 +299,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -300,12 +348,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -341,12 +397,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -382,12 +446,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -423,12 +495,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -464,12 +544,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -505,12 +593,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -546,12 +642,20 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RoundId = transaction.RoundId,
                     UserId = transaction.UserId,
                     Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
                     BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
                     BetType = transaction.BetType,
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -601,7 +705,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -651,7 +755,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -701,7 +805,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -751,7 +855,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -801,7 +905,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -851,7 +955,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -901,7 +1005,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -951,7 +1055,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1001,7 +1105,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1051,7 +1155,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1101,7 +1205,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1151,7 +1255,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1201,7 +1305,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     RealWinAmount = transaction.RealWinAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
                     JackpotWinAmount = transaction.JackpotWinAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1243,7 +1347,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1285,7 +1389,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
@@ -1327,7 +1431,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                     BetAmount = transaction.BetAmount,
                     RealBetAmount = transaction.RealBetAmount,
                     JackpotBetAmount = transaction.JackpotBetAmount,
-                    GameInfo = transaction.GameInfo,
+                    GameInfo = transaction.GameInfo
                 });
             };
 
