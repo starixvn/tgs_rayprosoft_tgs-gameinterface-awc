@@ -6,7 +6,7 @@
         public static readonly string AWC_AWS = "AWS";
         public static readonly string AWC_COCKFIGHT = "SV388";
         public static readonly string AWC_FACAI = "FC";
-        public static readonly string AWC_FS = "FS";
+        public static readonly string AWC_FS = "FASTSPIN";
         public static readonly string AWC_KM = "KINGMAKER";
         public static readonly string AWC_LUDO = "LUDO";
         public static readonly string AWC_PGS = "PG";
