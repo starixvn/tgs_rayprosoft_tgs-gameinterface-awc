@@ -19,7 +19,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
         public async IAsyncEnumerable<TransactionByTxTimeResult> QueryAsync(TransactionByTxTimeQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var reslut = await _client.GetTransactionByTxTimeAsync(
+            var result = await _client.GetTransactionByTxTimeAsync(
                 apiUrl: query.ApiUrl,
                 agentId: query.AgentId,
                 cert: query.Cert,
@@ -28,18 +28,18 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                 endTime: query.EndTime,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            if (!reslut.Success)
+            if (!result.Success)
             {
-                _logger.LogError("Logon:{logon} | Message:{message}", DateTime.UtcNow.ToString("O"), reslut.Message ?? string.Empty);
+                _logger.LogError("Logon:{logon} | Message:{message}", DateTime.UtcNow.ToString("O"), result.Message ?? string.Empty);
                 yield break;
             }
 
-            if (reslut.Transactions is null || !reslut.Transactions.Any())
+            if (result.Transactions is null || !result.Transactions.Any())
             {
                 yield break;
             }
 
-            foreach (var transaction in reslut.Transactions)
+            foreach (var transaction in result.Transactions)
             {
                 yield return new TransactionByTxTimeResult(
                     ExternalRoundId: string.Format("{0}-{1}", query.Platform, transaction.PlatformTxId),

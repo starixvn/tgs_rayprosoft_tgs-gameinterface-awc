@@ -141,15 +141,15 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
                 !document.RootElement.TryGetProperty("amount", out var jsonAmount)
                 ? throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})")
-                : !decimal.TryParse(jsonAmount.GetString(), out var reslutAmount) ||
-                !decimal.TryParse(jsonCurrentBalance.GetString(), out var reslutCurrentBalance)
+                : !decimal.TryParse(jsonAmount.GetString(), out var resultAmount) ||
+                !decimal.TryParse(jsonCurrentBalance.GetString(), out var resultCurrentBalance)
                 ? throw new Exception($"Decimal parsing failed.({JsonSerializer.Serialize(document)})")
                 : new FundResult(
                 Success: true,
                 TransactionId: jsonTransactionId.ToString(),
                 GameProductTransactionId: jsonGameProductTransactionId.ToString(),
-                Amount: reslutAmount,
-                CurrentBalance: reslutCurrentBalance);
+                Amount: resultAmount,
+                CurrentBalance: resultCurrentBalance);
         }
 
         public async ValueTask<bool> FundOrderCheckingAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default)
@@ -219,15 +219,15 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
                 !document.RootElement.TryGetProperty("amount", out var jsonAmount)
                 ? throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})")
-                : !decimal.TryParse(jsonAmount.GetString(), out var reslutAmount) ||
-                !decimal.TryParse(jsonCurrentBalance.GetString(), out var reslutCurrentBalance)
+                : !decimal.TryParse(jsonAmount.GetString(), out var resultAmount) ||
+                !decimal.TryParse(jsonCurrentBalance.GetString(), out var resultCurrentBalance)
                 ? throw new Exception($"Decimal parsing failed.({JsonSerializer.Serialize(document)})")
                 : new FundResult(
                 Success: true,
                 TransactionId: jsonTransactionId.ToString(),
                 GameProductTransactionId: jsonGameProductTransactionId.ToString(),
-                Amount: reslutAmount,
-                CurrentBalance: reslutCurrentBalance);
+                Amount: resultAmount,
+                CurrentBalance: resultCurrentBalance);
         }
 
         public async ValueTask<GetBalanceResult> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
