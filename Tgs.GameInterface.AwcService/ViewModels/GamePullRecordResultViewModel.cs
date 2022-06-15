@@ -1,6 +1,6 @@
-﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
+﻿namespace Tgs.GameInterface.AwcService.ViewModels
 {
-    public record GameSettleTransactionResult(
+    public record GamePullRecordResultViewModel(
         string ExternalRoundId,
         string Platform,
         string PlatformTxId,

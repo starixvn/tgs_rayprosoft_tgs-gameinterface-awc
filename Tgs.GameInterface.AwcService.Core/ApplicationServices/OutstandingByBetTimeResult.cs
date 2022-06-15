@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record GameUnsettleTransactionResult(
+    public record OutstandingByBetTimeResult(
         string ExternalRoundId,
         string Platform,
         string PlatformTxId,

@@ -141,15 +141,15 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
                 !document.RootElement.TryGetProperty("amount", out var jsonAmount)
                 ? throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})")
-                : !decimal.TryParse(jsonAmount.GetString(), out var reslutAmount) ||
-                !decimal.TryParse(jsonCurrentBalance.GetString(), out var reslutCurrentBalance)
+                : !decimal.TryParse(jsonAmount.GetString(), out var resultAmount) ||
+                !decimal.TryParse(jsonCurrentBalance.GetString(), out var resultCurrentBalance)
                 ? throw new Exception($"Decimal parsing failed.({JsonSerializer.Serialize(document)})")
                 : new FundResult(
                 Success: true,
                 TransactionId: jsonTransactionId.ToString(),
                 GameProductTransactionId: jsonGameProductTransactionId.ToString(),
-                Amount: reslutAmount,
-                CurrentBalance: reslutCurrentBalance);
+                Amount: resultAmount,
+                CurrentBalance: resultCurrentBalance);
         }
 
         public async ValueTask<bool> FundOrderCheckingAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default)
@@ -219,15 +219,15 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 !document.RootElement.TryGetProperty("currentBalance", out var jsonCurrentBalance) ||
                 !document.RootElement.TryGetProperty("amount", out var jsonAmount)
                 ? throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})")
-                : !decimal.TryParse(jsonAmount.GetString(), out var reslutAmount) ||
-                !decimal.TryParse(jsonCurrentBalance.GetString(), out var reslutCurrentBalance)
+                : !decimal.TryParse(jsonAmount.GetString(), out var resultAmount) ||
+                !decimal.TryParse(jsonCurrentBalance.GetString(), out var resultCurrentBalance)
                 ? throw new Exception($"Decimal parsing failed.({JsonSerializer.Serialize(document)})")
                 : new FundResult(
                 Success: true,
                 TransactionId: jsonTransactionId.ToString(),
                 GameProductTransactionId: jsonGameProductTransactionId.ToString(),
-                Amount: reslutAmount,
-                CurrentBalance: reslutCurrentBalance);
+                Amount: resultAmount,
+                CurrentBalance: resultCurrentBalance);
         }
 
         public async ValueTask<GetBalanceResult> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
@@ -365,12 +365,24 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 ["userIds"] = playerCode,
             };
 
-            var document = await PostAsync(
-                apiUrl,
-                "/wallet/logout",
-                parameters,
-                "logout",
-                cancellationToken).ConfigureAwait(false);
+            var tryCount = 3;
+            var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+             .WaitAndRetryAsync(tryCount,
+                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
+                 (result, retryTime, context) =>
+                 {
+                     _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                         DateTime.Now.ToString("o"),
+                         JsonSerializer.Serialize(parameters),
+                         JsonSerializer.Serialize(result),
+                         retryTime);
+                 });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/wallet/logout", parameters, "logout", cancellationToken));
 
             if (document is null)
             {
@@ -381,7 +393,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
 
             if (status != ((int)GameApiClientError.Success).ToString("d4"))
             {
-                throw new Exception($"The player has failed to kick the line.({playerCode})");
+                throw new Exception($"The player has failed to kick the line.({playerCode}) |({JsonSerializer.Serialize(document)})");
             }
         }
 

@@ -21,7 +21,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                 Platform: query.Platform,
                 Language: query.Language);
 
-            var reslut = await _client.LoginAndLaunchGameAsync(
+            var result = await _client.LoginAndLaunchGameAsync(
                 query.ApiUrl,
                 query.AgentId,
                 query.Cert,
@@ -29,10 +29,10 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                 cancellationToken).ConfigureAwait(false);
 
             return new GameUrlResult(
-                Success: reslut.Success,
-                Message: reslut.Message,
-                IsPlayerExist: reslut.IsPlayerExist,
-                GameUrl: reslut.GameUrl);
+                Success: result.Success,
+                Message: result.Message,
+                IsPlayerExist: result.IsPlayerExist,
+                GameUrl: result.GameUrl);
         }
     }
 }

@@ -16,20 +16,20 @@ service GameInterfaceAwcService {
   rpc FundOut (GameInterfaceAwcServiceFundRequest) returns (GameInterfaceAwcServiceFundReply);
   rpc GetBalance (GameInterfaceAwcServiceBalanceRequest) returns (GameInterfaceAwcServiceBalanceReply);
   rpc KickPlayer (GameInterfaceAwcServiceKickPlayerRequest) returns (GameInterfaceAwcServiceReply);
-  rpc GameUrlByLottoLobbyByAwcAeLotto (GameInterfaceAwcServiceGameUrlByLottoLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcAeLotto (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcAws (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
-  rpc GameUrlByLiveLobbyByAwcCockfight (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcFacai (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcFs (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
-  rpc GameUrlByLiveLobbyByAwcRcb (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcKm (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcLudo (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcPgs (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcSpade (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
-  rpc GameUrlByLiveLobbyByAwcVenus (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlByAwcYl (GameInterfaceAwcServiceGameUrlRequest) returns (GameInterfaceAwcServiceGameUrlReply);
-
+  rpc GameUrlByLiveLobbyByAwcCockfight (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
+  rpc GameUrlLiveLobbyByAwcRcb (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
+  rpc GameUrlLiveLobbyByAwcSg (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
+  rpc GameUrlLiveLobbyByAwcVenus (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
+  rpc GameUrlLottoLobbyByAwcAeLotto (GameInterfaceAwcServiceGameUrlByLottoLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
 }
 
 // The request message containing the user's name.
