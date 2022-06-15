@@ -126,7 +126,7 @@ message GameInterfaceAwcServiceFundReply {
 	bool success = 1;
 	string message = 2;
 	string transaction_id = 3;
-	string game_product_transaction_id = 4;
+	string game_provider_transaction_id = 4;
 	phoenix.protobuf.DecimalValue amount = 5;
 	phoenix.protobuf.DecimalValue current_balance = 6;
 }

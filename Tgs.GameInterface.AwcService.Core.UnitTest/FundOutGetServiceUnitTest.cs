@@ -33,7 +33,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
             var result = new FundResult(
                 Success: true,
                 TransactionId: transactionId,
-                GameProductTransactionId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
+                GameProviderTransactionId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
                 Amount: amount,
                 CurrentBalance: 100m);
             _ = fakeClient.FundOutAsync(
@@ -50,7 +50,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
 
             Assert.IsTrue(actual.Success);
             Assert.AreEqual(result.TransactionId, actual.TransactionId);
-            Assert.AreEqual(result.GameProductTransactionId, actual.GameProductTransactionId);
+            Assert.AreEqual(result.GameProviderTransactionId, actual.GameProviderTransactionId);
             Assert.AreEqual(result.CurrentBalance, actual.CurrentBalance);
         }
     }

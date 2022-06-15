@@ -147,7 +147,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 : new FundResult(
                 Success: true,
                 TransactionId: jsonTransactionId.ToString(),
-                GameProductTransactionId: jsonGameProductTransactionId.ToString(),
+                GameProviderTransactionId: jsonGameProductTransactionId.ToString(),
                 Amount: resultAmount,
                 CurrentBalance: resultCurrentBalance);
         }
@@ -225,7 +225,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
                 : new FundResult(
                 Success: true,
                 TransactionId: jsonTransactionId.ToString(),
-                GameProductTransactionId: jsonGameProductTransactionId.ToString(),
+                GameProviderTransactionId: jsonGameProductTransactionId.ToString(),
                 Amount: resultAmount,
                 CurrentBalance: resultCurrentBalance);
         }

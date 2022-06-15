@@ -97,7 +97,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Success = result.Success,
                 Message = result.Message ?? string.Empty,
                 TransactionId = result.TransactionId ?? string.Empty,
-                GameProductTransactionId = result.GameProductTransactionId ?? string.Empty,
+                GameProviderTransactionId = result.GameProviderTransactionId ?? string.Empty,
                 Amount = result.Amount ?? decimal.MinusOne,
                 CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
             };
@@ -133,7 +133,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 Success = result.Success,
                 Message = result.Message ?? string.Empty,
                 TransactionId = result.TransactionId ?? string.Empty,
-                GameProductTransactionId = result.GameProductTransactionId ?? string.Empty,
+                GameProviderTransactionId = result.GameProviderTransactionId ?? string.Empty,
                 Amount = result.Amount ?? decimal.MinusOne,
                 CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
             };
