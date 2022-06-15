@@ -87,7 +87,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Success,
                 result.Message,
                 result.TransactionId,
-                result.GameProductTransactionId,
+                result.GameProviderTransactionId,
                 result.Amount,
                 result.CurrentBalance);
         }
@@ -155,7 +155,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Success,
                 result.Message,
                 result.TransactionId,
-                result.GameProductTransactionId,
+                result.GameProviderTransactionId,
                 result.Amount,
                 result.CurrentBalance);
         }

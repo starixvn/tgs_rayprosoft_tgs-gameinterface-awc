@@ -26,7 +26,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
                 Success: result.Success,
                 Message: result.Message,
                 TransactionId: result.TransactionId,
-                GameProductTransactionId: result.GameProductTransactionId,
+                GameProviderTransactionId: result.GameProviderTransactionId,
                 Amount: result.Amount,
                 CurrentBalance: result.CurrentBalance);
         }
