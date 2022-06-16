@@ -29,7 +29,6 @@ service GameInterfaceAwcService {
   rpc GameUrlLiveLobbyByAwcRcb (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlLiveLobbyByAwcSg (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
   rpc GameUrlLiveLobbyByAwcVenus (GameInterfaceAwcServiceGameUrlByLiveLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
-  rpc GameUrlLottoLobbyByAwcAeLotto (GameInterfaceAwcServiceGameUrlByLottoLobbyRequest) returns (GameInterfaceAwcServiceGameUrlReply);
 }
 
 // The request message containing the user's name.
@@ -94,16 +93,6 @@ message GameInterfaceAwcServiceGameUrlRequest {
 	string back_url = 6;
 	string external_game_id = 7;
 	string language = 8;
-}
-
-message GameInterfaceAwcServiceGameUrlByLottoLobbyRequest {
-	string api_url = 1 ;
-	string agent_id = 2;
-	string cert = 3;
-	string player_code = 4;
-	bool is_mobile_login = 5;
-	string back_url = 6;
-	string language = 7;
 }
 
 message GameInterfaceAwcServiceGameUrlByLiveLobbyRequest {

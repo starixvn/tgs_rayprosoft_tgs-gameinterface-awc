@@ -16,7 +16,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
         private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
         private readonly IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> _gameUrlByLiveLobbyService;
         private readonly IGetService<GameUrlByLiveQuery, GameUrlResult> _gameUrlByLiveService;
-        private readonly IGetService<GameUrlByLottoLobbyQuery, GameUrlResult> _gameUrlByLottoLobbyService;
         private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
         private readonly ICommandService<LogoutCommand> _logoutService;
 
@@ -30,7 +29,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             ICommandService<CreatePlayerByBetLimitCommand> createPlayerByBetLimitService,
             IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
             IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> gameUrlByLiveLobbyService,
-            IGetService<GameUrlByLottoLobbyQuery, GameUrlResult> gameUrlByLottoLobbyService,
             IGetService<GameUrlByLiveQuery, GameUrlResult> gameUrlByLiveService
             )
         {
@@ -43,7 +41,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             _createPlayerByBetLimitService = createPlayerByBetLimitService ?? throw new ArgumentNullException(nameof(createPlayerByBetLimitService));
             _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
             _gameUrlByLiveLobbyService = gameUrlByLiveLobbyService ?? throw new ArgumentNullException(nameof(gameUrlByLiveLobbyService));
-            _gameUrlByLottoLobbyService = gameUrlByLottoLobbyService ?? throw new ArgumentNullException(nameof(gameUrlByLottoLobbyService));
             _gameUrlByLiveService = gameUrlByLiveService ?? throw new ArgumentNullException(nameof(gameUrlByLiveService));
         }
 
@@ -428,28 +425,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 BackUrl: request.BackUrl,
                 Platform: AwcPlatforms.AWC_VENUS,
                 BetLimit: request.BetLimit,
-                Language: request.Language
-                )).ConfigureAwait(false);
-
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
-
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLottoLobbyByAwcAeLotto(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, ServerCallContext context)
-        {
-            var result = await _gameUrlByLottoLobbyService.GetAsync(new GameUrlByLottoLobbyQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_AELOTTO,
                 Language: request.Language
                 )).ConfigureAwait(false);
 

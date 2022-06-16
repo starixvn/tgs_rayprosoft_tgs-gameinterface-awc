@@ -15,7 +15,6 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IKickPlayerHandler,
         ICreatePlayerHandler,
         IGameUrlHandler,
-        ILobbyGameUrlByLottoHandler,
         IGamePullRecordHandler,
         IGameSettleHandler
     {
@@ -399,49 +398,5 @@ namespace Tgs.GameInterface.AwcService.Controllers
             model.AgentId,
             model.Cert,
             model.PlayerCode));
-
-        /// <summary>
-        /// Lobbies the game URL by lotto asynchronous.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <b>Example</b><br />
-        ///
-        ///     Post
-        ///         {
-        ///             "apiUrl": "https://tttint.onlinegames22.com/",
-        ///             "agentId": "thbgpiaelotto",
-        ///             "cert": "sJQKnLeKugNHE7yqW7C",
-        ///             "playerCode": "devtestthb001",
-        ///             "isMobileLogin": false,
-        ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "language": "cn"
-        ///         }
-        ///
-        /// </remarks>
-        [HttpPost("lobby/lotto")]
-        public async ValueTask<GameUrlResultViewModel> LobbyGameUrlByLottoAsync(
-            [FromServices] IGetService<GameUrlByLottoLobbyQuery, GameUrlResult> service,
-            GameUrlByLottoLobbyQueryViewModel model)
-        {
-            var result = await service.GetAsync(new GameUrlByLottoLobbyQuery(
-                ApiUrl: model.ApiUrl,
-                AgentId: model.AgentId,
-                Cert: model.Cert,
-                PlayerCode: model.PlayerCode,
-                IsMobileLogin: model.IsMobileLogin,
-                BackUrl: model.BackUrl,
-                Platform: AwcPlatforms.AWC_AELOTTO,
-                Language: model.Language
-                )).ConfigureAwait(false);
-
-            return new GameUrlResultViewModel(
-                Success: result.Success,
-                Message: result.Message,
-                IsPlayerExist: result.IsPlayerExist,
-                GameUrl: result.GameUrl);
-        }
     }
 }
