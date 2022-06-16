@@ -177,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "PG-SLOT-001",
+        ///             "externalGameId": "PG-SLOT-001",
         ///             "language": "cn"
         ///         }
         ///
@@ -189,7 +189,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "PG-TABLE-001",
+        ///             "externalGameId": "PG-TABLE-001",
         ///             "language": "cn"
         ///         }
         /// </remarks>

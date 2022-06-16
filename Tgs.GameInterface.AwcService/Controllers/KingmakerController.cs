@@ -177,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "KM-TABLE-009",
+        ///             "externalGameId": "KM-TABLE-009",
         ///             "language": "cn"
         ///         }
         ///
