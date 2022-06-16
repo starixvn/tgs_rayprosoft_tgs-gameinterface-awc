@@ -114,9 +114,6 @@ namespace Tgs.GameInterface.AwcService.Client
         public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenusAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
             => await _client.GameUrlLiveLobbyByAwcVenusAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLottoLobbyByAwcAeLottoAsync(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, CancellationToken cancellationToken = default)
-            => await _client.GameUrlLottoLobbyByAwcAeLottoAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
-
         public async ValueTask<GameInterfaceAwcServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
             => await _client.GetBalanceAsync(new GameInterfaceAwcServiceBalanceRequest()
             {

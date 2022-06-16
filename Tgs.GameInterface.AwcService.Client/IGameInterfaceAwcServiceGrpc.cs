@@ -40,8 +40,6 @@ namespace Tgs.GameInterface.AwcService.Client
 
         ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenusAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default);
 
-        ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLottoLobbyByAwcAeLottoAsync(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, CancellationToken cancellationToken = default);
-
         ValueTask<GameInterfaceAwcServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);
 
         ValueTask KickPlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);

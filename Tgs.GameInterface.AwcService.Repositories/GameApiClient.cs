@@ -320,23 +320,6 @@ namespace Tgs.GameInterface.AwcService.Repositories
             return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
         }
 
-        public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLottoLobby data, CancellationToken cancellationToken = default)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                ["cert"] = cert,
-                ["agentId"] = agentId,
-                ["userId"] = data.PlayerCode,
-                ["isMobileLogin"] = data.IsMobileLogin.ToString(),
-                ["externalURL"] = data.BackUrl,
-                ["platform"] = data.Platform,
-                ["gameType"] = AwcGameTypes.LOTTO.ToString(),
-                ["language"] = data.Language,
-            };
-
-            return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
-        }
-
         public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLive data, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
