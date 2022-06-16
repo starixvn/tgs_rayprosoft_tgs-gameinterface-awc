@@ -177,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "{playerCode}",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "FastSpin-SLOT-003",
+        ///             "externalGameId": "FastSpin-SLOT-003",
         ///             "language": "cn"
         ///         }
         /// </remarks>

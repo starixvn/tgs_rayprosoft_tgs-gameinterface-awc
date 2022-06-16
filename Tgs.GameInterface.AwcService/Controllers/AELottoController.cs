@@ -177,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "devtestthb001",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "AE-LOTTO-021",
+        ///             "externalGameId": "AE-LOTTO-021",
         ///             "language": "cn"
         ///         }
         /// </remarks>

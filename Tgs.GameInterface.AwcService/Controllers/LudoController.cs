@@ -177,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "LUDO-TABLE-001",
+        ///             "externalGameId": "LUDO-TABLE-001",
         ///             "language": "cn"
         ///         }
         ///

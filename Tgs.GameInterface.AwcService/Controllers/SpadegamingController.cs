@@ -177,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": SG-FISH-001",
+        ///             "externalGameId": SG-FISH-001",
         ///             "language": "cn"
         ///         }
         ///
@@ -189,7 +189,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "SG-SLOT-002",
+        ///             "externalGameId": "SG-SLOT-002",
         ///             "language": "cn"
         ///         }
         /// </remarks>
