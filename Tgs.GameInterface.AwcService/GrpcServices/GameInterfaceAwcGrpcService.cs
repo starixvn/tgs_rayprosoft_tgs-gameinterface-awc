@@ -393,7 +393,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
 
         public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSg(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
         {
-            var result = await _gameUrlByLiveLobbyService.GetAsync(new GameUrlByLiveLobbyQuery(
+            var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -401,6 +401,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 IsMobileLogin: request.IsMobileLogin,
                 BackUrl: request.BackUrl,
                 Platform: AwcPlatforms.AWC_SG,
+                ExternalGameId: "MX-LIVE-002",
                 BetLimit: request.BetLimit,
                 Language: request.Language
                 )).ConfigureAwait(false);
