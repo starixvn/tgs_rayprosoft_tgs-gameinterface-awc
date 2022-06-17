@@ -14,7 +14,6 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IFundHandler,
         IKickPlayerHandler,
         ICreatePlayerByBetLimitHandler,
-        ILobbyGameUrlByLiveHandler,
         IGamePullRecordHandler,
         IGameSettleHandler
 
@@ -368,22 +367,22 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///         {
         ///             "apiUrl": "https://tttint.onlinegames22.com/",
         ///             "agentId": "cnygpisg",
-        ///             "cert": "DfyfVhwJ8akfz2aGo3K",
+        ///             "cert": "mFlxPF8LKwuVpDBE1Cw",
         ///             "playerCode": "4ucmqplxb029",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "betLimit": "{\"SEXYBCRT\":{\"LIVE\":{\"limitId\":[280303,280304,280305]}}}",
+        ///             "betLimit": "{\"SEXYBCRT\":{\"LIVE\":{\"limitId\":[280301,280302,280303]}}}",
         ///             "language": "cn"
         ///         }
         ///
         /// </remarks>
         [HttpPost("lobby/live")]
         public async ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync(
-            [FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service,
+            [FromServices] IGetService<GameUrlByLiveQuery, GameUrlResult> service,
             GameUrlByLiveLobbyQueryViewModel model)
 
         {
-            var result = await service.GetAsync(new GameUrlByLiveLobbyQuery(
+            var result = await service.GetAsync(new GameUrlByLiveQuery(
                 ApiUrl: model.ApiUrl,
                 AgentId: model.AgentId,
                 Cert: model.Cert,
@@ -391,6 +390,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 IsMobileLogin: model.IsMobileLogin,
                 BackUrl: model.BackUrl,
                 Platform: AwcPlatforms.AWC_SG,
+                ExternalGameId: "MX-LIVE-002",
                 BetLimit: model.BetLimit,
                 Language: model.Language)).ConfigureAwait(false);
 
