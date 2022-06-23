@@ -36,7 +36,7 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest
                 GameProviderTransactionId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
                 Amount: amount,
                 CurrentBalance: 0);
-            _ = fakeClient.FundInAsync(
+            _ = fakeClient.WithdrawAsync(
                 Arg.Is(apiUrl),
                 Arg.Is(agentId),
                 Arg.Is(cert),

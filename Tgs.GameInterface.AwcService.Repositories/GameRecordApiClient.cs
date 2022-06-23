@@ -96,13 +96,14 @@ namespace Tgs.GameInterface.AwcService.Repositories
             };
 
             var tryCount = 3;
+            var seconds = 20;
             var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
             {
                 var status = r?.RootElement.GetProperty("status").GetString();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
              .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
                  (result, retryTime, context) =>
                  {
                      _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
@@ -112,7 +113,12 @@ namespace Tgs.GameInterface.AwcService.Repositories
                          retryTime);
                  });
 
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/fetch/gzip/getTransactionByTxTime", parameters, "getTransactionByTxTime", cancellationToken));
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(
+                apiUrl: apiUrl,
+                path: "/fetch/gzip/getTransactionByTxTime",
+                parameters: parameters,
+                logPrefix: "getTransactionByTxTime",
+                cancellationToken: cancellationToken)).ConfigureAwait(false); ;
 
             if (document is null)
             {
@@ -144,13 +150,14 @@ namespace Tgs.GameInterface.AwcService.Repositories
             };
 
             var tryCount = 3;
+            var seconds = 20;
             var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
             {
                 var status = r?.RootElement.GetProperty("status").GetString();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
              .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
                  (result, retryTime, context) =>
                  {
                      _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
@@ -160,7 +167,13 @@ namespace Tgs.GameInterface.AwcService.Repositories
                          retryTime);
                  });
 
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/fetch/gzip/getTransactionByUpdateDate", parameters, "getTransactionByUpdateDate", cancellationToken));
+            var document = await retryPolicy.ExecuteAsync(async () =>
+            await PostAsync(
+                apiUrl: apiUrl,
+                path: "/fetch/gzip/getTransactionByUpdateDate",
+                parameters: parameters,
+                logPrefix: "getTransactionByUpdateDate",
+                cancellationToken: cancellationToken)).ConfigureAwait(false);
 
             if (document is null)
             {
@@ -191,13 +204,14 @@ namespace Tgs.GameInterface.AwcService.Repositories
             };
 
             var tryCount = 3;
+            var seconds = 20;
             var retryPolicy = Policy.HandleResult<JsonDocument?>(r =>
             {
                 var status = r?.RootElement.GetProperty("status").GetString();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
              .WaitAndRetryAsync(tryCount,
-                 retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: 20)),
+                 retryAttempt => TimeSpan.FromSeconds(seconds),
                  (result, retryTime, context) =>
                  {
                      _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
@@ -207,7 +221,13 @@ namespace Tgs.GameInterface.AwcService.Repositories
                          retryTime);
                  });
 
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/fetch/gzip/getTransactionByUpdateDate", parameters, "getTransactionByUpdateDate", cancellationToken));
+            var document = await retryPolicy.ExecuteAsync(async () =>
+            await PostAsync(
+                apiUrl: apiUrl,
+                path: "/fetch/gzip/getTransactionByUpdateDate",
+                parameters: parameters,
+                logPrefix: "getTransactionByUpdateDate",
+                cancellationToken: cancellationToken)).ConfigureAwait(false);
 
             if (document is null)
             {
@@ -229,7 +249,7 @@ namespace Tgs.GameInterface.AwcService.Repositories
 
         private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
         {
-            logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
+            logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
 
             var sw = Stopwatch.StartNew();
             var url = new Uri(apiUrl, path);

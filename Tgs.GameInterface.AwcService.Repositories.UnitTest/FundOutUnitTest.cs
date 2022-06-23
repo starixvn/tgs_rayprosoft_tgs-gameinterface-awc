@@ -47,7 +47,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var actual = await client.FundOutAsync(apiUrl, agentId, cert, playerCode, txCode, amount);
+            var actual = await client.DepositAsync(apiUrl, agentId, cert, playerCode, txCode, amount);
 
             Assert.IsTrue(actual.Success);
             Assert.AreEqual(response.txCode, actual.TransactionId);

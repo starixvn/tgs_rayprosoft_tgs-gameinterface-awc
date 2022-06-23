@@ -44,7 +44,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var actual = await client.FundOrderCheckingAsync(apiUrl, agentId, cert, txCode);
+            var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
             Assert.IsTrue(actual);
         }
@@ -78,7 +78,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var actual = await client.FundOrderCheckingAsync(apiUrl, agentId, cert, txCode);
+            var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
             Assert.IsFalse(actual);
         }
@@ -109,7 +109,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
 
             _ = await Assert.ThrowsExceptionAsync<Exception>(async () =>
             {
-                _ = await client.FundOrderCheckingAsync(
+                _ = await client.CheckTransferOperationAsync(
                     apiUrl,
                     agentId,
                     cert,

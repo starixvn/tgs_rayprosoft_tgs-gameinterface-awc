@@ -13,7 +13,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
         public async ValueTask<FundOutResult> GetAsync(FundOutQuery query, CancellationToken cancellationToken = default)
         {
-            var result = await _client.FundOutAsync(
+            var result = await _client.DepositAsync(
                 query.ApiUrl,
                 query.AgentId,
                 query.Cert,

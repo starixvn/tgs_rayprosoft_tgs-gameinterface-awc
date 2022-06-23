@@ -45,7 +45,7 @@ namespace Tgs.GameInterface.AwcService.Core
         /// <param name="withdrawType">Type of the withdraw.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        ValueTask<FundResult> FundInAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, int withdrawType = 0, CancellationToken cancellationToken = default);
+        ValueTask<FundResult> WithdrawAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, int withdrawType = 0, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Funds the order checking asynchronous.
@@ -56,7 +56,7 @@ namespace Tgs.GameInterface.AwcService.Core
         /// <param name="transactionId">The transaction identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        ValueTask<bool> FundOrderCheckingAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default);
+        ValueTask<bool> CheckTransferOperationAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Funds the out asynchronous.(Tgs -> Gp)
@@ -69,7 +69,7 @@ namespace Tgs.GameInterface.AwcService.Core
         /// <param name="amount">The amount.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        ValueTask<FundResult> FundOutAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
+        ValueTask<FundResult> DepositAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets the balance asynchronous.
