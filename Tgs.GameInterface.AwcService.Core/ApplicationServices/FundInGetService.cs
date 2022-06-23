@@ -13,7 +13,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 
         public async ValueTask<FundInResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
         {
-            var result = await _client.FundInAsync(
+            var result = await _client.WithdrawAsync(
                 query.ApiUrl,
                 query.AgentId,
                 query.Cert,
