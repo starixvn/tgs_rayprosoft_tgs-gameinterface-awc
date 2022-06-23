@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
         }
 
         public async ValueTask<bool> GetAsync(FundOrderCheckingQuery command, CancellationToken cancellationToken = default)
-            => await _client.FundOrderCheckingAsync(
+            => await _client.CheckTransferOperationAsync(
                 apiUrl: command.ApiUrl,
                 agentId: command.AgentId,
                 cert: command.Cert,
