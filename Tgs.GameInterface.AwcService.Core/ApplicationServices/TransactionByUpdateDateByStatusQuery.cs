@@ -1,10 +1,10 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record GameSettleTransactionQuery(
+    public record TransactionByUpdateDateByStatusQuery(
         Uri ApiUrl,
         string AgentId,
         string Cert,
         string Platform,
-        DateTimeOffset StartTime,
-        DateTimeOffset EndTime);
+        DateTimeOffset TimeFrom,
+        TransactionStatus TransactionStatus);
 }

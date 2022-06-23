@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record GameUnsettleTransactionQuery(
+    public record OutstandingByBetTimeQuery(
         Uri ApiUrl,
         string AgentId,
         string Cert,

@@ -51,7 +51,7 @@ namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
 
             Assert.IsTrue(actual.Success);
             Assert.AreEqual(response.txCode, actual.TransactionId);
-            Assert.AreEqual(response.databaseId, actual.GameProductTransactionId);
+            Assert.AreEqual(response.databaseId, actual.GameProviderTransactionId);
             Assert.AreEqual(decimal.Parse(response.amount), actual.Amount);
             Assert.AreEqual(decimal.Parse(response.currentBalance), actual.CurrentBalance);
         }

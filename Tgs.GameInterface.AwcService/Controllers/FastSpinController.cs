@@ -15,6 +15,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IKickPlayerHandler,
         ICreatePlayerHandler,
         IGameUrlHandler,
+        IGamePullRecordHandler,
         IGameSettleHandler
     {
         /// <summary>
@@ -86,7 +87,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Success,
                 result.Message,
                 result.TransactionId,
-                result.GameProductTransactionId,
+                result.GameProviderTransactionId,
                 result.Amount,
                 result.CurrentBalance);
         }
@@ -154,75 +155,9 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Success,
                 result.Message,
                 result.TransactionId,
-                result.GameProductTransactionId,
+                result.GameProviderTransactionId,
                 result.Amount,
                 result.CurrentBalance);
-        }
-
-        /// <summary>
-        /// Gamesettles the asynchronous.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <b>Example</b><br />
-        ///
-        ///     Post
-        ///         {
-        ///             "apiUrl": "https://tttint.onlinegames22.com/",
-        ///             "agentId": "phpgpifs",
-        ///             "cert": "Mj2aGek2BndbRYKqZYw",
-        ///             "startTime": "2022-05-31T07:00:00.000Z",
-        ///             "endTime": "2022-05-31T08:00:00.000Z"
-        ///         }
-        /// </remarks>
-        [HttpPost("game/settle")]
-        public async IAsyncEnumerable<GameSettleTransactionViewModel> GameSettleAsync(
-            [FromServices] IQueryService<GameSettleTransactionQuery, GameSettleTransactionResult> service,
-            GameSettleQueryViewModel model)
-
-        {
-            var result = await service.QueryAsync(new GameSettleTransactionQuery(
-                ApiUrl: model.ApiUrl,
-                AgentId: model.AgentId,
-                Cert: model.Cert,
-                Platform: AwcPlatforms.AWC_FS,
-                StartTime: model.StartTime,
-                EndTime: model.EndTime)).ToArrayAsync().ConfigureAwait(false);
-
-            if (!result.Any())
-            {
-                yield break;
-            }
-
-            foreach (var transaction in result)
-            {
-                yield return new GameSettleTransactionViewModel(
-                    ExternalRoundId: transaction.ExternalRoundId,
-                    Platform: transaction.Platform,
-                    PlatformTxId: transaction.PlatformTxId,
-                    GameType: transaction.GameType,
-                    GameCode: transaction.GameCode,
-                    GameName: transaction.GameName,
-                    RoundId: transaction.RoundId,
-                    UserId: transaction.UserId,
-                    Currency: transaction.Currency,
-                    TxStatus: transaction.TxStatus,
-                    SettleStatus: transaction.SettleStatus,
-                    BetTime: transaction.BetTime,
-                    TxTime: transaction.TxTime,
-                    UpdateTime: transaction.UpdateTime,
-                    BetType: transaction.BetType,
-                    BetAmount: transaction.BetAmount,
-                    RealBetAmount: transaction.RealBetAmount,
-                    Turnover: transaction.Turnover,
-                    WinAmount: transaction.WinAmount,
-                    RealWinAmount: transaction.RealWinAmount,
-                    JackpotBetAmount: transaction.JackpotBetAmount,
-                    JackpotWinAmount: transaction.JackpotWinAmount,
-                    GameInfo: transaction.GameInfo);
-            }
         }
 
         /// <summary>
@@ -242,7 +177,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
         ///             "playerCode": "{playerCode}",
         ///             "isMobileLogin": false,
         ///             "backUrl": "https://dev-t1.rpgp.cc/",
-        ///             "gameCode": "FastSpin-SLOT-003",
+        ///             "externalGameId": "FastSpin-SLOT-003",
         ///             "language": "cn"
         ///         }
         /// </remarks>
@@ -304,6 +239,138 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 result.Message,
                 result.IsPlayerExist,
                 result.Balance);
+        }
+
+        /// <summary>
+        /// Gets the game pull record asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "phpgpifs",
+        ///             "cert": "Mj2aGek2BndbRYKqZYw",
+        ///             "timeFrom": "2022-06-01T08:00:00.000Z"
+        ///         }
+        ///
+        /// </remarks>
+        [HttpPost("game/pullrecord")]
+        public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
+            [FromServices] IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> service,
+            GamePullRecordQueryViewModel model)
+
+        {
+            var result = await service.QueryAsync(new TransactionByUpdateDateQuery(
+                ApiUrl: model.ApiUrl,
+                AgentId: model.AgentId,
+                Cert: model.Cert,
+                Platform: AwcPlatforms.AWC_FS,
+                TimeFrom: model.TimeFrom)).ToArrayAsync().ConfigureAwait(false);
+
+            if (!result.Any())
+            {
+                yield break;
+            }
+
+            foreach (var transaction in result)
+            {
+                yield return new GamePullRecordResultViewModel(
+                    ExternalRoundId: transaction.ExternalRoundId,
+                    Platform: transaction.Platform,
+                    PlatformTxId: transaction.PlatformTxId,
+                    GameType: transaction.GameType,
+                    GameCode: transaction.GameCode,
+                    GameName: transaction.GameName,
+                    RoundId: transaction.RoundId,
+                    UserId: transaction.UserId,
+                    Currency: transaction.Currency,
+                    TxStatus: transaction.TxStatus,
+                    SettleStatus: transaction.SettleStatus,
+                    BetTime: transaction.BetTime,
+                    TxTime: transaction.TxTime,
+                    UpdateTime: transaction.UpdateTime,
+                    BetType: transaction.BetType,
+                    BetAmount: transaction.BetAmount,
+                    RealBetAmount: transaction.RealBetAmount,
+                    Turnover: transaction.Turnover,
+                    WinAmount: transaction.WinAmount,
+                    RealWinAmount: transaction.RealWinAmount,
+                    JackpotBetAmount: transaction.JackpotBetAmount,
+                    JackpotWinAmount: transaction.JackpotWinAmount,
+                    GameInfo: transaction.GameInfo);
+            }
+        }
+
+        /// <summary>
+        /// Gets the game settle asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://tttint.onlinegames22.com/",
+        ///             "agentId": "phpgpifs",
+        ///             "cert": "Mj2aGek2BndbRYKqZYw",
+        ///             "startTime": "2022-06-10T05:30:00.000Z",
+        ///             "endTime": "2022-06-10T06:30:00.000Z"
+        ///         }
+        ///
+        /// </remarks>
+        [HttpPost("game/settle")]
+        public async IAsyncEnumerable<GameSettleTransactionViewModel> GetGameSettleAsync(
+            [FromServices] IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> service,
+            GameSettleQueryViewModel model)
+        {
+            var result = await service.QueryAsync(new TransactionByTxTimeQuery(
+                ApiUrl: model.ApiUrl,
+                AgentId: model.AgentId,
+                Cert: model.Cert,
+                Platform: AwcPlatforms.AWC_FS,
+                StartTime: model.StartTime,
+                EndTime: model.EndTime
+                )).ToArrayAsync().ConfigureAwait(false);
+
+            if (!result.Any())
+            {
+                yield break;
+            }
+
+            foreach (var transaction in result)
+            {
+                yield return new GameSettleTransactionViewModel(
+                    ExternalRoundId: transaction.ExternalRoundId,
+                    Platform: transaction.Platform,
+                    PlatformTxId: transaction.PlatformTxId,
+                    GameType: transaction.GameType,
+                    GameCode: transaction.GameCode,
+                    GameName: transaction.GameName,
+                    RoundId: transaction.RoundId,
+                    UserId: transaction.UserId,
+                    Currency: transaction.Currency,
+                    TxStatus: transaction.TxStatus,
+                    SettleStatus: transaction.SettleStatus,
+                    BetTime: transaction.BetTime,
+                    TxTime: transaction.TxTime,
+                    UpdateTime: transaction.UpdateTime,
+                    BetType: transaction.BetType,
+                    BetAmount: transaction.BetAmount,
+                    RealBetAmount: transaction.RealBetAmount,
+                    Turnover: transaction.Turnover,
+                    WinAmount: transaction.WinAmount,
+                    RealWinAmount: transaction.RealWinAmount,
+                    JackpotBetAmount: transaction.JackpotBetAmount,
+                    JackpotWinAmount: transaction.JackpotWinAmount,
+                    GameInfo: transaction.GameInfo);
+            }
         }
 
         /// <summary>

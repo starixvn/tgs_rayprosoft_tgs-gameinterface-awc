@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.ViewModels
 {
-    public record CockFightGameUnsettleQueryViewModel(
+    public record GamePullRecordQueryViewModel(
         Uri ApiUrl,
         string AgentId,
         string Cert,

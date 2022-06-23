@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
 {
-    public record GameTransactionResult(
+    public record TransactionByUpdateDateResult(
         string ExternalRoundId,
         string Platform,
         string PlatformTxId,

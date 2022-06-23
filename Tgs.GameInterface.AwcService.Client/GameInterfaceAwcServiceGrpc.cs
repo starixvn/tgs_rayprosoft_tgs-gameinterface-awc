@@ -105,14 +105,14 @@ namespace Tgs.GameInterface.AwcService.Client
         public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcCockfightAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
             => await _client.GameUrlByLiveLobbyByAwcCockfightAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcRcbAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
-            => await _client.GameUrlByLiveLobbyByAwcRcbAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
+        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcRcbAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
+            => await _client.GameUrlLiveLobbyByAwcRcbAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcVenusAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
-            => await _client.GameUrlByLiveLobbyByAwcVenusAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
+        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSgAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
+             => await _client.GameUrlLiveLobbyByAwcSgAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlByLottoLobbyByAwcAeLottoAsync(GameInterfaceAwcServiceGameUrlByLottoLobbyRequest request, CancellationToken cancellationToken = default)
-            => await _client.GameUrlByLottoLobbyByAwcAeLottoAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
+        public async ValueTask<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenusAsync(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, CancellationToken cancellationToken = default)
+            => await _client.GameUrlLiveLobbyByAwcVenusAsync(request, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         public async ValueTask<GameInterfaceAwcServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
             => await _client.GetBalanceAsync(new GameInterfaceAwcServiceBalanceRequest()

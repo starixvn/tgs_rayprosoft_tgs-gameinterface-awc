@@ -4,7 +4,7 @@
         bool Success,
         string? Message,
         string? TransactionId,
-        string? GameProductTransactionId,
+        string? GameProviderTransactionId,
         decimal? Amount,
         decimal? CurrentBalance);
 }
