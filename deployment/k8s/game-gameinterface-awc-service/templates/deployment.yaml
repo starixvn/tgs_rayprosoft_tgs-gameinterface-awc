@@ -57,7 +57,7 @@ spec:
               containerPort:  {{ .Values.servicegrpc.port }}
               protocol: TCP
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
