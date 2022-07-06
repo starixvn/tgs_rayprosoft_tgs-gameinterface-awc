@@ -5,13 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: harbor.rpgp.cc/tgs/game-gameinterface-awc-service
+  repository: pgtgs/game-gameinterface-awc-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
 imagePullSecrets:
-  - name: secret-tgs-harbor
+  - name: dockerhub
 nameOverride: "game-gameinterface-awc-service"
 fullnameOverride: "game-gameinterface-awc-service"
 
