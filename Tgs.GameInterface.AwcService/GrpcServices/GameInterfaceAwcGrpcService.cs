@@ -14,7 +14,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
         private readonly IGetService<FundInQuery, FundInResult> _fundInService;
         private readonly IGetService<FundOrderCheckingQuery, bool> _fundOrderCheckingService;
         private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
-        private readonly IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> _gameUrlByLiveLobbyService;
         private readonly IGetService<GameUrlByLiveQuery, GameUrlResult> _gameUrlByLiveService;
         private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
         private readonly ICommandService<LogoutCommand> _logoutService;
@@ -28,7 +27,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             ICommandService<CreatePlayerCommand> createPlayerService,
             ICommandService<CreatePlayerByBetLimitCommand> createPlayerByBetLimitService,
             IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
-            IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> gameUrlByLiveLobbyService,
             IGetService<GameUrlByLiveQuery, GameUrlResult> gameUrlByLiveService
             )
         {
@@ -40,7 +38,6 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
             _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
             _createPlayerByBetLimitService = createPlayerByBetLimitService ?? throw new ArgumentNullException(nameof(createPlayerByBetLimitService));
             _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
-            _gameUrlByLiveLobbyService = gameUrlByLiveLobbyService ?? throw new ArgumentNullException(nameof(gameUrlByLiveLobbyService));
             _gameUrlByLiveService = gameUrlByLiveService ?? throw new ArgumentNullException(nameof(gameUrlByLiveService));
         }
 
@@ -417,7 +414,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
 
         public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenus(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
         {
-            var result = await _gameUrlByLiveLobbyService.GetAsync(new GameUrlByLiveLobbyQuery(
+            var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -425,6 +422,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices
                 IsMobileLogin: request.IsMobileLogin,
                 BackUrl: request.BackUrl,
                 Platform: AwcPlatforms.AWC_VENUS,
+                ExternalGameId: "VN-LIVE-001",
                 BetLimit: request.BetLimit,
                 Language: request.Language
                 )).ConfigureAwait(false);

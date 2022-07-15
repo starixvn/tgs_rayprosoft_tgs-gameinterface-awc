@@ -14,7 +14,6 @@ namespace Tgs.GameInterface.AwcService.Controllers
         IFundHandler,
         IKickPlayerHandler,
         ICreatePlayerByBetLimitHandler,
-        ILobbyGameUrlByLiveHandler,
         IGamePullRecordHandler,
         IGameSettleHandler
     {
@@ -378,11 +377,11 @@ namespace Tgs.GameInterface.AwcService.Controllers
         /// </remarks>
         [HttpPost("lobby/live")]
         public async ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync(
-            [FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service,
+            [FromServices] IGetService<GameUrlByLiveQuery, GameUrlResult> service,
             GameUrlByLiveLobbyQueryViewModel model)
 
         {
-            var result = await service.GetAsync(new GameUrlByLiveLobbyQuery(
+            var result = await service.GetAsync(new GameUrlByLiveQuery(
                 ApiUrl: model.ApiUrl,
                 AgentId: model.AgentId,
                 Cert: model.Cert,
@@ -390,6 +389,7 @@ namespace Tgs.GameInterface.AwcService.Controllers
                 IsMobileLogin: model.IsMobileLogin,
                 BackUrl: model.BackUrl,
                 Platform: AwcPlatforms.AWC_VENUS,
+                ExternalGameId: "VN-LIVE-001",
                 BetLimit: model.BetLimit,
                 Language: model.Language)).ConfigureAwait(false);
 
