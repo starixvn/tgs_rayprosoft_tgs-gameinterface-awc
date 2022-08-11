@@ -3,17 +3,16 @@ using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.ViewModels;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameInterface.AwcService.Interfaces
+namespace Tgs.GameInterface.AwcService.Interfaces;
+
+public interface IFundHandler
 {
-    public interface IFundHandler
-    {
-        [HttpPost("fundin")]
-        ValueTask<FundResultViewModel> FundInAsync([FromServices] IGetService<FundInQuery, FundInResult> service, FundQueryViewModel model);
+    [HttpPost("fundin")]
+    ValueTask<FundResultViewModel> FundInAsync([FromServices] IGetService<FundInQuery, FundInResult> service, FundQueryViewModel model);
 
-        [HttpPost("fundorderchecking")]
-        ValueTask<bool> FundOrderCheckingAsync([FromServices] IGetService<FundOrderCheckingQuery, bool> service, FundOrderCheckingViewModel model);
+    [HttpPost("fundorderchecking")]
+    ValueTask<bool> FundOrderCheckingAsync([FromServices] IGetService<FundOrderCheckingQuery, bool> service, FundOrderCheckingViewModel model);
 
-        [HttpPost("fundout")]
-        ValueTask<FundResultViewModel> FundOutAsync([FromServices] IGetService<FundOutQuery, FundOutResult> service, FundQueryViewModel model);
-    }
+    [HttpPost("fundout")]
+    ValueTask<FundResultViewModel> FundOutAsync([FromServices] IGetService<FundOutQuery, FundOutResult> service, FundQueryViewModel model);
 }

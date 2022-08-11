@@ -1,52 +1,51 @@
 ﻿using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameInterface.AwcService.Core.ApplicationServices
+namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
+
+internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
 {
-    internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
+    private readonly IGameApiClient _client;
+
+    public GameUrlGetService(IGameApiClient client)
     {
-        private readonly IGameApiClient _client;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+    }
 
-        public GameUrlGetService(IGameApiClient client)
+    public async ValueTask<GameUrlResult> GetAsync(GameUrlQuery query, CancellationToken cancellationToken = default)
+    {
+        var gameCodeSplits = query.ExternalGameId.Split("-");
+        var gameType = gameCodeSplits[1].ToUpper() switch
         {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
+            "SLOT" => AwcGameTypes.SLOT.ToString(),
+            "FISH" => AwcGameTypes.FH.ToString(),
+            "FH" => AwcGameTypes.FH.ToString(),
+            "EGAME" => AwcGameTypes.EGAME.ToString(),
+            "TABLE" => AwcGameTypes.TABLE.ToString(),
+            "LOTTO" => AwcGameTypes.LOTTO.ToString(),
+            _ => throw new NotImplementedException(),
+        };
 
-        public async ValueTask<GameUrlResult> GetAsync(GameUrlQuery query, CancellationToken cancellationToken = default)
-        {
-            var gameCodeSplits = query.ExternalGameId.Split("-");
-            var gameType = gameCodeSplits[1].ToUpper() switch
-            {
-                "SLOT" => AwcGameTypes.SLOT.ToString(),
-                "FISH" => AwcGameTypes.FH.ToString(),
-                "FH" => AwcGameTypes.FH.ToString(),
-                "EGAME" => AwcGameTypes.EGAME.ToString(),
-                "TABLE" => AwcGameTypes.TABLE.ToString(),
-                "LOTTO" => AwcGameTypes.LOTTO.ToString(),
-                _ => throw new NotImplementedException(),
-            };
+        var data = new LoginAndLaunchGame(
+            PlayerCode: query.PlayerCode,
+            IsMobileLogin: query.IsMobileLogin,
+            BackUrl: query.BackUrl,
+            Platform: query.Platform,
+            GameType: gameType,
+            ExternalGameId: query.ExternalGameId,
+            Language: query.Language);
 
-            var data = new LoginAndLaunchGame(
-                PlayerCode: query.PlayerCode,
-                IsMobileLogin: query.IsMobileLogin,
-                BackUrl: query.BackUrl,
-                Platform: query.Platform,
-                GameType: gameType,
-                ExternalGameId: query.ExternalGameId,
-                Language: query.Language);
+        var result = await _client.LoginAndLaunchGameAsync(
+            query.ApiUrl,
+            query.AgentId,
+            query.Cert,
+            data,
+            cancellationToken).ConfigureAwait(false);
 
-            var result = await _client.LoginAndLaunchGameAsync(
-                query.ApiUrl,
-                query.AgentId,
-                query.Cert,
-                data,
-                cancellationToken).ConfigureAwait(false);
-
-            return new GameUrlResult(
-                Success: result.Success,
-                Message: result.Message,
-                IsPlayerExist: result.IsPlayerExist,
-                GameUrl: result.GameUrl);
-        }
+        return new GameUrlResult(
+            Success: result.Success,
+            Message: result.Message,
+            IsPlayerExist: result.IsPlayerExist,
+            GameUrl: result.GameUrl);
     }
 }

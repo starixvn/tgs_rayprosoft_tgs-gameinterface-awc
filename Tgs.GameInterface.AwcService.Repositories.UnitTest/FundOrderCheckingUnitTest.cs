@@ -10,111 +10,110 @@ using RichardSzalay.MockHttp;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
+namespace Tgs.GameInterface.AwcService.Repositories.UnitTest;
+
+[TestClass]
+public class FundOrderCheckingUnitTest
 {
-    [TestClass]
-    public class FundOrderCheckingUnitTest
+    [TestMethod]
+    public async Task Normal_Process()
     {
-        [TestMethod]
-        public async Task Normal_Process()
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        string txCode = Guid.NewGuid().ToString("N");
+
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            string txCode = Guid.NewGuid().ToString("N");
+            status = ((int)GameApiClientError.Success).ToString("d4"),
+            desc = GameApiClientError.Success.ToString(),
+            txStatus = 1,
+            balance = 100,
+            transferAmount = 100,
+            transferType = "DEPOSIT",
+            txCode
+        };
 
-            var response = new
-            {
-                status = ((int)GameApiClientError.Success).ToString("d4"),
-                desc = GameApiClientError.Success.ToString(),
-                txStatus = 1,
-                balance = 100,
-                transferAmount = 100,
-                transferType = "DEPOSIT",
-                txCode
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
+        .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
-            .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
-            var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
+        Assert.IsTrue(actual);
+    }
 
-            Assert.IsTrue(actual);
-        }
+    [TestMethod]
+    public async Task Transfer_Fail()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        string txCode = Guid.NewGuid().ToString("N");
 
-        [TestMethod]
-        public async Task Transfer_Fail()
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            string txCode = Guid.NewGuid().ToString("N");
+            status = ((int)GameApiClientError.Success).ToString("d4"),
+            desc = GameApiClientError.Success.ToString(),
+            txStatus = 0,
+            balance = 100,
+            transferAmount = 100,
+            transferType = "DEPOSIT",
+            txCode
+        };
 
-            var response = new
-            {
-                status = ((int)GameApiClientError.Success).ToString("d4"),
-                desc = GameApiClientError.Success.ToString(),
-                txStatus = 0,
-                balance = 100,
-                transferAmount = 100,
-                transferType = "DEPOSIT",
-                txCode
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
+        .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
-            .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
-            var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
+        Assert.IsFalse(actual);
+    }
 
-            Assert.IsFalse(actual);
-        }
+    [TestMethod]
+    public async Task Txcode_Is_Not_Exist()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        string txCode = Guid.NewGuid().ToString("N");
 
-        [TestMethod]
-        public async Task Txcode_Is_Not_Exist()
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            string txCode = Guid.NewGuid().ToString("N");
+            status = ((int)GameApiClientError.TxcodeIsNotExist).ToString("d4"),
+            desc = GameApiClientError.TxcodeIsNotExist.ToString()
+        };
 
-            var response = new
-            {
-                status = ((int)GameApiClientError.TxcodeIsNotExist).ToString("d4"),
-                desc = GameApiClientError.TxcodeIsNotExist.ToString()
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
+        .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler.Expect(HttpMethod.Post, "/wallet/checkTransferOperation")
-            .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
-
-            _ = await Assert.ThrowsExceptionAsync<Exception>(async () =>
-            {
-                _ = await client.CheckTransferOperationAsync(
-                    apiUrl,
-                    agentId,
-                    cert,
-                    txCode).AsTask().ConfigureAwait(false);
-            });
-        }
+        _ = await Assert.ThrowsExceptionAsync<Exception>(async () =>
+        {
+            _ = await client.CheckTransferOperationAsync(
+                apiUrl,
+                agentId,
+                cert,
+                txCode).AsTask().ConfigureAwait(false);
+        });
     }
 }

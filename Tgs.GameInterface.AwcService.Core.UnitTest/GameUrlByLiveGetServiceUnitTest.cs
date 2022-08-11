@@ -7,182 +7,181 @@ using NSubstitute.ExceptionExtensions;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
-namespace Tgs.GameInterface.AwcService.Core.UnitTest
+namespace Tgs.GameInterface.AwcService.Core.UnitTest;
+
+[TestClass]
+public class GameUrlByLiveGetServiceUnitTest
 {
-    [TestClass]
-    public class GameUrlByLiveGetServiceUnitTest
+    [TestMethod]
+    public async Task Account_Is_Not_Exists()
     {
-        [TestMethod]
-        public async Task Account_Is_Not_Exists()
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        var playerCode = "4ucmqplxb029";
+        var cultureCode = "cn";
+        var betLimit = JsonSerializer.Serialize(new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            var playerCode = "4ucmqplxb029";
-            var cultureCode = "cn";
-            var betLimit = JsonSerializer.Serialize(new
+            VENUS = new
             {
-                VENUS = new
+                LIVE = new
                 {
-                    LIVE = new
-                    {
-                        limitId = new[] { "280303", "280304", "280305" }
-                    }
+                    limitId = new[] { "280303", "280304", "280305" }
                 }
-            });
+            }
+        });
 
-            var query = new GameUrlByLiveLobbyQuery(
-                ApiUrl: apiUrl,
-                AgentId: agentId,
-                Cert: cert,
-                PlayerCode: playerCode,
-                IsMobileLogin: false,
-                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
-                Platform: AwcPlatforms.AWC_VENUS,
-                Language: cultureCode,
-                BetLimit: betLimit);
+        var query = new GameUrlByLiveLobbyQuery(
+            ApiUrl: apiUrl,
+            AgentId: agentId,
+            Cert: cert,
+            PlayerCode: playerCode,
+            IsMobileLogin: false,
+            BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
+            Platform: AwcPlatforms.AWC_VENUS,
+            Language: cultureCode,
+            BetLimit: betLimit);
 
-            var fakeClient = Substitute.For<IGameApiClient>();
+        var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLiveLobby(
-                PlayerCode: query.PlayerCode,
-                IsMobileLogin: query.IsMobileLogin,
-                BackUrl: query.BackUrl,
-                Platform: query.Platform,
-                BetLimit: betLimit,
-                Language: query.Language);
+        var data = new LoginAndLaunchGameByLiveLobby(
+            PlayerCode: query.PlayerCode,
+            IsMobileLogin: query.IsMobileLogin,
+            BackUrl: query.BackUrl,
+            Platform: query.Platform,
+            BetLimit: betLimit,
+            Language: query.Language);
 
-            var result = new LoginAndLaunchGameResult(
-                Success: true,
-                IsPlayerExist: false,
-                GameUrl: null
-                );
+        var result = new LoginAndLaunchGameResult(
+            Success: true,
+            IsPlayerExist: false,
+            GameUrl: null
+            );
 
-            _ = fakeClient.LoginAndLaunchGameAsync(
-                apiUrl: Arg.Is(apiUrl),
-                agentId: Arg.Is(agentId),
-                cert: Arg.Is(cert),
-                data: Arg.Is(data)).Returns(result);
+        _ = fakeClient.LoginAndLaunchGameAsync(
+            apiUrl: Arg.Is(apiUrl),
+            agentId: Arg.Is(agentId),
+            cert: Arg.Is(cert),
+            data: Arg.Is(data)).Returns(result);
 
-            var service = new GameUrlByLiveLobbyGetService(fakeClient);
+        var service = new GameUrlByLiveLobbyGetService(fakeClient);
 
-            var actual = await service.GetAsync(query).ConfigureAwait(false);
+        var actual = await service.GetAsync(query).ConfigureAwait(false);
 
-            Assert.IsTrue(actual.Success);
-            Assert.IsFalse(actual.IsPlayerExist);
-            Assert.IsNull(actual.GameUrl);
-        }
+        Assert.IsTrue(actual.Success);
+        Assert.IsFalse(actual.IsPlayerExist);
+        Assert.IsNull(actual.GameUrl);
+    }
 
-        [TestMethod]
-        public async Task Exception_Process()
+    [TestMethod]
+    public async Task Exception_Process()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        var playerCode = "4ucmqplxb029";
+        var cultureCode = "cn";
+        var betLimit = JsonSerializer.Serialize(new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            var playerCode = "4ucmqplxb029";
-            var cultureCode = "cn";
-            var betLimit = JsonSerializer.Serialize(new
+            VENUS = new
             {
-                VENUS = new
+                LIVE = new
                 {
-                    LIVE = new
-                    {
-                        limitId = new[] { "280303", "280304", "280305" }
-                    }
+                    limitId = new[] { "280303", "280304", "280305" }
                 }
-            });
+            }
+        });
 
-            var query = new GameUrlByLiveLobbyQuery(
-                ApiUrl: apiUrl,
-                AgentId: agentId,
-                Cert: cert,
-                PlayerCode: playerCode,
-                IsMobileLogin: false,
-                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
-                Platform: AwcPlatforms.AWC_VENUS,
-                Language: cultureCode,
-                BetLimit: betLimit);
+        var query = new GameUrlByLiveLobbyQuery(
+            ApiUrl: apiUrl,
+            AgentId: agentId,
+            Cert: cert,
+            PlayerCode: playerCode,
+            IsMobileLogin: false,
+            BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
+            Platform: AwcPlatforms.AWC_VENUS,
+            Language: cultureCode,
+            BetLimit: betLimit);
 
-            var fakeClient = Substitute.For<IGameApiClient>();
+        var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLiveLobby(
-                PlayerCode: query.PlayerCode,
-                IsMobileLogin: query.IsMobileLogin,
-                BackUrl: query.BackUrl,
-                Platform: query.Platform,
-                BetLimit: query.BetLimit,
-                Language: query.Language);
+        var data = new LoginAndLaunchGameByLiveLobby(
+            PlayerCode: query.PlayerCode,
+            IsMobileLogin: query.IsMobileLogin,
+            BackUrl: query.BackUrl,
+            Platform: query.Platform,
+            BetLimit: query.BetLimit,
+            Language: query.Language);
 
-            _ = fakeClient.LoginAndLaunchGameAsync(
-                apiUrl: Arg.Is(apiUrl),
-                agentId: Arg.Is(agentId),
-                cert: Arg.Is(cert),
-                data: Arg.Is(data)).Throws<Exception>();
+        _ = fakeClient.LoginAndLaunchGameAsync(
+            apiUrl: Arg.Is(apiUrl),
+            agentId: Arg.Is(agentId),
+            cert: Arg.Is(cert),
+            data: Arg.Is(data)).Throws<Exception>();
 
-            var service = new GameUrlByLiveLobbyGetService(fakeClient);
+        var service = new GameUrlByLiveLobbyGetService(fakeClient);
 
-            _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.GetAsync(query).AsTask()).ConfigureAwait(false);
-        }
+        _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.GetAsync(query).AsTask()).ConfigureAwait(false);
+    }
 
-        [TestMethod]
-        public async Task Normal_Process()
+    [TestMethod]
+    public async Task Normal_Process()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        var playerCode = "4ucmqplxb029";
+        var cultureCode = "cn";
+        var betLimit = JsonSerializer.Serialize(new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            var playerCode = "4ucmqplxb029";
-            var cultureCode = "cn";
-            var betLimit = JsonSerializer.Serialize(new
+            VENUS = new
             {
-                VENUS = new
+                LIVE = new
                 {
-                    LIVE = new
-                    {
-                        limitId = new[] { "280303", "280304", "280305" }
-                    }
+                    limitId = new[] { "280303", "280304", "280305" }
                 }
-            });
+            }
+        });
 
-            var query = new GameUrlByLiveLobbyQuery(
-                ApiUrl: apiUrl,
-                AgentId: agentId,
-                Cert: cert,
-                PlayerCode: playerCode,
-                IsMobileLogin: false,
-                BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
-                Platform: AwcPlatforms.AWC_VENUS,
-                Language: cultureCode,
-                BetLimit: betLimit);
+        var query = new GameUrlByLiveLobbyQuery(
+            ApiUrl: apiUrl,
+            AgentId: agentId,
+            Cert: cert,
+            PlayerCode: playerCode,
+            IsMobileLogin: false,
+            BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
+            Platform: AwcPlatforms.AWC_VENUS,
+            Language: cultureCode,
+            BetLimit: betLimit);
 
-            var fakeClient = Substitute.For<IGameApiClient>();
+        var fakeClient = Substitute.For<IGameApiClient>();
 
-            var data = new LoginAndLaunchGameByLiveLobby(
-                PlayerCode: query.PlayerCode,
-                IsMobileLogin: query.IsMobileLogin,
-                BackUrl: query.BackUrl,
-                Platform: query.Platform,
-                BetLimit: query.BetLimit,
-                Language: query.Language);
+        var data = new LoginAndLaunchGameByLiveLobby(
+            PlayerCode: query.PlayerCode,
+            IsMobileLogin: query.IsMobileLogin,
+            BackUrl: query.BackUrl,
+            Platform: query.Platform,
+            BetLimit: query.BetLimit,
+            Language: query.Language);
 
-            var result = new LoginAndLaunchGameResult(
-                Success: true,
-                IsPlayerExist: true,
-                GameUrl: "http://localhost"
-                );
+        var result = new LoginAndLaunchGameResult(
+            Success: true,
+            IsPlayerExist: true,
+            GameUrl: "http://localhost"
+            );
 
-            _ = fakeClient.LoginAndLaunchGameAsync(
-                apiUrl: Arg.Is(apiUrl),
-                agentId: Arg.Is(agentId),
-                cert: Arg.Is(cert),
-                data: Arg.Is(data)).Returns(result);
+        _ = fakeClient.LoginAndLaunchGameAsync(
+            apiUrl: Arg.Is(apiUrl),
+            agentId: Arg.Is(agentId),
+            cert: Arg.Is(cert),
+            data: Arg.Is(data)).Returns(result);
 
-            var service = new GameUrlByLiveLobbyGetService(fakeClient);
+        var service = new GameUrlByLiveLobbyGetService(fakeClient);
 
-            var actual = await service.GetAsync(query).ConfigureAwait(false);
+        var actual = await service.GetAsync(query).ConfigureAwait(false);
 
-            Assert.IsTrue(actual.Success);
-            Assert.IsTrue(actual.IsPlayerExist);
-            Assert.AreEqual(result.GameUrl, actual.GameUrl);
-        }
+        Assert.IsTrue(actual.Success);
+        Assert.IsTrue(actual.IsPlayerExist);
+        Assert.AreEqual(result.GameUrl, actual.GameUrl);
     }
 }

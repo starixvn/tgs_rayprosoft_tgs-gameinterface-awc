@@ -10,50 +10,49 @@ using RichardSzalay.MockHttp;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
+namespace Tgs.GameInterface.AwcService.Repositories.UnitTest;
+
+[TestClass]
+public class FundInUnitTest
 {
-    [TestClass]
-    public class FundInUnitTest
+    [TestMethod]
+    public async Task Normal_Process()
     {
-        [TestMethod]
-        public async Task Normal_Process()
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        var playerCode = "4ucmqplxb029";
+        string transactionId = Guid.NewGuid().ToString("N");
+        decimal amount = 100m;
+
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            var playerCode = "4ucmqplxb029";
-            string transactionId = Guid.NewGuid().ToString("N");
-            decimal amount = 100m;
+            status = ((int)GameApiClientError.Success).ToString("d4"),
+            desc = GameApiClientError.Success.ToString(),
+            amount = amount.ToString(),
+            method = "WITHDRAW",
+            databaseId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
+            currentBalance = "0",
+            lastModified = DateTime.UtcNow,
+            txCode = transactionId
+        };
 
-            var response = new
-            {
-                status = ((int)GameApiClientError.Success).ToString("d4"),
-                desc = GameApiClientError.Success.ToString(),
-                amount = amount.ToString(),
-                method = "WITHDRAW",
-                databaseId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
-                currentBalance = "0",
-                lastModified = DateTime.UtcNow,
-                txCode = transactionId
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, "/wallet/withdraw")
+        .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler.Expect(HttpMethod.Post, "/wallet/withdraw")
-            .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var actual = await client.WithdrawAsync(apiUrl, agentId, cert, playerCode, transactionId, amount);
 
-            var actual = await client.WithdrawAsync(apiUrl, agentId, cert, playerCode, transactionId, amount);
-
-            Assert.IsTrue(actual.Success);
-            Assert.AreEqual(response.txCode, actual.TransactionId);
-            Assert.AreEqual(response.databaseId, actual.GameProviderTransactionId);
-            Assert.AreEqual(decimal.Parse(response.amount), actual.Amount);
-            Assert.AreEqual(decimal.Parse(response.currentBalance), actual.CurrentBalance);
-        }
+        Assert.IsTrue(actual.Success);
+        Assert.AreEqual(response.txCode, actual.TransactionId);
+        Assert.AreEqual(response.databaseId, actual.GameProviderTransactionId);
+        Assert.AreEqual(decimal.Parse(response.amount), actual.Amount);
+        Assert.AreEqual(decimal.Parse(response.currentBalance), actual.CurrentBalance);
     }
 }

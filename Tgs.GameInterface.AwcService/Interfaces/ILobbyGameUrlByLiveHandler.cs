@@ -3,17 +3,16 @@ using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.ViewModels;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameInterface.AwcService.Interfaces
+namespace Tgs.GameInterface.AwcService.Interfaces;
+
+public interface ILobbyGameUrlByLiveHandler
 {
-    public interface ILobbyGameUrlByLiveHandler
-    {
-        /// <summary>
-        /// Lobbies the game URL by live asynchronous.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        [HttpPost("lobby/live")]
-        ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync([FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service, GameUrlByLiveLobbyQueryViewModel model);
-    }
+    /// <summary>
+    /// Lobbies the game URL by live asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="model">The model.</param>
+    /// <returns></returns>
+    [HttpPost("lobby/live")]
+    ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync([FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service, GameUrlByLiveLobbyQueryViewModel model);
 }
