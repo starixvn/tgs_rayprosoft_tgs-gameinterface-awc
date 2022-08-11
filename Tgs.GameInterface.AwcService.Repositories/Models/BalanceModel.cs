@@ -1,9 +1,8 @@
-﻿namespace Tgs.GameInterface.AwcService.Repositories.Models
+﻿namespace Tgs.GameInterface.AwcService.Repositories.Models;
+
+public record BalanceModel
 {
-    public record BalanceModel
-    {
-        public string UserId { get; set; } = default!;
-        public string Balance { get; set; } = default!;
-        public DateTime LastModified { get; set; }
-    }
+    public string UserId { get; set; } = default!;
+    public string Balance { get; set; } = default!;
+    public DateTime LastModified { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace Tgs.GameInterface.AwcService.Client
+﻿namespace Tgs.GameInterface.AwcService.Client;
+
+public class GameInterfaceAwcServiceClientOptions
 {
-    public class GameInterfaceAwcServiceClientOptions
-    {
-        public Uri BaseUrl { get; set; } = default!;
-    }
+    public Uri BaseUrl { get; set; } = default!;
 }

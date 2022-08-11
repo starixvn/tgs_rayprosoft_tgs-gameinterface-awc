@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics;
 
-namespace Tgs.GameInterface.AwcService
+namespace Tgs.GameInterface.AwcService;
+
+public class DiagnosticsInterceptorOptions
 {
-    public class DiagnosticsInterceptorOptions
-    {
-        public ActivitySource InterceptorActivitySource { get; set; } =
-            new ActivitySource($"Tgs.GameInterface.AwcService.DiagnosticsInterceptor");
-    }
+    public ActivitySource InterceptorActivitySource { get; set; } =
+        new ActivitySource($"Tgs.GameInterface.AwcService.DiagnosticsInterceptor");
 }

@@ -10,37 +10,36 @@ using RichardSzalay.MockHttp;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories.UnitTest
+namespace Tgs.GameInterface.AwcService.Repositories.UnitTest;
+
+[TestClass]
+public class LogoutUnitTest
 {
-    [TestClass]
-    public class LogoutUnitTest
+    [TestMethod]
+    public async Task Normal_Process()
     {
-        [TestMethod]
-        public async Task Normal_Process()
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        var playerCode = "4ucmqplxb029";
+
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var agentId = "testagentid";
-            var cert = "testcert";
-            var playerCode = "4ucmqplxb029";
+            status = ((int)GameApiClientError.Success).ToString("d4"),
+            desc = GameApiClientError.Success.ToString(),
+            logoutUsers = new[] { playerCode }
+        };
 
-            var response = new
-            {
-                status = ((int)GameApiClientError.Success).ToString("d4"),
-                desc = GameApiClientError.Success.ToString(),
-                logoutUsers = new[] { playerCode }
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, "/wallet/logout")
+        .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler.Expect(HttpMethod.Post, "/wallet/logout")
-            .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
-
-            await client.LogoutAsync(apiUrl, agentId, cert, playerCode);
-        }
+        await client.LogoutAsync(apiUrl, agentId, cert, playerCode);
     }
 }

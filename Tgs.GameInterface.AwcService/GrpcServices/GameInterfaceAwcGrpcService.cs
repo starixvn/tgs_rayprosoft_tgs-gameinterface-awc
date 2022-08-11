@@ -4,467 +4,466 @@ using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Protos;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameInterface.AwcService.GrpcServices
+namespace Tgs.GameInterface.AwcService.GrpcServices;
+
+public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterfaceAwcServiceBase
 {
-    public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterfaceAwcServiceBase
+    private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
+    private readonly ICommandService<CreatePlayerByBetLimitCommand> _createPlayerByBetLimitService;
+    private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
+    private readonly IGetService<FundInQuery, FundInResult> _fundInService;
+    private readonly IGetService<FundOrderCheckingQuery, bool> _fundOrderCheckingService;
+    private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
+    private readonly IGetService<GameUrlByLiveQuery, GameUrlResult> _gameUrlByLiveService;
+    private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
+    private readonly ICommandService<LogoutCommand> _logoutService;
+
+    public GameInterfaceAwcGrpcService(
+        IGetService<FundInQuery, FundInResult> fundInService,
+        IGetService<FundOrderCheckingQuery, bool> fundOrderCheckingService,
+        IGetService<FundOutQuery, FundOutResult> fundOutService,
+        ICommandService<LogoutCommand> logoutService,
+        IGetService<BalanceQuery, BalanceResult> balanceService,
+        ICommandService<CreatePlayerCommand> createPlayerService,
+        ICommandService<CreatePlayerByBetLimitCommand> createPlayerByBetLimitService,
+        IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
+        IGetService<GameUrlByLiveQuery, GameUrlResult> gameUrlByLiveService
+        )
     {
-        private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
-        private readonly ICommandService<CreatePlayerByBetLimitCommand> _createPlayerByBetLimitService;
-        private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
-        private readonly IGetService<FundInQuery, FundInResult> _fundInService;
-        private readonly IGetService<FundOrderCheckingQuery, bool> _fundOrderCheckingService;
-        private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
-        private readonly IGetService<GameUrlByLiveQuery, GameUrlResult> _gameUrlByLiveService;
-        private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
-        private readonly ICommandService<LogoutCommand> _logoutService;
+        _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
+        _fundOrderCheckingService = fundOrderCheckingService ?? throw new ArgumentNullException(nameof(fundOrderCheckingService));
+        _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
+        _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
+        _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
+        _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
+        _createPlayerByBetLimitService = createPlayerByBetLimitService ?? throw new ArgumentNullException(nameof(createPlayerByBetLimitService));
+        _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
+        _gameUrlByLiveService = gameUrlByLiveService ?? throw new ArgumentNullException(nameof(gameUrlByLiveService));
+    }
 
-        public GameInterfaceAwcGrpcService(
-            IGetService<FundInQuery, FundInResult> fundInService,
-            IGetService<FundOrderCheckingQuery, bool> fundOrderCheckingService,
-            IGetService<FundOutQuery, FundOutResult> fundOutService,
-            ICommandService<LogoutCommand> logoutService,
-            IGetService<BalanceQuery, BalanceResult> balanceService,
-            ICommandService<CreatePlayerCommand> createPlayerService,
-            ICommandService<CreatePlayerByBetLimitCommand> createPlayerByBetLimitService,
-            IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
-            IGetService<GameUrlByLiveQuery, GameUrlResult> gameUrlByLiveService
-            )
+    public override async Task<GameInterfaceAwcServiceReply> CreatePlayer(GameInterfaceAwcServiceCreatePlayerRequest request, ServerCallContext context)
+    {
+        await _createPlayerService.ExecuteAsync(new CreatePlayerCommand(
+                   new(request.ApiUrl),
+                   request.AgentId,
+                   request.Cert,
+                   request.PlayerCode,
+                   request.UserName,
+                   request.Currency,
+                   request.Language)).ConfigureAwait(false);
+
+        return new GameInterfaceAwcServiceReply()
         {
-            _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
-            _fundOrderCheckingService = fundOrderCheckingService ?? throw new ArgumentNullException(nameof(fundOrderCheckingService));
-            _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
-            _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
-            _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
-            _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
-            _createPlayerByBetLimitService = createPlayerByBetLimitService ?? throw new ArgumentNullException(nameof(createPlayerByBetLimitService));
-            _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
-            _gameUrlByLiveService = gameUrlByLiveService ?? throw new ArgumentNullException(nameof(gameUrlByLiveService));
-        }
+            Success = true
+        };
+    }
 
-        public override async Task<GameInterfaceAwcServiceReply> CreatePlayer(GameInterfaceAwcServiceCreatePlayerRequest request, ServerCallContext context)
+    public override async Task<GameInterfaceAwcServiceReply> CreatePlayerByBetLimit(GameInterfaceAwcServiceCreatePlayerByBetLimitRequest request, ServerCallContext context)
+    {
+        await _createPlayerByBetLimitService.ExecuteAsync(new CreatePlayerByBetLimitCommand(
+                   new(request.ApiUrl),
+                   request.AgentId,
+                   request.Cert,
+                   request.PlayerCode,
+                   request.UserName,
+                   request.Currency,
+                   request.BetLimit,
+                   request.Language)).ConfigureAwait(false);
+
+        return new GameInterfaceAwcServiceReply()
         {
-            await _createPlayerService.ExecuteAsync(new CreatePlayerCommand(
-                       new(request.ApiUrl),
-                       request.AgentId,
-                       request.Cert,
-                       request.PlayerCode,
-                       request.UserName,
-                       request.Currency,
-                       request.Language)).ConfigureAwait(false);
+            Success = true
+        };
+    }
 
-            return new GameInterfaceAwcServiceReply()
-            {
-                Success = true
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceFundReply> FundIn(GameInterfaceAwcServiceFundRequest request, ServerCallContext context)
+    {
+        var result = await _fundInService.GetAsync(new FundInQuery(
+            new(request.ApiUrl),
+            request.AgentId,
+            request.Cert,
+            request.PlayerCode,
+            request.TransactionId,
+            request.Amount)).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceReply> CreatePlayerByBetLimit(GameInterfaceAwcServiceCreatePlayerByBetLimitRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceFundReply()
         {
-            await _createPlayerByBetLimitService.ExecuteAsync(new CreatePlayerByBetLimitCommand(
-                       new(request.ApiUrl),
-                       request.AgentId,
-                       request.Cert,
-                       request.PlayerCode,
-                       request.UserName,
-                       request.Currency,
-                       request.BetLimit,
-                       request.Language)).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            TransactionId = result.TransactionId ?? string.Empty,
+            GameProviderTransactionId = result.GameProviderTransactionId ?? string.Empty,
+            Amount = result.Amount ?? decimal.MinusOne,
+            CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
+        };
+    }
 
-            return new GameInterfaceAwcServiceReply()
-            {
-                Success = true
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceFundOrderCheckingReply> FundOrderChecking(GameInterfaceAwcServiceFundOrderCheckingRequest request, ServerCallContext context)
 
-        public override async Task<GameInterfaceAwcServiceFundReply> FundIn(GameInterfaceAwcServiceFundRequest request, ServerCallContext context)
+    {
+        var result = await _fundOrderCheckingService.GetAsync(new FundOrderCheckingQuery(
+            new(request.ApiUrl),
+            request.AgentId,
+            request.Cert,
+            request.TransactionId)).ConfigureAwait(false);
+
+        return new GameInterfaceAwcServiceFundOrderCheckingReply()
         {
-            var result = await _fundInService.GetAsync(new FundInQuery(
-                new(request.ApiUrl),
-                request.AgentId,
-                request.Cert,
-                request.PlayerCode,
-                request.TransactionId,
-                request.Amount)).ConfigureAwait(false);
+            Exist = result
+        };
+    }
 
-            return new GameInterfaceAwcServiceFundReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                TransactionId = result.TransactionId ?? string.Empty,
-                GameProviderTransactionId = result.GameProviderTransactionId ?? string.Empty,
-                Amount = result.Amount ?? decimal.MinusOne,
-                CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceFundReply> FundOut(GameInterfaceAwcServiceFundRequest request, ServerCallContext context)
+    {
+        var result = await _fundOutService.GetAsync(new FundOutQuery(
+            new(request.ApiUrl),
+            request.AgentId,
+            request.Cert,
+            request.PlayerCode,
+            request.TransactionId,
+            request.Amount)).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceFundOrderCheckingReply> FundOrderChecking(GameInterfaceAwcServiceFundOrderCheckingRequest request, ServerCallContext context)
-
+        return new GameInterfaceAwcServiceFundReply()
         {
-            var result = await _fundOrderCheckingService.GetAsync(new FundOrderCheckingQuery(
-                new(request.ApiUrl),
-                request.AgentId,
-                request.Cert,
-                request.TransactionId)).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            TransactionId = result.TransactionId ?? string.Empty,
+            GameProviderTransactionId = result.GameProviderTransactionId ?? string.Empty,
+            Amount = result.Amount ?? decimal.MinusOne,
+            CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
+        };
+    }
 
-            return new GameInterfaceAwcServiceFundOrderCheckingReply()
-            {
-                Exist = result
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAeLotto(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_AELOTTO,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceFundReply> FundOut(GameInterfaceAwcServiceFundRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _fundOutService.GetAsync(new FundOutQuery(
-                new(request.ApiUrl),
-                request.AgentId,
-                request.Cert,
-                request.PlayerCode,
-                request.TransactionId,
-                request.Amount)).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceFundReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                TransactionId = result.TransactionId ?? string.Empty,
-                GameProviderTransactionId = result.GameProviderTransactionId ?? string.Empty,
-                Amount = result.Amount ?? decimal.MinusOne,
-                CurrentBalance = result.CurrentBalance ?? decimal.MinusOne,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAws(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_AWS,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAeLotto(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_AELOTTO,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcFacai(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_FACAI,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAws(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_AWS,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcFs(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_FS,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcFacai(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_FACAI,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcKm(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_KM,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcFs(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_FS,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcLudo(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_LUDO,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcKm(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_KM,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcPgs(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_PGS,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcLudo(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_LUDO,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcSpade(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_SPADE,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcPgs(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_PGS,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcYl(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_YL,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcSpade(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_SPADE,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcCockfight(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_COCKFIGHT,
+            ExternalGameId: "SV-LIVE-001",
+            BetLimit: request.BetLimit,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcYl(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_YL,
-                ExternalGameId: request.ExternalGameId,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcRcb(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_RCB,
+            ExternalGameId: "HRB-LIVE-001",
+            BetLimit: request.BetLimit,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcCockfight(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_COCKFIGHT,
-                ExternalGameId: "SV-LIVE-001",
-                BetLimit: request.BetLimit,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSg(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_SG,
+            ExternalGameId: "MX-LIVE-002",
+            BetLimit: request.BetLimit,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcRcb(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_RCB,
-                ExternalGameId: "HRB-LIVE-001",
-                BetLimit: request.BetLimit,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenus(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_VENUS,
+            ExternalGameId: "VN-LIVE-001",
+            BetLimit: request.BetLimit,
+            Language: request.Language
+            )).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSg(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceGameUrlReply()
         {
-            var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_SG,
-                ExternalGameId: "MX-LIVE-002",
-                BetLimit: request.BetLimit,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl ?? string.Empty,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceBalanceReply> GetBalance(GameInterfaceAwcServiceBalanceRequest request, ServerCallContext context)
+    {
+        var result = await _balanceService.GetAsync(new BalanceQuery(
+            new(request.ApiUrl),
+            request.AgentId,
+            request.Cert,
+            request.PlayerCode)).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenus(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceBalanceReply()
         {
-            var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
-                ApiUrl: new(request.ApiUrl),
-                AgentId: request.AgentId,
-                Cert: request.Cert,
-                PlayerCode: request.PlayerCode,
-                IsMobileLogin: request.IsMobileLogin,
-                BackUrl: request.BackUrl,
-                Platform: AwcPlatforms.AWC_VENUS,
-                ExternalGameId: "VN-LIVE-001",
-                BetLimit: request.BetLimit,
-                Language: request.Language
-                )).ConfigureAwait(false);
+            Success = result.Success,
+            Message = result.Message ?? string.Empty,
+            IsPlayerExist = result.IsPlayerExist,
+            Balance = result.Balance ?? decimal.Zero,
+        };
+    }
 
-            return new GameInterfaceAwcServiceGameUrlReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                GameUrl = result.GameUrl ?? string.Empty,
-            };
-        }
+    public override async Task<GameInterfaceAwcServiceReply> KickPlayer(GameInterfaceAwcServiceKickPlayerRequest request, ServerCallContext context)
+    {
+        await _logoutService.ExecuteAsync(new LogoutCommand(
+            new(request.ApiUrl),
+            request.AgentId,
+            request.Cert,
+            request.PlayerCode)).ConfigureAwait(false);
 
-        public override async Task<GameInterfaceAwcServiceBalanceReply> GetBalance(GameInterfaceAwcServiceBalanceRequest request, ServerCallContext context)
+        return new GameInterfaceAwcServiceReply()
         {
-            var result = await _balanceService.GetAsync(new BalanceQuery(
-                new(request.ApiUrl),
-                request.AgentId,
-                request.Cert,
-                request.PlayerCode)).ConfigureAwait(false);
-
-            return new GameInterfaceAwcServiceBalanceReply()
-            {
-                Success = result.Success,
-                Message = result.Message ?? string.Empty,
-                IsPlayerExist = result.IsPlayerExist,
-                Balance = result.Balance ?? decimal.Zero,
-            };
-        }
-
-        public override async Task<GameInterfaceAwcServiceReply> KickPlayer(GameInterfaceAwcServiceKickPlayerRequest request, ServerCallContext context)
-        {
-            await _logoutService.ExecuteAsync(new LogoutCommand(
-                new(request.ApiUrl),
-                request.AgentId,
-                request.Cert,
-                request.PlayerCode)).ConfigureAwait(false);
-
-            return new GameInterfaceAwcServiceReply()
-            {
-                Success = true
-            };
-        }
+            Success = true
+        };
     }
 }

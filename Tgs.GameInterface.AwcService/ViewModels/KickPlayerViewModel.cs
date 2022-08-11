@@ -1,8 +1,7 @@
-﻿namespace Tgs.GameInterface.AwcService.ViewModels
-{
-    public record KickPlayerViewModel(
-        Uri ApiUrl,
-        string AgentId,
-        string Cert,
-        string PlayerCode);
-}
+﻿namespace Tgs.GameInterface.AwcService.ViewModels;
+
+public record KickPlayerViewModel(
+    Uri ApiUrl,
+    string AgentId,
+    string Cert,
+    string PlayerCode);
