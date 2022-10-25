@@ -47,10 +47,11 @@ Selector labels
 */}}
 {{- define "game-gameinterface-awc-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "game-gameinterface-awc-service.name" . }}
-app: {{ include "game-gameinterface-awc-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app: {{ include "game-gameinterface-awc-service.name" . }}
 tgs.kind: game
 tgs.game.kind: gameinterface
+tgs.gameprovider.kind: awc
 {{- end }}
 
 {{/*
