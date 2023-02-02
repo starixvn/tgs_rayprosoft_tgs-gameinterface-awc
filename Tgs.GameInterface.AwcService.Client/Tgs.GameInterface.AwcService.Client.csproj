@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.8</Version>
+		<Version>0.0.9</Version>
 		<Authors>Raypro</Authors>
 		<Description>Tgs GameInterface AwcService Client</Description>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-awcservice</PackageProjectUrl>
@@ -15,6 +15,12 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Tgs GameInterface AwcService</PackageTags>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Protos\**" />
+	  <EmbeddedResource Remove="Protos\**" />
+	  <None Remove="Protos\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.48.0" />
@@ -27,16 +33,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Protos\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="..\Tgs.GameInterface.AwcService\Protos\gameinterfaceawcrecordservice.proto" GrpcServices="Client">
-		  <Link>Protos\gameinterfaceawcrecordservice.proto</Link>
-		</Protobuf>
-		<Protobuf Include="..\Tgs.GameInterface.AwcService\Protos\gameinterfaceawcservice.proto" GrpcServices="Client">
-			<Link>Protos\gameinterfaceawcservice.proto</Link>
-		</Protobuf>
+	  <Protobuf Include="..\Tgs.GameInterface.AwcService\Protos\gameinterfaceawcrecordservice.proto" GrpcServices="Client">
+	    <Link>gameinterfaceawcrecordservice.proto</Link>
+	  </Protobuf>
+	  <Protobuf Include="..\Tgs.GameInterface.AwcService\Protos\gameinterfaceawcservice.proto" GrpcServices="Client">
+	    <Link>gameinterfaceawcservice.proto</Link>
+	  </Protobuf>
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
+using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.GameInterface.AwcService.Interfaces;
 using Tgs.GameInterface.AwcService.ViewModels;
 using Tgs.ServiceUtility;
@@ -11,6 +12,7 @@ namespace Tgs.GameInterface.AwcService.Controllers;
 [ApiController]
 public class HorseRacingController : ControllerBase,
     IBalanceHandler,
+    IBalancesHandler,
     IFundHandler,
     IKickPlayerHandler,
     ICreatePlayerByBetLimitHandler,
@@ -162,7 +164,7 @@ public class HorseRacingController : ControllerBase,
     }
 
     /// <summary>
-    /// Players the balance asynchronous.
+    /// Gets the balance asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
     /// <param name="model">The model.</param>
@@ -175,13 +177,13 @@ public class HorseRacingController : ControllerBase,
     ///             "apiUrl": "https://tttint.onlinegames22.com/",
     ///             "agentId": "cnygpircb",
     ///             "cert": "zGHFiBqpNt7pfg9WV2M",
-    ///             "playerCode": "4ucmqplxb029"
+    ///             "playerCode": "{playerCode}"
     ///         }
     /// </remarks>
     [HttpPost("balance")]
     public async ValueTask<BalanceResultViewModel> GetBalanceAsync(
-            [FromServices] IGetService<BalanceQuery, BalanceResult> service,
-            BalanceQueryViewModel model)
+        [FromServices] IGetService<BalanceQuery, BalanceResult> service,
+        BalanceQueryViewModel model)
     {
         var result = await service.GetAsync(new BalanceQuery(
             model.ApiUrl,
@@ -195,6 +197,51 @@ public class HorseRacingController : ControllerBase,
             result.Message,
             result.IsPlayerExist,
             result.Balance);
+    }
+
+    /// <summary>
+    /// Gets the balances asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="model">The model.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///         {
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpircb",
+    ///             "cert": "zGHFiBqpNt7pfg9WV2M"
+    ///         }
+    /// </remarks>
+    [HttpPost("balances")]
+    public async IAsyncEnumerable<AllBalanceViewModel> GetBalancesAsync(
+        [FromServices] IQueryService<AllBalanceQuery, AllBalance> service,
+        AllBalanceQueryViewModel model)
+    {
+        var balances = await service.QueryAsync(
+              query: new AllBalanceQuery(
+                  ApiUrl: model.ApiUrl,
+                  AgentId: model.AgentId,
+                  Cert: model.Cert),
+              cancellationToken: HttpContext.RequestAborted)
+              .ToArrayAsync()
+              .ConfigureAwait(false)
+              ?? Enumerable.Empty<AllBalance>();
+
+        if (!balances.Any())
+        {
+            yield break;
+        }
+
+        foreach (var balance in balances)
+        {
+            yield return new AllBalanceViewModel(
+                UserId: balance.UserId,
+                Balance: balance.Balance,
+                LastModified: balance.LastModified);
+        }
     }
 
     /// <summary>

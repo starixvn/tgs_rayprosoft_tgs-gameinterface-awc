@@ -8,5 +8,7 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 public interface IGameUnsettleHandler
 {
     [HttpPost("game/unsettle")]
-    IAsyncEnumerable<GameUnsettleTransactionViewModel> GetGameUnsettleAsync([FromServices] IQueryService<OutstandingByBetTimeQuery, OutstandingByBetTimeResult> service, GameUnsettleQueryViewModel model);
+    IAsyncEnumerable<GameUnsettleTransactionViewModel> GetGameUnsettleAsync(
+        [FromServices] IQueryService<OutstandingByBetTimeQuery, OutstandingByBetTimeResult> service,
+        GameUnsettleQueryViewModel model);
 }

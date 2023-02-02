@@ -69,6 +69,16 @@ public interface IGameApiClient
     ValueTask<GetBalanceResult> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets all balances asynchronous.
+    /// </summary>
+    /// <param name="apiUrl">The API URL.</param>
+    /// <param name="agentId">The agent identifier.</param>
+    /// <param name="cert">The cert.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns></returns>
+    IAsyncEnumerable<AllBalance> GetAllBalancesAsync(Uri apiUrl, string agentId, string cert, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Logins the and launch game asynchronous.
     /// </summary>
     /// <param name="apiUrl">The API URL.</param>

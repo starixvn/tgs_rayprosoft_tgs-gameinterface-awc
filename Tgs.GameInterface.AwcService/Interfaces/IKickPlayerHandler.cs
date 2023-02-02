@@ -8,5 +8,7 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 public interface IKickPlayerHandler
 {
     [HttpPost("kick")]
-    ValueTask KickPlayerAsync([FromServices] ICommandService<LogoutCommand> service, KickPlayerViewModel model);
+    ValueTask KickPlayerAsync(
+        [FromServices] ICommandService<LogoutCommand> service,
+        KickPlayerViewModel model);
 }

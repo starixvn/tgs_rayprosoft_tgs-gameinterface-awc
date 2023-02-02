@@ -8,5 +8,7 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 public interface IBalanceHandler
 {
     [HttpPost("balance")]
-    ValueTask<BalanceResultViewModel> GetBalanceAsync([FromServices] IGetService<BalanceQuery, BalanceResult> service, BalanceQueryViewModel model);
+    ValueTask<BalanceResultViewModel> GetBalanceAsync(
+        [FromServices] IGetService<BalanceQuery, BalanceResult> service,
+        BalanceQueryViewModel model);
 }

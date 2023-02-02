@@ -25,7 +25,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         _transactionByUpdateDateByStatusService = transactionByUpdateDateByStatusService ?? throw new ArgumentNullException(nameof(transactionByUpdateDateByStatusService));
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcAeLotto(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcAeLotto(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -34,7 +34,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_AELOTTO,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -43,7 +43,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -74,7 +74,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcAws(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcAws(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -83,7 +83,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_AWS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -92,7 +92,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -123,7 +123,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcCockfight(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcCockfight(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -132,7 +132,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_COCKFIGHT,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -141,7 +141,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -172,7 +172,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcFacai(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcFacai(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -181,7 +181,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_FACAI,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -190,7 +190,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -221,7 +221,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcFs(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcFs(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -230,7 +230,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_FS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -239,7 +239,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -270,7 +270,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcKm(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcKm(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -279,7 +279,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_KM,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -288,7 +288,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -319,7 +319,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcLudo(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcLudo(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -328,7 +328,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_LUDO,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -337,7 +337,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -368,7 +368,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcPgs(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcPgs(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -377,7 +377,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_PGS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -386,7 +386,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -417,7 +417,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcRcb(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcRcb(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -426,7 +426,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_RCB,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -435,7 +435,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -466,7 +466,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcSg(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcSg(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -475,7 +475,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_SG,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -484,7 +484,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -515,7 +515,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcSpade(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcSpade(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -524,7 +524,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_SPADE,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -533,7 +533,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -564,7 +564,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcVenus(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcVenus(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -573,7 +573,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_VENUS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -582,7 +582,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -613,7 +613,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGamePullRecordReply> GamePullRecordByAwcYl(GameInterfaceAwcServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcYl(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateService.QueryAsync(new TransactionByUpdateDateQuery(
             ApiUrl: new(request.ApiUrl),
@@ -622,7 +622,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_YL,
             TimeFrom: request.TimeFrom.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -631,7 +631,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -662,7 +662,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcAeLotto(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcAeLotto(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -672,7 +672,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -681,7 +681,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -712,7 +712,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcAws(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcAws(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -722,7 +722,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -731,7 +731,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -762,7 +762,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcCockfight(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcCockfight(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -772,7 +772,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -781,7 +781,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -812,7 +812,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcFacai(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcFacai(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -822,7 +822,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -831,7 +831,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -862,7 +862,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcFs(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcFs(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -872,7 +872,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -881,7 +881,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -912,7 +912,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcKm(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcKm(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -922,7 +922,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -931,7 +931,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -962,7 +962,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcLudo(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcLudo(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -972,7 +972,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -981,7 +981,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1012,7 +1012,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcPgs(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcPgs(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1022,7 +1022,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -1031,7 +1031,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1062,7 +1062,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcRcb(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcRcb(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1072,7 +1072,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -1081,7 +1081,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1112,7 +1112,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcSg(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcSg(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1122,7 +1122,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -1131,7 +1131,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1162,7 +1162,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcSpade(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcSpade(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1172,7 +1172,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -1181,7 +1181,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1212,7 +1212,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcVenus(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcVenus(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1222,7 +1222,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -1231,7 +1231,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1262,7 +1262,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameSettleRecordReply> GameSettleByAwcYl(GameInterfaceAwcServiceGameSettleRequest request, ServerCallContext context)
+    public override async Task<GameSettleRecordReply> GameSettleByAwcYl(GameSettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByTxTimeQuery.QueryAsync(new TransactionByTxTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1272,7 +1272,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameSettleRecordReply();
+        var reply = new GameSettleRecordReply();
 
         if (result is null)
         {
@@ -1281,7 +1281,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameSettleRecord()
+            reply.Items.Add(new GameSettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1312,7 +1312,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUnsettleRecordReply> GameUnsettleByAwcAeLotto(GameInterfaceAwcServiceGameUnsettleRequest request, ServerCallContext context)
+    public override async Task<GameUnsettleRecordReply> GameUnsettleByAwcAeLotto(GameUnsettleRequest request, ServerCallContext context)
     {
         var result = await _outstandingByBetTimeService.QueryAsync(new OutstandingByBetTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1322,7 +1322,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameUnsettleRecordReply();
+        var reply = new GameUnsettleRecordReply();
 
         if (result is null)
         {
@@ -1331,7 +1331,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameUnsettleRecord()
+            reply.Items.Add(new GameUnsettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1354,7 +1354,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUnsettleRecordReply> GameUnsettleByAwcCockfight(GameInterfaceAwcServiceCockFightGameUnsettleRequest request, ServerCallContext context)
+    public override async Task<GameUnsettleRecordReply> GameUnsettleByAwcCockfight(CockFightGameUnsettleRequest request, ServerCallContext context)
     {
         var result = await _transactionByUpdateDateByStatusService.QueryAsync(new TransactionByUpdateDateByStatusQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1364,7 +1364,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             TimeFrom: request.TimeFrom.ToDateTimeOffset(),
             TransactionStatus: TransactionStatus.Bet)).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameUnsettleRecordReply();
+        var reply = new GameUnsettleRecordReply();
 
         if (result is null)
         {
@@ -1373,7 +1373,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameUnsettleRecord()
+            reply.Items.Add(new GameUnsettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
@@ -1396,7 +1396,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUnsettleRecordReply> GameUnsettleByAwcRcb(GameInterfaceAwcServiceGameUnsettleRequest request, ServerCallContext context)
+    public override async Task<GameUnsettleRecordReply> GameUnsettleByAwcRcb(GameUnsettleRequest request, ServerCallContext context)
     {
         var result = await _outstandingByBetTimeService.QueryAsync(new OutstandingByBetTimeQuery(
             ApiUrl: new(request.ApiUrl),
@@ -1406,7 +1406,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset())).ToListAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceAwcServiceGameUnsettleRecordReply();
+        var reply = new GameUnsettleRecordReply();
 
         if (result is null)
         {
@@ -1415,7 +1415,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceAwcServiceGameUnsettleRecord()
+            reply.Items.Add(new GameUnsettleRecord()
             {
                 ExternalRoundId = transaction.ExternalRoundId,
                 Platform = transaction.Platform,
