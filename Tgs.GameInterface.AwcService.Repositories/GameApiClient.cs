@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
@@ -37,7 +38,12 @@ internal class GameApiClient : IGameApiClient
         _tgsLog = tgsLog ?? throw new ArgumentNullException(nameof(tgsLog));
     }
 
-    public async ValueTask<bool> CheckTransferOperationAsync(Uri apiUrl, string agentId, string cert, string transactionId, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> CheckTransferOperationAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string transactionId,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -70,7 +76,15 @@ internal class GameApiClient : IGameApiClient
         return txStatus == 1;
     }
 
-    public async ValueTask CreatePlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string language = "en", CancellationToken cancellationToken = default)
+    public async ValueTask CreatePlayerAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string playerCode,
+        string userName,
+        string currency,
+        string language = "en",
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -104,7 +118,16 @@ internal class GameApiClient : IGameApiClient
         }
     }
 
-    public async ValueTask CreatePlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string betLimit, string language = "en", CancellationToken cancellationToken = default)
+    public async ValueTask CreatePlayerAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string playerCode,
+        string userName,
+        string currency,
+        string betLimit,
+        string language = "en",
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -139,7 +162,14 @@ internal class GameApiClient : IGameApiClient
         }
     }
 
-    public async ValueTask<FundResult> DepositAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
+    public async ValueTask<FundResult> DepositAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string playerCode,
+        string transactionId,
+        decimal amount,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -203,7 +233,66 @@ internal class GameApiClient : IGameApiClient
             CurrentBalance: resultCurrentBalance);
     }
 
-    public async ValueTask<GetBalanceResult> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<AllBalance> GetAllBalancesAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["cert"] = cert,
+            ["agentId"] = agentId,
+            ["isFilterBalance"] = 1.ToString(),
+            ["alluser"] = 1.ToString()
+        };
+
+        var document = await PostAsync(
+            apiUrl,
+            "/wallet/getBalance",
+            parameters,
+            "getAllBalances",
+            cancellationToken).ConfigureAwait(false);
+
+        if (document is null)
+        {
+            throw new Exception("Document is empty.");
+        }
+
+        var status = document.RootElement.GetProperty("status").ToString();
+
+        if (status != ((int)GameApiClientError.Success).ToString("d4"))
+        {
+            throw new Exception(document.RootElement.GetProperty("desc").ToString());
+        }
+
+        if (!document.RootElement.TryGetProperty(("results"), out JsonElement results))
+        {
+            throw new Exception("JsonElement parsing failed.");
+        }
+        var balances = results.Deserialize<IEnumerable<BalanceModel>>(_SerializerOptions)
+            ?? Enumerable.Empty<BalanceModel>();
+
+        if (!balances.Any())
+        {
+            yield break;
+        }
+
+        foreach (var balance in balances)
+        {
+            yield return new AllBalance(
+                UserId: balance.UserId,
+                Balance: decimal.Parse(balance.Balance),
+                LastModified: balance.LastModified);
+        }
+    }
+
+    public async ValueTask<GetBalanceResult> GetBalanceAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string playerCode,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -257,7 +346,12 @@ internal class GameApiClient : IGameApiClient
             );
     }
 
-    public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGame data, CancellationToken cancellationToken = default)
+    public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        LoginAndLaunchGame data,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -275,7 +369,12 @@ internal class GameApiClient : IGameApiClient
         return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
     }
 
-    public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveLobby data, CancellationToken cancellationToken = default)
+    public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        LoginAndLaunchGameByLiveLobby data,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -293,7 +392,12 @@ internal class GameApiClient : IGameApiClient
         return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
     }
 
-    public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLive data, CancellationToken cancellationToken = default)
+    public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        LoginAndLaunchGameByLive data,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -312,7 +416,12 @@ internal class GameApiClient : IGameApiClient
         return LoginAndLaunchGameAsync(apiUrl, parameters, cancellationToken);
     }
 
-    public async ValueTask LogoutAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
+    public async ValueTask LogoutAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string playerCode,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -360,7 +469,15 @@ internal class GameApiClient : IGameApiClient
         }
     }
 
-    public async ValueTask<FundResult> WithdrawAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, int withdrawType = 0, CancellationToken cancellationToken = default)
+    public async ValueTask<FundResult> WithdrawAsync(
+        Uri apiUrl,
+        string agentId,
+        string cert,
+        string playerCode,
+        string transactionId,
+        decimal amount,
+        int withdrawType = 0,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {

@@ -1,6 +1,8 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
+using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.GameInterface.AwcService.Protos;
 using Tgs.ServiceUtility;
 
@@ -9,6 +11,7 @@ namespace Tgs.GameInterface.AwcService.GrpcServices;
 public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterfaceAwcServiceBase
 {
     private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
+    private readonly IQueryService<AllBalanceQuery, AllBalance> _allBalanceService;
     private readonly ICommandService<CreatePlayerByBetLimitCommand> _createPlayerByBetLimitService;
     private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
     private readonly IGetService<FundInQuery, FundInResult> _fundInService;
@@ -24,6 +27,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         IGetService<FundOutQuery, FundOutResult> fundOutService,
         ICommandService<LogoutCommand> logoutService,
         IGetService<BalanceQuery, BalanceResult> balanceService,
+        IQueryService<AllBalanceQuery, AllBalance> allBalanceService,
         ICommandService<CreatePlayerCommand> createPlayerService,
         ICommandService<CreatePlayerByBetLimitCommand> createPlayerByBetLimitService,
         IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
@@ -35,13 +39,14 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
         _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
         _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
+        _allBalanceService = allBalanceService ?? throw new ArgumentNullException(nameof(allBalanceService));
         _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
         _createPlayerByBetLimitService = createPlayerByBetLimitService ?? throw new ArgumentNullException(nameof(createPlayerByBetLimitService));
         _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
         _gameUrlByLiveService = gameUrlByLiveService ?? throw new ArgumentNullException(nameof(gameUrlByLiveService));
     }
 
-    public override async Task<GameInterfaceAwcServiceReply> CreatePlayer(GameInterfaceAwcServiceCreatePlayerRequest request, ServerCallContext context)
+    public override async Task<BaseReply> CreatePlayer(CreatePlayerRequest request, ServerCallContext context)
     {
         await _createPlayerService.ExecuteAsync(new CreatePlayerCommand(
                    new(request.ApiUrl),
@@ -52,13 +57,13 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
                    request.Currency,
                    request.Language)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceReply()
+        return new BaseReply()
         {
             Success = true
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceReply> CreatePlayerByBetLimit(GameInterfaceAwcServiceCreatePlayerByBetLimitRequest request, ServerCallContext context)
+    public override async Task<BaseReply> CreatePlayerByBetLimit(CreatePlayerByBetLimitRequest request, ServerCallContext context)
     {
         await _createPlayerByBetLimitService.ExecuteAsync(new CreatePlayerByBetLimitCommand(
                    new(request.ApiUrl),
@@ -70,13 +75,13 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
                    request.BetLimit,
                    request.Language)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceReply()
+        return new BaseReply()
         {
             Success = true
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceFundReply> FundIn(GameInterfaceAwcServiceFundRequest request, ServerCallContext context)
+    public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)
     {
         var result = await _fundInService.GetAsync(new FundInQuery(
             new(request.ApiUrl),
@@ -86,7 +91,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             request.TransactionId,
             request.Amount)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceFundReply()
+        return new FundReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -97,7 +102,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceFundOrderCheckingReply> FundOrderChecking(GameInterfaceAwcServiceFundOrderCheckingRequest request, ServerCallContext context)
+    public override async Task<FundOrderCheckingReply> FundOrderChecking(FundOrderCheckingRequest request, ServerCallContext context)
 
     {
         var result = await _fundOrderCheckingService.GetAsync(new FundOrderCheckingQuery(
@@ -106,13 +111,13 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             request.Cert,
             request.TransactionId)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceFundOrderCheckingReply()
+        return new FundOrderCheckingReply()
         {
             Exist = result
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceFundReply> FundOut(GameInterfaceAwcServiceFundRequest request, ServerCallContext context)
+    public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)
     {
         var result = await _fundOutService.GetAsync(new FundOutQuery(
             new(request.ApiUrl),
@@ -122,7 +127,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             request.TransactionId,
             request.Amount)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceFundReply()
+        return new FundReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -133,7 +138,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAeLotto(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcAeLotto(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -147,7 +152,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -156,7 +161,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcAws(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcAws(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -170,7 +175,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -179,7 +184,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcFacai(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcFacai(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -193,7 +198,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -202,7 +207,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcFs(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcFs(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -216,7 +221,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -225,7 +230,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcKm(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcKm(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -239,7 +244,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -248,7 +253,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcLudo(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcLudo(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -262,7 +267,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -271,7 +276,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcPgs(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcPgs(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -285,7 +290,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -294,7 +299,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcSpade(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcSpade(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -308,7 +313,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -317,7 +322,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByAwcYl(GameInterfaceAwcServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByAwcYl(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -331,7 +336,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -340,7 +345,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlByLiveLobbyByAwcCockfight(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlByLiveLobbyByAwcCockfight(GameUrlByLiveLobbyRequest request, ServerCallContext context)
     {
         var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
             ApiUrl: new(request.ApiUrl),
@@ -355,7 +360,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -364,7 +369,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcRcb(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlLiveLobbyByAwcRcb(GameUrlByLiveLobbyRequest request, ServerCallContext context)
     {
         var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
             ApiUrl: new(request.ApiUrl),
@@ -379,7 +384,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -388,7 +393,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcSg(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlLiveLobbyByAwcSg(GameUrlByLiveLobbyRequest request, ServerCallContext context)
     {
         var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
             ApiUrl: new(request.ApiUrl),
@@ -403,7 +408,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -412,7 +417,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceGameUrlReply> GameUrlLiveLobbyByAwcVenus(GameInterfaceAwcServiceGameUrlByLiveLobbyRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrlLiveLobbyByAwcVenus(GameUrlByLiveLobbyRequest request, ServerCallContext context)
     {
         var result = await _gameUrlByLiveService.GetAsync(new GameUrlByLiveQuery(
             ApiUrl: new(request.ApiUrl),
@@ -427,7 +432,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -436,7 +441,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceBalanceReply> GetBalance(GameInterfaceAwcServiceBalanceRequest request, ServerCallContext context)
+    public override async Task<BalanceReply> GetBalance(BalanceRequest request, ServerCallContext context)
     {
         var result = await _balanceService.GetAsync(new BalanceQuery(
             new(request.ApiUrl),
@@ -444,7 +449,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             request.Cert,
             request.PlayerCode)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceBalanceReply()
+        return new BalanceReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -453,7 +458,39 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
-    public override async Task<GameInterfaceAwcServiceReply> KickPlayer(GameInterfaceAwcServiceKickPlayerRequest request, ServerCallContext context)
+    public override async Task<BalancesReply> GetBalances(BalancesRequest request, ServerCallContext context)
+    {
+        var balances = await _allBalanceService
+            .QueryAsync(
+            query: new AllBalanceQuery(
+                ApiUrl: new(request.ApiUrl),
+                AgentId: request.AgentId,
+                Cert: request.Cert),
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync()
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<AllBalance>();
+
+        var reply = new BalancesReply();
+
+        if (balances.Any())
+        {
+            foreach (var balance in balances)
+            {
+                reply.Items.Add(new BalanceRecord
+                {
+                    UserId = balance.UserId,
+                    Balance = balance.Balance,
+                    LastModified = balance.LastModified.ToTimestamp()
+                });
+            }
+            return reply;
+        }
+
+        return reply;
+    }
+
+    public override async Task<BaseReply> KickPlayer(KickPlayerRequest request, ServerCallContext context)
     {
         await _logoutService.ExecuteAsync(new LogoutCommand(
             new(request.ApiUrl),
@@ -461,7 +498,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
             request.Cert,
             request.PlayerCode)).ConfigureAwait(false);
 
-        return new GameInterfaceAwcServiceReply()
+        return new BaseReply()
         {
             Success = true
         };

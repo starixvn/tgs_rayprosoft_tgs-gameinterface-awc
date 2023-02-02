@@ -8,11 +8,17 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 public interface IFundHandler
 {
     [HttpPost("fundin")]
-    ValueTask<FundResultViewModel> FundInAsync([FromServices] IGetService<FundInQuery, FundInResult> service, FundQueryViewModel model);
+    ValueTask<FundResultViewModel> FundInAsync(
+        [FromServices] IGetService<FundInQuery, FundInResult> service,
+        FundQueryViewModel model);
 
     [HttpPost("fundorderchecking")]
-    ValueTask<bool> FundOrderCheckingAsync([FromServices] IGetService<FundOrderCheckingQuery, bool> service, FundOrderCheckingViewModel model);
+    ValueTask<bool> FundOrderCheckingAsync(
+        [FromServices] IGetService<FundOrderCheckingQuery, bool> service,
+        FundOrderCheckingViewModel model);
 
     [HttpPost("fundout")]
-    ValueTask<FundResultViewModel> FundOutAsync([FromServices] IGetService<FundOutQuery, FundOutResult> service, FundQueryViewModel model);
+    ValueTask<FundResultViewModel> FundOutAsync(
+        [FromServices] IGetService<FundOutQuery, FundOutResult> service,
+        FundQueryViewModel model);
 }

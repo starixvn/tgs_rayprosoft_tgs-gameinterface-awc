@@ -14,5 +14,7 @@ public interface ILobbyGameUrlByLiveHandler
     /// <param name="model">The model.</param>
     /// <returns></returns>
     [HttpPost("lobby/live")]
-    ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync([FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service, GameUrlByLiveLobbyQueryViewModel model);
+    ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync(
+        [FromServices] IGetService<GameUrlByLiveLobbyQuery, GameUrlResult> service,
+        GameUrlByLiveLobbyQueryViewModel model);
 }

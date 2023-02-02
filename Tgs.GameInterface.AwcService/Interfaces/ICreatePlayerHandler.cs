@@ -8,5 +8,7 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 public interface ICreatePlayerHandler
 {
     [HttpPost("create")]
-    ValueTask CreatePlayerAsync([FromServices] ICommandService<CreatePlayerCommand> service, CreatePlayerViewModel model);
+    ValueTask CreatePlayerAsync(
+        [FromServices] ICommandService<CreatePlayerCommand> service,
+        CreatePlayerViewModel model);
 }

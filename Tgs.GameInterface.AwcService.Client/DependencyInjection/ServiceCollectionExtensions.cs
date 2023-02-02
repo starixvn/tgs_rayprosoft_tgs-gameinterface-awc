@@ -51,6 +51,6 @@ public static class ServiceCollectionExtensions
             .Services
             .AddSingleton<DiagnosticsInterceptorOptions>()
             .AddSingleton<LoggingInterceptor>()
-            .AddTransient<IGameInterfaceAwcServiceGrpc, GameInterfaceAwcServiceGrpc>()
-            .AddTransient<IGameInterfaceAwcRecordServiceGrpc, GameInterfaceAwcRecordServiceGrpc>();
+            .AddTransient<IGameInterfaceAwcServiceClient, GameInterfaceAwcServiceClient>()
+            .AddTransient<IGameInterfaceAwcRecordServiceClient, GameInterfaceAwcRecordServiceClient>();
 }
