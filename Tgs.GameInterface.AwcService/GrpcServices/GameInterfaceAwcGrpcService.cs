@@ -481,7 +481,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
                 {
                     UserId = balance.UserId,
                     Balance = balance.Balance,
-                    LastModified = balance.LastModified.ToTimestamp()
+                    LastModified = balance.LastModified.ToUniversalTime().ToTimestamp()
                 });
             }
             return reply;
