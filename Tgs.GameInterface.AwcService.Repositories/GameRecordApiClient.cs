@@ -182,7 +182,12 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var status = document.RootElement.GetProperty("status").ToString();
 
-        return status != ((int)GameApiClientError.Success).ToString("d4")
+        return
+            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
+            ? new GetTransactionByUpdateDateResult(
+                Success: true,
+                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>())
+            : status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetTransactionByUpdateDateResult(
                 Success: false,
                 Message: document.RootElement.GetProperty("desc").ToString())
