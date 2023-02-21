@@ -73,7 +73,12 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var status = document.RootElement.GetProperty("status").ToString();
 
-        return status != ((int)GameApiClientError.Success).ToString("d4")
+        return
+            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
+            ? new GetOutstandingByBetTimeResult(
+                Success: true,
+                Transactions: Enumerable.Empty<GetOutstandingByBetTimeTransaction>())
+            : status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetOutstandingByBetTimeResult(
                 Success: false,
                 Message: document.RootElement.GetProperty("desc").ToString())
@@ -127,7 +132,12 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var status = document.RootElement.GetProperty("status").ToString();
 
-        return status != ((int)GameApiClientError.Success).ToString("d4")
+        return
+            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
+            ? new GetTransactionByTxTimeResult(
+                Success: true,
+                Transactions: Enumerable.Empty<GetTransactionByTxTimeTransaction>())
+            : status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetTransactionByTxTimeResult(
                 Success: false,
                 Message: document.RootElement.GetProperty("desc").ToString())
@@ -241,7 +251,12 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var status = document.RootElement.GetProperty("status").ToString();
 
-        return status != ((int)GameApiClientError.Success).ToString("d4")
+        return
+            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
+            ? new GetTransactionByUpdateDateResult(
+                Success: true,
+                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>())
+            : status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetTransactionByUpdateDateResult(
                 Success: false,
                 Message: document.RootElement.GetProperty("desc").ToString())
