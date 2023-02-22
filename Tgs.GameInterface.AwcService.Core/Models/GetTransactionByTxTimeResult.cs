@@ -2,5 +2,5 @@
 
 public record GetTransactionByTxTimeResult(
     bool Success,
-    string? Message = null,
-    IEnumerable<GetTransactionByTxTimeTransaction>? Transactions = null);
+    IEnumerable<GetTransactionByTxTimeTransaction> Transactions,
+    string? Message = null);

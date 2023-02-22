@@ -2,5 +2,5 @@
 
 public record GetTransactionByUpdateDateResult(
     bool Success,
-    string? Message = null,
-    IEnumerable<GetTransactionByUpdateDateTransaction>? Transactions = null);
+    IEnumerable<GetTransactionByUpdateDateTransaction> Transactions,
+    string? Message = null);

@@ -2,5 +2,5 @@
 
 public record GetOutstandingByBetTimeResult(
     bool Success,
-    string? Message = null,
-    IEnumerable<GetOutstandingByBetTimeTransaction>? Transactions = null);
+    IEnumerable<GetOutstandingByBetTimeTransaction> Transactions,
+    string? Message = null);

@@ -75,19 +75,17 @@ internal class GameRecordApiClient : IGameRecordApiClient
         var status = document.RootElement.GetProperty("status").ToString();
 
         return
-            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
-            ? new GetOutstandingByBetTimeResult(
-                Success: true,
-                Transactions: Enumerable.Empty<GetOutstandingByBetTimeTransaction>())
-            : status != ((int)GameApiClientError.Success).ToString("d4")
+            status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetOutstandingByBetTimeResult(
                 Success: false,
+                Transactions: Enumerable.Empty<GetOutstandingByBetTimeTransaction>(),
                 Message: document.RootElement.GetProperty("desc").ToString())
             : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
             ? throw new Exception("JsonElement failed to parse transactions.")
             : new GetOutstandingByBetTimeResult(
             Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetOutstandingByBetTimeTransaction>>(_SerializerOptions));
+            Transactions: transactions.Deserialize<IEnumerable<GetOutstandingByBetTimeTransaction>>(_SerializerOptions)
+            ?? Enumerable.Empty<GetOutstandingByBetTimeTransaction>());
     }
 
     public async ValueTask<GetTransactionByTxTimeResult> GetTransactionByTxTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
@@ -134,19 +132,17 @@ internal class GameRecordApiClient : IGameRecordApiClient
         var status = document.RootElement.GetProperty("status").ToString();
 
         return
-            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
-            ? new GetTransactionByTxTimeResult(
-                Success: true,
-                Transactions: Enumerable.Empty<GetTransactionByTxTimeTransaction>())
-            : status != ((int)GameApiClientError.Success).ToString("d4")
+            status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetTransactionByTxTimeResult(
                 Success: false,
+                Transactions: Enumerable.Empty<GetTransactionByTxTimeTransaction>(),
                 Message: document.RootElement.GetProperty("desc").ToString())
             : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
             ? throw new Exception("JsonElement failed to parse transactions.")
             : new GetTransactionByTxTimeResult(
             Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByTxTimeTransaction>>(_SerializerOptions));
+            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByTxTimeTransaction>>(_SerializerOptions)
+            ?? Enumerable.Empty<GetTransactionByTxTimeTransaction>());
     }
 
     public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, CancellationToken cancellationToken = default)
@@ -194,19 +190,17 @@ internal class GameRecordApiClient : IGameRecordApiClient
         var status = document.RootElement.GetProperty("status").ToString();
 
         return
-            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
-            ? new GetTransactionByUpdateDateResult(
-                Success: true,
-                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>())
-            : status != ((int)GameApiClientError.Success).ToString("d4")
+            status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetTransactionByUpdateDateResult(
                 Success: false,
+                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>(),
                 Message: document.RootElement.GetProperty("desc").ToString())
             : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
             ? throw new Exception("JsonElement failed to parse transactions.")
             : new GetTransactionByUpdateDateResult(
             Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions));
+            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions)
+            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>());
     }
 
     public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, CancellationToken cancellationToken = default)
@@ -253,19 +247,17 @@ internal class GameRecordApiClient : IGameRecordApiClient
         var status = document.RootElement.GetProperty("status").ToString();
 
         return
-            status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4")
-            ? new GetTransactionByUpdateDateResult(
-                Success: true,
-                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>())
-            : status != ((int)GameApiClientError.Success).ToString("d4")
+            status != ((int)GameApiClientError.Success).ToString("d4")
             ? new GetTransactionByUpdateDateResult(
                 Success: false,
+                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>(),
                 Message: document.RootElement.GetProperty("desc").ToString())
             : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
             ? throw new Exception("JsonElement failed to parse transactions.")
             : new GetTransactionByUpdateDateResult(
             Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions));
+            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions)
+            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>());
     }
 
     private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
