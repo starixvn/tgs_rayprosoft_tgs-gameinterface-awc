@@ -170,38 +170,13 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ["status"] = ((int)transactionStatus).ToString()
         };
 
-        var retryPolicy = Policy
-            .HandleResult<JsonDocument?>(r =>
-            {
-                var status = r?.RootElement.GetProperty("status").GetString();
-                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
-            })
-            .WaitAndRetryAsync(
-            retryCount: 1,
-            retryAttempt =>
-            {
-                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
-                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
-                var timeToRetry = TimeSpan.FromSeconds(20);
-                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
-                return timeToRetry;
-            },
-            (result, retryTime, context) =>
-            {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                    DateTime.Now.ToString("o"),
-                    parameters,
-                    result,
-                    retryTime);
-            });
-
-        var document = await retryPolicy.ExecuteAsync(async () =>
-        await PostAsync(
-            apiUrl: apiUrl,
-            path: "/fetch/gzip/getTransactionByUpdateDate",
-            parameters: parameters,
-            logPrefix: "getTransactionByUpdateDate",
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        var document = await PostAsync(
+                apiUrl: apiUrl,
+                path: "/fetch/gzip/getTransactionByUpdateDate",
+                parameters: parameters,
+                logPrefix: "getTransactionByUpdateDate",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         if (document is null)
         {
@@ -234,38 +209,13 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ["platform"] = platform
         };
 
-        var retryPolicy = Policy
-            .HandleResult<JsonDocument?>(r =>
-            {
-                var status = r?.RootElement.GetProperty("status").GetString();
-                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
-            })
-            .WaitAndRetryAsync(
-            retryCount: 1,
-            retryAttempt =>
-            {
-                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
-                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
-                var timeToRetry = TimeSpan.FromSeconds(20);
-                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
-                return timeToRetry;
-            },
-            (result, retryTime, context) =>
-            {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                    DateTime.Now.ToString("o"),
-                    parameters,
-                    result,
-                    retryTime);
-            });
-
-        var document = await retryPolicy.ExecuteAsync(async () =>
-        await PostAsync(
-            apiUrl: apiUrl,
-            path: "/fetch/gzip/getTransactionByUpdateDate",
-            parameters: parameters,
-            logPrefix: "getTransactionByUpdateDate",
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        var document = await PostAsync(
+                apiUrl: apiUrl,
+                path: "/fetch/gzip/getTransactionByUpdateDate",
+                parameters: parameters,
+                logPrefix: "getTransactionByUpdateDate",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         if (document is null)
         {
