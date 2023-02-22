@@ -45,7 +45,7 @@ public class GetOutstandingByBetTimeUnitTest
         var result = await client.GetOutstandingByBetTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
 
         Assert.IsTrue(result.Success);
-        Assert.IsNull(result.Transactions);
+        Assert.IsFalse(result.Transactions.Any());
     }
 
     [TestMethod]

@@ -46,7 +46,7 @@ public class GetTransactionByUpdateDateUnitTest
         var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom, TransactionStatus.Settled);
 
         Assert.IsTrue(result.Success);
-        Assert.IsNull(result.Transactions);
+        Assert.IsFalse(result.Transactions.Any());
     }
 
     [TestMethod]

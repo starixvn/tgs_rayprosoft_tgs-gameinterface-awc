@@ -46,7 +46,7 @@ public class GetTransactionByTxTimeUnitTest
         var result = await client.GetTransactionByTxTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
 
         Assert.IsTrue(result.Success);
-        Assert.IsNull(result.Transactions);
+        Assert.IsFalse(result.Transactions.Any());
     }
 
     [TestMethod]
