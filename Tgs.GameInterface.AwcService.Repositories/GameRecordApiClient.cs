@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -54,12 +55,12 @@ internal class GameRecordApiClient : IGameRecordApiClient
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
             .WaitAndRetryAsync(
-            retryCount: 1,
+            retryCount: 2,
             retryAttempt =>
             {
                 _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
                 _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
-                var timeToRetry = TimeSpan.FromSeconds(20);
+                var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
                 _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
                 return timeToRetry;
             },
@@ -113,12 +114,12 @@ internal class GameRecordApiClient : IGameRecordApiClient
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
             .WaitAndRetryAsync(
-            retryCount: 1,
+            retryCount: 2,
             retryAttempt =>
             {
                 _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
                 _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
-                var timeToRetry = TimeSpan.FromSeconds(20);
+                var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
                 _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
                 return timeToRetry;
             },
@@ -170,13 +171,39 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ["status"] = ((int)transactionStatus).ToString()
         };
 
-        var document = await PostAsync(
+        var retryPolicy = Policy
+            .HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+            .WaitAndRetryAsync(
+            retryCount: 2,
+            retryAttempt =>
+            {
+                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
+                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
+                var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
+                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
+                return timeToRetry;
+            },
+            (result, retryTime, context) =>
+            {
+                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                    DateTime.Now.ToString("o"),
+                    parameters,
+                    result,
+                    retryTime);
+            });
+
+        var document = await retryPolicy.ExecuteAsync(async ()
+            => await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getTransactionByUpdateDate",
                 parameters: parameters,
                 logPrefix: "getTransactionByUpdateDate",
                 cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            .ConfigureAwait(false));
 
         if (document is null)
         {
@@ -209,13 +236,39 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ["platform"] = platform
         };
 
-        var document = await PostAsync(
+        var retryPolicy = Policy
+            .HandleResult<JsonDocument?>(r =>
+            {
+                var status = r?.RootElement.GetProperty("status").GetString();
+                return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
+            })
+            .WaitAndRetryAsync(
+            retryCount: 2,
+            retryAttempt =>
+            {
+                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
+                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
+                var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
+                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
+                return timeToRetry;
+            },
+            (result, retryTime, context) =>
+            {
+                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                    DateTime.Now.ToString("o"),
+                    parameters,
+                    result,
+                    retryTime);
+            });
+
+        var document = await retryPolicy.ExecuteAsync(async ()
+            => await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getTransactionByUpdateDate",
                 parameters: parameters,
                 logPrefix: "getTransactionByUpdateDate",
                 cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            .ConfigureAwait(false));
 
         if (document is null)
         {
