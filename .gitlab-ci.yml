@@ -2,6 +2,11 @@ variables:
   ImageName: pgtgs/game-gameinterface-awc-service
   TgsSettingKey: game-gameinterface-awc-service
   HelmTemplateFolderName: game-gameinterface-awc-service
+  BuildCacheKey: Tgs.GameInterface.AwcService.$CI_PIPELINE_ID
+
+default:
+  before_script:
+    - export Tag="$(date -d $CI_PIPELINE_CREATED_AT +%Y%m%d%H%M).$CI_PIPELINE_IID"
 
 stages:
   - build
@@ -18,20 +23,25 @@ build-code:
   only:
     - merge_requests
     - main
-  artifacts:
-    untracked: true
-    expire_in: "1 days"
+  cache:
+    key: $BuildCacheKey
+    untracked: true 
 
 unit-test:
   stage: test
+  variables:
+    DOTNET_USE_POLLING_FILE_WATCHER: "true"
   script:
     - dotnet test -c $BuildConfiguration -l:"junit;LogFilePath=../TestReports/{assembly}-TestReport.xml" --no-restore --no-build
   needs:
-    - job: build-code
-      artifacts: true
+    - build-code
   only:
     - merge_requests
     - main
+  cache:
+    key: $BuildCacheKey
+    untracked: true   
+    policy: pull
   artifacts:
     when: always
     reports:
@@ -40,9 +50,12 @@ unit-test:
 push-nuget:
   stage: publish
   needs:
-    - job: build-code
-      artifacts: true
+    - build-code
     - unit-test
+  cache:
+    key: $BuildCacheKey
+    untracked: true   
+    policy: pull
   only:
     - main
   script:
@@ -58,17 +71,15 @@ push-nuget:
 push-docker-image:
   stage: publish
   needs:
-    - job: build-code
-      artifacts: true
+    - build-code
     - unit-test
   only:
     - main
   cache:
-    key: Tgs.OpApi.$CI_PIPELINE_ID
-    untracked: true
+    key: $BuildCacheKey
+    untracked: true   
     policy: pull
   script:
-    - export Tag="$(date -d $CI_PIPELINE_CREATED_AT +%Y%m%d%H%M).$CI_PIPELINE_IID"
     - dotnet build "Tgs.GameInterface.AwcService/Tgs.GameInterface.AwcService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
     - docker push $ImageName:$Tag
 
@@ -79,7 +90,6 @@ push-k8s-template:
   only:
     - main
   script:
-    - export Tag="$(date -d $CI_PIPELINE_CREATED_AT +%Y%m%d%H%M).$CI_PIPELINE_IID"
     - mkdir -p artifacts/k8s
     - cp -R deployment/k8s/$HelmTemplateFolderName artifacts/k8s/
     - |
@@ -107,13 +117,12 @@ deploy-dev:
       artifacts: true
   only:
     - main
-  when: manual
   before_script:
     - export KUBECONFIG=$KubeConfig_Raypro_dev
   script:
     - export resources=$(kubectl get cm resources-setting -o jsonpath={.data.$TgsSettingKey})
-    - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated})
-    - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector})
+    - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated_game})
+    - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector_game})
     - export autoscaling=$(kubectl get cm autoscaling-setting -o jsonpath={.data.$TgsSettingKey})
     - |
       cat << EOF | yq e -P | helm template artifacts/k8s/$HelmTemplateFolderName \
@@ -149,7 +158,7 @@ deploy-staging:
     name: staging
   stage: deploy-staging
   needs:
-    - push-docker-image
+    - deploy-dev
     - job: push-k8s-template
       artifacts: true
   only:
@@ -159,8 +168,8 @@ deploy-staging:
     - export KUBECONFIG=$KubeConfig_Raypro_staging
   script:
     - export resources=$(kubectl get cm resources-setting -o jsonpath={.data.$TgsSettingKey})
-    - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated})
-    - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector})
+    - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated_game})
+    - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector_game})
     - export autoscaling=$(kubectl get cm autoscaling-setting -o jsonpath={.data.$TgsSettingKey})
     - |
       cat << EOF | yq e -P | helm template artifacts/k8s/$HelmTemplateFolderName \
