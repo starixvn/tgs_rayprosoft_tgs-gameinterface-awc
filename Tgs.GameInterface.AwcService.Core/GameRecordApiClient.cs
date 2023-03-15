@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -7,9 +6,8 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories;
+namespace Tgs.GameInterface.AwcService.Core;
 
 internal class GameRecordApiClient : IGameRecordApiClient
 {
@@ -24,17 +22,13 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
     private readonly HttpClient _client;
     private readonly ILogger<GameRecordApiClient> _logger;
-    private readonly ITgsLog _tgsLog;
 
     public GameRecordApiClient(
-        HttpClient client,
         ILogger<GameRecordApiClient> logger,
-        ITgsLog tgsLog
-        )
+        HttpClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _tgsLog = tgsLog ?? throw new ArgumentNullException(nameof(tgsLog));
     }
 
     public async ValueTask<GetOutstandingByBetTimeResult> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
@@ -73,12 +67,17 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, "/fetch/gzip/getOutstandingByBetTime", parameters, "getOutstandingByBetTime", cancellationToken));
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy
+            .ExecuteAsync(
+            async () =>
+            await PostAsync(
+                apiUrl: apiUrl,
+                path: "/fetch/gzip/getOutstandingByBetTime",
+                parameters: parameters,
+                logPrefix: "getOutstandingByBetTime",
+                cancellationToken: cancellationToken))
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").ToString();
 
@@ -196,19 +195,16 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy.ExecuteAsync(async ()
-            => await PostAsync(
+        var document = await retryPolicy.ExecuteAsync(
+            async () =>
+            await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getTransactionByUpdateDate",
                 parameters: parameters,
                 logPrefix: "getTransactionByUpdateDate",
                 cancellationToken: cancellationToken)
-            .ConfigureAwait(false));
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+            .ConfigureAwait(false))
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").ToString();
 
@@ -261,19 +257,16 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy.ExecuteAsync(async ()
-            => await PostAsync(
+        var document = await retryPolicy.ExecuteAsync(
+            async () =>
+            await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getTransactionByUpdateDate",
                 parameters: parameters,
                 logPrefix: "getTransactionByUpdateDate",
                 cancellationToken: cancellationToken)
-            .ConfigureAwait(false));
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+            .ConfigureAwait(false))
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").ToString();
 
@@ -312,10 +305,13 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
+            responseMessage = await sr
+                .ReadToEndAsync(
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false) ?? string.Empty;
         }
 
-        var apiLogEvent = new ApiLogEvent
+        var apiLogEvent = new GameApiLogEvent
         {
             Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
             Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -329,7 +325,6 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _tgsLog.LogApi(apiLogEvent);
         _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();

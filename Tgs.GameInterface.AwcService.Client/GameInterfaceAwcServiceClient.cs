@@ -135,7 +135,6 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
           cancellationToken: cancellationToken)
         .ConfigureAwait(false);
 
-
     public async ValueTask KickPlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
     {
         _ = await _client.KickPlayerAsync(new KickPlayerRequest()

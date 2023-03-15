@@ -7,7 +7,7 @@ using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
-namespace Tgs.GameInterface.AwcService.Core.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
 public class OutstandingByBetTimeGetServiceUnitTest
@@ -33,7 +33,7 @@ public class OutstandingByBetTimeGetServiceUnitTest
         var fakeLogger = NullLogger<OutstandingByBetTimeGetService>.Instance;
         var fakeClient = Substitute.For<IGameRecordApiClient>();
 
-        var result = new Models.GetOutstandingByBetTimeResult(
+        var result = new GetOutstandingByBetTimeResult(
             Success: true,
             Transactions: new GetOutstandingByBetTimeTransaction[] {
                 new GetOutstandingByBetTimeTransaction(){

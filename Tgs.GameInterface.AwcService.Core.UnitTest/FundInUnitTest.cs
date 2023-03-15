@@ -5,15 +5,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
 using RichardSzalay.MockHttp;
-using Tgs.GameInterface.AwcService.Core;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
 [TestClass]
-public class FundOutUnitTest
+public class FundInUnitTest
 {
     [TestMethod]
     public async Task Normal_Process()
@@ -22,7 +19,7 @@ public class FundOutUnitTest
         var agentId = "testagentid";
         var cert = "testcert";
         var playerCode = "4ucmqplxb029";
-        string txCode = Guid.NewGuid().ToString("N");
+        string transactionId = Guid.NewGuid().ToString("N");
         decimal amount = 100m;
 
         var response = new
@@ -30,24 +27,23 @@ public class FundOutUnitTest
             status = ((int)GameApiClientError.Success).ToString("d4"),
             desc = GameApiClientError.Success.ToString(),
             amount = amount.ToString(),
-            method = "DEPOSIT",
+            method = "WITHDRAW",
             databaseId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
-            currentBalance = "100",
+            currentBalance = "0",
             lastModified = DateTime.UtcNow,
-            txCode
+            txCode = transactionId
         };
 
         var content = JsonSerializer.Serialize(response);
         var handler = new MockHttpMessageHandler();
-        _ = handler.Expect(HttpMethod.Post, "/wallet/deposit")
+        _ = handler.Expect(HttpMethod.Post, "/wallet/withdraw")
         .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
-        var actual = await client.DepositAsync(apiUrl, agentId, cert, playerCode, txCode, amount);
+        var actual = await client.WithdrawAsync(apiUrl, agentId, cert, playerCode, transactionId, amount);
 
         Assert.IsTrue(actual.Success);
         Assert.AreEqual(response.txCode, actual.TransactionId);

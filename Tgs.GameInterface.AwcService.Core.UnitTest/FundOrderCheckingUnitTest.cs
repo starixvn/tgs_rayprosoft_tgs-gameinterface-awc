@@ -5,12 +5,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
 using RichardSzalay.MockHttp;
-using Tgs.GameInterface.AwcService.Core;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
 [TestClass]
 public class FundOrderCheckingUnitTest
@@ -41,8 +38,7 @@ public class FundOrderCheckingUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
@@ -75,8 +71,7 @@ public class FundOrderCheckingUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
@@ -104,8 +99,7 @@ public class FundOrderCheckingUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         _ = await Assert.ThrowsExceptionAsync<Exception>(async () =>
         {

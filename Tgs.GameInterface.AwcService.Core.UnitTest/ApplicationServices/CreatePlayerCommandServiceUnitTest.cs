@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-namespace Tgs.GameInterface.AwcService.Core.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
-public class CreatePlayerByBetLimitCommandServiceUnitTest
+public class CreatePlayerCommandServiceUnitTest
 {
     [TestMethod]
     public async Task Failed_To_Create_Member()
@@ -21,25 +20,14 @@ public class CreatePlayerByBetLimitCommandServiceUnitTest
         var userName = "4ucmqplxb029";
         var currencyCode = "HKD";
         var cultureCode = "cn";
-        var betLimit = JsonSerializer.Serialize(new
-        {
-            VENUS = new
-            {
-                LIVE = new
-                {
-                    limitId = new[] { "280303", "280304", "280305" }
-                }
-            }
-        });
 
-        var query = new CreatePlayerByBetLimitCommand(
+        var query = new CreatePlayerCommand(
             ApiUrl: apiUrl,
             AgentId: agentId,
             Cert: cert,
             PlayerCode: playerCode,
             UserName: userName,
             Currency: currencyCode,
-            BetLimit: betLimit,
             Language: cultureCode);
 
         var fakeClient = Substitute.For<IGameApiClient>();
@@ -51,10 +39,9 @@ public class CreatePlayerByBetLimitCommandServiceUnitTest
             playerCode: Arg.Is(playerCode),
             userName: Arg.Is(userName),
             currency: Arg.Is(currencyCode),
-            betLimit: Arg.Is(betLimit),
             language: Arg.Is(cultureCode)).Throws<Exception>();
 
-        var service = new CreatePlayerByBetLimitCommandService(fakeClient);
+        var service = new CreatePlayerCommandService(fakeClient);
 
         _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.ExecuteAsync(query).AsTask()).ConfigureAwait(false);
     }
@@ -69,25 +56,14 @@ public class CreatePlayerByBetLimitCommandServiceUnitTest
         var userName = "4ucmqplxb029";
         var currencyCode = "HKD";
         var cultureCode = "cn";
-        var betLimit = JsonSerializer.Serialize(new
-        {
-            VENUS = new
-            {
-                LIVE = new
-                {
-                    limitId = new[] { "280303", "280304", "280305" }
-                }
-            }
-        });
 
-        var query = new CreatePlayerByBetLimitCommand(
+        var query = new CreatePlayerCommand(
             ApiUrl: apiUrl,
             AgentId: agentId,
             Cert: cert,
             PlayerCode: playerCode,
             UserName: userName,
             Currency: currencyCode,
-            BetLimit: betLimit,
             Language: cultureCode);
 
         var fakeClient = Substitute.For<IGameApiClient>();
@@ -99,10 +75,9 @@ public class CreatePlayerByBetLimitCommandServiceUnitTest
             playerCode: Arg.Is(playerCode),
             userName: Arg.Is(userName),
             currency: Arg.Is(currencyCode),
-            betLimit: Arg.Is(betLimit),
             language: Arg.Is(cultureCode));
 
-        var service = new CreatePlayerByBetLimitCommandService(fakeClient);
+        var service = new CreatePlayerCommandService(fakeClient);
 
         await service.ExecuteAsync(query).ConfigureAwait(false);
     }

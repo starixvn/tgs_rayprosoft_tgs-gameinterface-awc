@@ -1,4 +1,4 @@
-﻿namespace Tgs.GameInterface.AwcService.Repositories.Models;
+﻿namespace Tgs.GameInterface.AwcService.Core.Models;
 
 public record BalanceModel
 {

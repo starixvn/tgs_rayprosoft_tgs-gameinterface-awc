@@ -7,10 +7,10 @@ using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
-namespace Tgs.GameInterface.AwcService.Core.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
-public class TransactionByUpdateDateGetServiceUnitTest
+public class TransactionByTxTimeGetServiceUnitTest
 {
     [TestMethod]
     public async Task Normal_Process()
@@ -19,22 +19,24 @@ public class TransactionByUpdateDateGetServiceUnitTest
         var agentId = "testagentid";
         var cert = "testcert";
         var platform = "SEXYBCRT";
-        var timeFrom = DateTimeOffset.Now;
+        var startTime = DateTimeOffset.Now.AddMinutes(-5);
+        var endTime = DateTimeOffset.Now;
 
-        var query = new TransactionByUpdateDateQuery(
+        var query = new TransactionByTxTimeQuery(
             ApiUrl: apiUrl,
             AgentId: agentId,
             Cert: cert,
             Platform: platform,
-            TimeFrom: timeFrom);
+            StartTime: startTime,
+            EndTime: endTime);
 
-        var fakeLogger = NullLogger<TransactionByUpdateDateGetService>.Instance;
+        var fakeLogger = NullLogger<TransactionByTxTimeGetService>.Instance;
         var fakeClient = Substitute.For<IGameRecordApiClient>();
 
-        var result = new GetTransactionByUpdateDateResult(
+        var result = new GetTransactionByTxTimeResult(
             Success: true,
-            Transactions: new GetTransactionByUpdateDateTransaction[] {
-                new GetTransactionByUpdateDateTransaction(){
+            Transactions: new GetTransactionByTxTimeTransaction[] {
+                new GetTransactionByTxTimeTransaction(){
                      Platform= "SEXYBCRT",
                     PlatformTxId= "BAC-133992630",
                     GameType= "LIVE",
@@ -59,14 +61,15 @@ public class TransactionByUpdateDateGetServiceUnitTest
                     GameInfo= "{\"result\":[\"C13\",\"D06\",\"\",\"D11\",\"D04\",\"C10\"],\"roundStartTime\":\"03/11/2021 13:35:57.648\",\"winner\":\"BANKER\",\"ip\":\"192.172.0.1\",\"odds\":-1.0,\"streamerId\":\"\",\"tableId\":1,\"dealerDomain\":\"Mexico\",\"winLoss\":-10.0,\"status\":\"LOSE\"}"
                 }
             });
-        _ = fakeClient.GetTransactionByUpdateDateAsync(
+        _ = fakeClient.GetTransactionByTxTimeAsync(
             Arg.Is(apiUrl),
             Arg.Is(agentId),
             Arg.Is(cert),
             Arg.Is(platform),
-            Arg.Is(timeFrom)).Returns(ValueTask.FromResult(result));
+            Arg.Is(startTime),
+            Arg.Is(endTime)).Returns(ValueTask.FromResult(result));
 
-        var service = new TransactionByUpdateDateGetService(
+        var service = new TransactionByTxTimeGetService(
             fakeLogger,
             fakeClient);
 

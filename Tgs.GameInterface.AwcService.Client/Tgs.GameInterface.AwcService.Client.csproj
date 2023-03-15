@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.9</Version>
+		<Version>0.0.10</Version>
 		<Authors>Raypro</Authors>
 		<Description>Tgs GameInterface AwcService Client</Description>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-awcservice</PackageProjectUrl>
@@ -23,9 +23,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.48.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.48.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.48.1">
+		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.51.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.51.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.52.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
