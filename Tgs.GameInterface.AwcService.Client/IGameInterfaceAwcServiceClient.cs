@@ -4,6 +4,8 @@ namespace Tgs.GameInterface.AwcService.Client;
 
 public interface IGameInterfaceAwcServiceClient
 {
+    ValueTask<string> CheckingServiceAsync(string machineName, CancellationToken cancellationToken = default);
+
     ValueTask CreatePlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string language = "en", CancellationToken cancellationToken = default);
 
     ValueTask CreatePlayerByBetLimitAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string betLimit, string language = "en", CancellationToken cancellationToken = default);

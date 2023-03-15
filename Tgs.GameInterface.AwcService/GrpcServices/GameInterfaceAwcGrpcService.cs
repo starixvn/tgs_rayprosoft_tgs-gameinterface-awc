@@ -14,6 +14,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
     private readonly IQueryService<AllBalanceQuery, AllBalance> _allBalanceService;
     private readonly ICommandService<CreatePlayerByBetLimitCommand> _createPlayerByBetLimitService;
     private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
+    private readonly ILogger<GameInterfaceAwcGrpcService> _logger;
     private readonly IGetService<FundInQuery, FundInResult> _fundInService;
     private readonly IGetService<FundOrderCheckingQuery, bool> _fundOrderCheckingService;
     private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
@@ -22,6 +23,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
     private readonly ICommandService<LogoutCommand> _logoutService;
 
     public GameInterfaceAwcGrpcService(
+        ILogger<GameInterfaceAwcGrpcService> logger,
         IGetService<FundInQuery, FundInResult> fundInService,
         IGetService<FundOrderCheckingQuery, bool> fundOrderCheckingService,
         IGetService<FundOutQuery, FundOutResult> fundOutService,
@@ -34,6 +36,7 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         IGetService<GameUrlByLiveQuery, GameUrlResult> gameUrlByLiveService
         )
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
         _fundOrderCheckingService = fundOrderCheckingService ?? throw new ArgumentNullException(nameof(fundOrderCheckingService));
         _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
@@ -44,6 +47,18 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         _createPlayerByBetLimitService = createPlayerByBetLimitService ?? throw new ArgumentNullException(nameof(createPlayerByBetLimitService));
         _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
         _gameUrlByLiveService = gameUrlByLiveService ?? throw new ArgumentNullException(nameof(gameUrlByLiveService));
+    }
+
+    public override Task<CheckingServiceReply> CheckingService(
+    CheckingServiceRequest request,
+    ServerCallContext context)
+    {
+        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+
+        return Task.FromResult(new CheckingServiceReply
+        {
+            MachineName = Environment.MachineName
+        });
     }
 
     public override async Task<BaseReply> CreatePlayer(CreatePlayerRequest request, ServerCallContext context)
