@@ -72,8 +72,6 @@ message GamePullRecordeRequest {
 	google.protobuf.Timestamp time_from=4; 
 }
 
-
-
 // The response message containing the greetings.
 message GamePullRecordReply {
 	repeated GamePullRecord items = 1;
