@@ -53,16 +53,13 @@ internal class GameApiClient : IGameApiClient
         };
 
         var document = await PostAsync(
-           apiUrl,
-           "/wallet/checkTransferOperation",
-           parameters,
-           "checkTransferOperation",
-           cancellationToken).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+           apiUrl: apiUrl,
+           path: "/wallet/checkTransferOperation",
+           parameters: parameters,
+           logPrefix: "checkTransferOperation",
+           cancellationToken: cancellationToken)
+           .ConfigureAwait(false)
+           ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").GetString();
 
@@ -102,12 +99,9 @@ internal class GameApiClient : IGameApiClient
             "/wallet/createMember",
             parameters,
             "createMember",
-            cancellationToken).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+            cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").GetString();
 
@@ -141,16 +135,13 @@ internal class GameApiClient : IGameApiClient
         };
 
         var document = await PostAsync(
-            apiUrl,
-            "/wallet/createMember",
-            parameters,
-            "createMember",
-            cancellationToken).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+            apiUrl: apiUrl,
+            path: "/wallet/createMember",
+            parameters: parameters,
+            logPrefix: "createMember",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").GetString();
 
@@ -198,18 +189,16 @@ internal class GameApiClient : IGameApiClient
                      retryTime);
              });
 
-        var document = await retryPolicy.ExecuteAsync(async () =>
-        await PostAsync(
-            apiUrl: apiUrl,
-            path: "/wallet/deposit",
-            parameters: parameters,
-            logPrefix: "deposit",
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy
+            .ExecuteAsync(async () =>
+            await PostAsync(
+                apiUrl: apiUrl,
+                path: "/wallet/deposit",
+                parameters: parameters,
+                logPrefix: "deposit",
+                cancellationToken: cancellationToken))
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").GetString();
 
@@ -248,16 +237,13 @@ internal class GameApiClient : IGameApiClient
         };
 
         var document = await PostAsync(
-            apiUrl,
-            "/wallet/getBalance",
-            parameters,
-            "getAllBalances",
-            cancellationToken).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+                apiUrl: apiUrl,
+                path: "/wallet/getBalance",
+                parameters: parameters,
+                logPrefix: "getAllBalances",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").ToString();
 
@@ -303,16 +289,13 @@ internal class GameApiClient : IGameApiClient
         };
 
         var document = await PostAsync(
-            apiUrl,
-            "/wallet/getBalance",
-            parameters,
-            "getBalance",
-            cancellationToken).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+                apiUrl: apiUrl,
+                path: "/wallet/getBalance",
+                parameters: parameters,
+                logPrefix: "getBalance",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").ToString();
 
@@ -448,18 +431,16 @@ internal class GameApiClient : IGameApiClient
                      retryTime);
              });
 
-        var document = await retryPolicy.ExecuteAsync(async () =>
-        await PostAsync(
-             apiUrl: apiUrl,
-             path: "/wallet/logout",
-             parameters: parameters,
-             logPrefix: "logout",
-             cancellationToken: cancellationToken)).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy.ExecuteAsync(
+            async () =>
+            await PostAsync(
+                 apiUrl: apiUrl,
+                 path: "/wallet/logout",
+                 parameters: parameters,
+                 logPrefix: "logout",
+                 cancellationToken: cancellationToken))
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").GetString();
 
@@ -507,18 +488,16 @@ internal class GameApiClient : IGameApiClient
                      retryTime);
              });
 
-        var document = await retryPolicy.ExecuteAsync(async () =>
-        await PostAsync(
-            apiUrl: apiUrl,
-            path: "/wallet/withdraw",
-            parameters: parameters,
-            logPrefix: "withdraw",
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy.ExecuteAsync(
+            async () =>
+            await PostAsync(
+                apiUrl: apiUrl,
+                path: "/wallet/withdraw",
+                parameters: parameters,
+                logPrefix: "withdraw",
+                cancellationToken: cancellationToken))
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").GetString();
 
@@ -562,18 +541,16 @@ internal class GameApiClient : IGameApiClient
                      retryTime);
              });
 
-        var document = await retryPolicy.ExecuteAsync(async () =>
+        var document = await retryPolicy.ExecuteAsync(
+            async () =>
             await PostAsync(
                 apiUrl: apiUrl,
                 path: "/wallet/doLoginAndLaunchGame",
                 parameters: parameters,
                 logPrefix: "GetGamingLoginGameAsync",
-                cancellationToken: cancellationToken)).ConfigureAwait(false);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+                cancellationToken: cancellationToken))
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty.");
 
         var status = document.RootElement.GetProperty("status").ToString();
 
@@ -613,7 +590,10 @@ internal class GameApiClient : IGameApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
+            responseMessage = await sr
+                .ReadToEndAsync(
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false) ?? string.Empty;
         }
 
         var apiLogEvent = new ApiLogEvent
