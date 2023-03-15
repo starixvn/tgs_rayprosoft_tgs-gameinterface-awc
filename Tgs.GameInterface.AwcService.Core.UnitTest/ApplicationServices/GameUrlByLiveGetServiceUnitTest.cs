@@ -7,7 +7,7 @@ using NSubstitute.ExceptionExtensions;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
-namespace Tgs.GameInterface.AwcService.Core.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
 public class GameUrlByLiveGetServiceUnitTest

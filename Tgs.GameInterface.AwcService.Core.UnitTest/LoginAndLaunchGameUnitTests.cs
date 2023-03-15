@@ -5,13 +5,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
 using RichardSzalay.MockHttp;
-using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
 [TestClass]
 public class LoginAndLaunchGameUnitTests
@@ -47,8 +44,7 @@ public class LoginAndLaunchGameUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
@@ -89,8 +85,7 @@ public class LoginAndLaunchGameUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
@@ -145,8 +140,7 @@ public class LoginAndLaunchGameUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
@@ -201,8 +195,7 @@ public class LoginAndLaunchGameUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
@@ -257,8 +250,7 @@ public class LoginAndLaunchGameUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
@@ -308,8 +300,7 @@ public class LoginAndLaunchGameUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 

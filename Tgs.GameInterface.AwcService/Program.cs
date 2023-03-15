@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Net.Mime;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Exporter;
@@ -15,16 +17,15 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.Logging
-    .AddTgsLog()
     .AddOpenTelemetry(options =>
     {
         options.IncludeFormattedMessage = true;
         options.ParseStateValues = true;
         _ = options.AddFluentdForwardExporter(fluentOptions =>
         {
-            var nodeIp = builder.Configuration.GetValue<string>("NODE_IP");
+            var nodeIp = builder.Configuration.GetValue<string>("NODE_IP")!;
             fluentOptions.Host = nodeIp;
-            fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME");
+            fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME")!;
             fluentOptions.UseMessagePack();
         });
     });
@@ -32,7 +33,11 @@ builder.Logging
 
 builder.Services
     .AddRouting(options => options.LowercaseUrls = true)
-    .AddControllers()
+    .AddControllers(options =>
+    {
+        options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+        options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -61,29 +66,14 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.IncludeXmlComments(xmlFileName);
     }
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tgs.GameInterface.AwcService", Version = "v1" });
 });
 
-builder.Services
-    .AddMessageQueue()
-    .AddNatsMessageQueue(natsConfig =>
-    {
-        _ = natsConfig
-        .ConfigQueueOptions((options, sp) =>
-        {
-            var configuration = sp.GetRequiredService<IConfiguration>();
-            options.Url = configuration.GetConnectionString("Nats");
-        });
-    })
-    .AddNatsGlobPatternExchange("*");
-
-builder.Services.AddAwcServiceCore();
-builder.Services.AddAwcServiceRepositories();
+builder.Services.AddGameInterfaceCore();
 
 builder.Services
-     .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
+    .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
         sp => new ConfigureNamedOptions<OtlpExporterOptions>(
-            Microsoft.Extensions.Options.Options.DefaultName,
+            Options.DefaultName,
             exporterOptions =>
             {
                 var config = sp.GetRequiredService<IConfiguration>();
@@ -98,7 +88,6 @@ builder.Services
         .SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector())
         .AddSource("Tgs.*")
         .AddSource("TGS.*")
-        .AddGrpcClientInstrumentation()
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
         .AddProfileViewExporter()
@@ -109,11 +98,12 @@ builder.Services
         options.Filter = httpContext =>
         {
             return !httpContext.Request.Path.HasValue
-                || !httpContext.Request.Path.StartsWithSegments("/swagger")
-                && !httpContext.Request.Path.StartsWithSegments("/healthz")
-                && !httpContext.Request.Path.StartsWithSegments("/profiler/")
-                && !new[] { "html", "ico", "png", "jpg" }.Any(
-                    ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
+                   || !httpContext.Request.Path.StartsWithSegments("/swagger")
+                   && !httpContext.Request.Path.StartsWithSegments("/healthz")
+                   && !httpContext.Request.Path.StartsWithSegments("/profiler/")
+                   && !httpContext.Request.Path.StartsWithSegments("/metrics")
+                   && !new[] { "html", "ico", "png", "jpg" }.Any(
+                       ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
         };
     });
 
@@ -123,10 +113,6 @@ builder.Services
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-}
-
 _ = app.UseSwagger();
 _ = app.UseSwaggerUI();
 

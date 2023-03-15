@@ -7,10 +7,8 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
-using Tgs.GameInterface.AwcService.Repositories.Models;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories;
+namespace Tgs.GameInterface.AwcService.Core;
 
 internal class GameApiClient : IGameApiClient
 {
@@ -25,17 +23,13 @@ internal class GameApiClient : IGameApiClient
 
     private readonly HttpClient _client;
     private readonly ILogger<GameApiClient> _logger;
-    private readonly ITgsLog _tgsLog;
 
     public GameApiClient(
-        HttpClient client,
         ILogger<GameApiClient> logger,
-        ITgsLog tgsLog
-        )
+        HttpClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _tgsLog = tgsLog ?? throw new ArgumentNullException(nameof(tgsLog));
     }
 
     public async ValueTask<bool> CheckTransferOperationAsync(
@@ -596,7 +590,7 @@ internal class GameApiClient : IGameApiClient
                 .ConfigureAwait(false) ?? string.Empty;
         }
 
-        var apiLogEvent = new ApiLogEvent
+        var apiLogEvent = new GameApiLogEvent
         {
             Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
             Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -610,7 +604,6 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _tgsLog.LogApi(apiLogEvent);
         _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();

@@ -5,7 +5,7 @@ using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
-namespace Tgs.GameInterface.AwcService.Core.UnitTest;
+namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
 public class FundOutGetServiceUnitTest
@@ -17,8 +17,8 @@ public class FundOutGetServiceUnitTest
         var agentId = "testagentid";
         var cert = "testcert";
         var playerCode = "4ucmqplxb029";
-        string transactionId = Guid.NewGuid().ToString("N");
-        decimal amount = 100m;
+        var transactionId = Guid.NewGuid().ToString("N");
+        var amount = 100m;
 
         var query = new FundOutQuery(
             ApiUrl: apiUrl,

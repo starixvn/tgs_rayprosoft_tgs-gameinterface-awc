@@ -6,9 +6,8 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.AwcService.Repositories;
+namespace Tgs.GameInterface.AwcService.Core;
 
 internal class GameRecordApiClient : IGameRecordApiClient
 {
@@ -23,17 +22,13 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
     private readonly HttpClient _client;
     private readonly ILogger<GameRecordApiClient> _logger;
-    private readonly ITgsLog _tgsLog;
 
     public GameRecordApiClient(
-        HttpClient client,
         ILogger<GameRecordApiClient> logger,
-        ITgsLog tgsLog
-        )
+        HttpClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _tgsLog = tgsLog ?? throw new ArgumentNullException(nameof(tgsLog));
     }
 
     public async ValueTask<GetOutstandingByBetTimeResult> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
@@ -316,7 +311,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
                 .ConfigureAwait(false) ?? string.Empty;
         }
 
-        var apiLogEvent = new ApiLogEvent
+        var apiLogEvent = new GameApiLogEvent
         {
             Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
             Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -330,7 +325,6 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _tgsLog.LogApi(apiLogEvent);
         _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
