@@ -10,16 +10,16 @@ namespace Tgs.GameInterface.AwcService.GrpcServices;
 
 public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterfaceAwcServiceBase
 {
-    private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
     private readonly IQueryService<AllBalanceQuery, AllBalance> _allBalanceService;
+    private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
     private readonly ICommandService<CreatePlayerByBetLimitCommand> _createPlayerByBetLimitService;
     private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
-    private readonly ILogger<GameInterfaceAwcGrpcService> _logger;
     private readonly IGetService<FundInQuery, FundInResult> _fundInService;
     private readonly IGetService<FundOrderCheckingQuery, bool> _fundOrderCheckingService;
     private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
     private readonly IGetService<GameUrlByLiveQuery, GameUrlResult> _gameUrlByLiveService;
     private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
+    private readonly ILogger<GameInterfaceAwcGrpcService> _logger;
     private readonly ICommandService<LogoutCommand> _logoutService;
 
     public GameInterfaceAwcGrpcService(

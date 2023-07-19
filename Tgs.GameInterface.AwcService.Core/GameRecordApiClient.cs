@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Polly;
-using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core;
