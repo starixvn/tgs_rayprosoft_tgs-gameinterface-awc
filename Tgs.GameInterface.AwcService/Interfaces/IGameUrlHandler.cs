@@ -7,8 +7,14 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 
 public interface IGameUrlHandler
 {
-    [HttpPost("gameurl")]
+    /// <summary>
+    /// Games the URL asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    [HttpPost("game/url")]
     ValueTask<GameUrlResultViewModel> GameUrlAsync(
         [FromServices] IGetService<GameUrlQuery, GameUrlResult> service,
-        GameUrlQueryViewModel model);
+        GameUrlQueryViewModel source);
 }

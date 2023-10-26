@@ -1,56 +1,54 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
-using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class FundInGetServiceUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
         var agentId = "testagentid";
         var cert = "testcert";
         var playerCode = "4ucmqplxb029";
-        var transactionId = Guid.NewGuid().ToString("N");
-        var amount = 100m;
+        var orderId = "018b69d42cef0000000107e7cfe506aa";
+        var amount = 16000m;
 
         var query = new FundInQuery(
             ApiUrl: apiUrl,
             AgentId: agentId,
             Cert: cert,
             PlayerCode: playerCode,
-            TransactionId: transactionId,
+            OrderId: orderId,
             Amount: amount);
 
         var fakeClient = Substitute.For<IGameApiClient>();
 
-        var result = new FundResult(
-            Success: true,
-            TransactionId: transactionId,
-            GameProviderTransactionId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
-            Amount: amount,
-            CurrentBalance: 0);
+        var result = new Models.FundResp(
+            TransactionId: "018b69d42cef0000000107e7cfe506aa",
+            GameProviderTransactionId: "1556992469",
+            Amount: 16000m,
+            CurrentBalance: 0.35m,
+            Resp: "{\"method\":\"WITHDRAW\",\"databaseId\":1556992469,\"currentBalance\":\"0.35\",\"lastModified\":\"2023-10-26T10:33:14.763+08:00\",\"txCode\":\"018b69d42cef0000000107e7cfe506aa\",\"amount\":\"16000\",\"status\":\"0000\"}");
         _ = fakeClient.WithdrawAsync(
             Arg.Is(apiUrl),
             Arg.Is(agentId),
             Arg.Is(cert),
             Arg.Is(playerCode),
-            Arg.Is(transactionId),
+            Arg.Is(orderId),
             Arg.Is(amount)).Returns(ValueTask.FromResult(result));
 
         var service = new FundInGetService(fakeClient);
 
-        var actual = await service.GetAsync(query).ConfigureAwait(false);
+        var actual = await service.GetAsync(query);
 
-        Assert.IsTrue(actual.Success);
-        Assert.AreEqual(result.TransactionId, actual.TransactionId);
-        Assert.AreEqual(result.GameProviderTransactionId, actual.GameProviderTransactionId);
-        Assert.AreEqual(result.CurrentBalance, actual.CurrentBalance);
+        Assert.Equal("018b69d42cef0000000107e7cfe506aa", actual.OrderId);
+        Assert.Equal("1556992469", actual.GameProviderTransactionId);
+        Assert.Equal(16000m, actual.Amount);
+        Assert.Equal(0.35m, actual.CurrentBalance);
+        Assert.Equal(result.Resp, actual.Resp);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.ViewModels;
 
 public record AllBalanceViewModel(
-    string UserId,
+    string PlayerCode,
     decimal Balance,
-    DateTime LastModified);
+    DateTimeOffset LastModified);

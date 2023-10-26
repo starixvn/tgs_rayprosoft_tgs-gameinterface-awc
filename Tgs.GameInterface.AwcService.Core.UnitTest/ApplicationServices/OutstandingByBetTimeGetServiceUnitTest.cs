@@ -2,17 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class OutstandingByBetTimeGetServiceUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -64,10 +62,10 @@ public class OutstandingByBetTimeGetServiceUnitTest
             fakeLogger,
             fakeClient);
 
-        var actual = await service.QueryAsync(query).ToArrayAsync().ConfigureAwait(false);
+        var actual = await service.QueryAsync(query).ToArrayAsync();
 
-        Assert.IsNotNull(actual);
-        Assert.AreEqual($"{platform}-{result.Transactions!.First().PlatformTxId}", actual.First().ExternalRoundId);
-        Assert.AreEqual(platform, actual.First().Platform);
+        Assert.NotNull(actual);
+        Assert.Equal($"{platform}-{result.Transactions!.First().PlatformTxId}", actual.First().ExternalRoundId);
+        Assert.Equal(platform, actual.First().Platform);
     }
 }

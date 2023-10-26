@@ -5,15 +5,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class GetOutstandingByBetTimeUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task No_Transactions_Data()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -40,11 +38,11 @@ public class GetOutstandingByBetTimeUnitTest
 
         var result = await client.GetOutstandingByBetTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsFalse(result.Transactions.Any());
+        Assert.True(result.Success);
+        Assert.False(result.Transactions.Any());
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -89,7 +87,7 @@ public class GetOutstandingByBetTimeUnitTest
 
         var result = await client.GetOutstandingByBetTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
 
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(response.transactions.First().roundId, result.Transactions!.First().RoundId);
+        Assert.True(result.Success);
+        Assert.Equal(response.transactions.First().roundId, result.Transactions!.First().RoundId);
     }
 }

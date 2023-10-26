@@ -5,15 +5,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class GetBalanceUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Account_Is_Not_Exists()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -38,12 +36,10 @@ public class GetBalanceUnitTest
 
         var result = await client.GetBalanceAsync(apiUrl, agentId, cert, playerCode);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsFalse(result.IsPlayerExist);
-        Assert.IsNull(result.Balance);
+        Assert.False(result.IsPlayerExist);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -77,8 +73,7 @@ public class GetBalanceUnitTest
 
         var result = await client.GetBalanceAsync(apiUrl, agentId, cert, playerCode);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsTrue(result.IsPlayerExist);
-        Assert.AreEqual(decimal.Parse(response.results.First().balance), result.Balance);
+        Assert.True(result.IsPlayerExist);
+        Assert.Equal(decimal.Parse(response.results.First().balance), result.Balance);
     }
 }

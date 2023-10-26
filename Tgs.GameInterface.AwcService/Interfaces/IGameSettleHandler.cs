@@ -7,8 +7,14 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 
 public interface IGameSettleHandler
 {
-    [HttpPost("game/settle")]
-    IAsyncEnumerable<GameSettleTransactionViewModel> GetGameSettleAsync(
-        [FromServices] IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> service,
-        GameSettleQueryViewModel model);
+    /// <summary>
+    /// Games the record settled asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    [HttpPost("game/record/settled")]
+    IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
+        [FromServices] IQueryService<GameRecordSettledQuery, GameRecordSettledResult> service,
+        GameSettleQueryViewModel source);
 }

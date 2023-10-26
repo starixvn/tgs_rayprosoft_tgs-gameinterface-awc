@@ -4,15 +4,14 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.AwcService.Core.Exceptions;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class CreatePlayerUnitTests
 {
-    [TestMethod]
+    [Fact]
     public async Task Account_Existed()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -48,7 +47,7 @@ public class CreatePlayerUnitTests
             language: cultureCode);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Failed_To_Create_Member()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -74,18 +73,19 @@ public class CreatePlayerUnitTests
         var fakeLog = NullLogger<GameApiClient>.Instance;
         var client = new GameApiClient(fakeLog, fakeHttpClient);
 
-        _ = await Assert.ThrowsExceptionAsync<Exception>(() =>
-        client.CreatePlayerAsync(
-            apiUrl: apiUrl,
-            agentId: agentId,
-            cert: cert,
-            playerCode: playerCode,
-            userName: userName,
-            currency: currencyCode,
-            language: cultureCode).AsTask()).ConfigureAwait(false);
+        _ = await Assert.ThrowsAsync<StatusException>(
+            () => client.CreatePlayerAsync(
+                apiUrl: apiUrl,
+                agentId: agentId,
+                cert: cert,
+                playerCode: playerCode,
+                userName: userName,
+                currency: currencyCode,
+                language: cultureCode)
+            .AsTask());
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_HORSEBOOK()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -137,7 +137,7 @@ public class CreatePlayerUnitTests
             language: cultureCode);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_SEXYBCRT()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -184,7 +184,7 @@ public class CreatePlayerUnitTests
             language: cultureCode);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_SV388()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -235,7 +235,7 @@ public class CreatePlayerUnitTests
             language: cultureCode);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_VENUS()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -282,7 +282,7 @@ public class CreatePlayerUnitTests
             language: cultureCode);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Not_Live()
     {
         var apiUrl = new Uri("http://localhost/");

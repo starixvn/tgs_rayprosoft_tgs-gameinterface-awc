@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
-using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.GameInterface.AwcService.Interfaces;
 using Tgs.GameInterface.AwcService.ViewModels;
 using Tgs.ServiceUtility;
@@ -10,301 +9,15 @@ namespace Tgs.GameInterface.AwcService.Controllers;
 
 [Route("AWC_PGS")]
 [ApiController]
-public class PocketGamesSoftController : ControllerBase,
-    IBalanceHandler,
-    IBalancesHandler,
-    IFundHandler,
-    IKickPlayerHandler,
-    ICreatePlayerHandler,
+public class PocketGamesSoftController : AwcController,
     IGameUrlHandler,
-    IGamePullRecordHandler,
-    IGameSettleHandler
+    IPlayerCreateHandler
 {
     /// <summary>
-    /// Creates the player asynchronous.
+    /// Games the record pull asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "userName": "4ucmqplxb029",
-    ///             "currency": "CNY",
-    ///             "language": "cn"
-    ///         }
-    /// </remarks>
-    [HttpPost("create")]
-    public ValueTask CreatePlayerAsync(
-        [FromServices] ICommandService<CreatePlayerCommand> service,
-        CreatePlayerViewModel model)
-            => service.ExecuteAsync(new CreatePlayerCommand(
-                model.ApiUrl,
-                model.AgentId,
-                model.Cert,
-                model.PlayerCode,
-                model.UserName,
-                model.Currency,
-                model.Language));
-
-    /// <summary>
-    /// Funds the in asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692D",
-    ///             "amount": 100
-    ///         }
-    /// </remarks>
-    [HttpPost("fund-in")]
-    public async ValueTask<FundResultViewModel> FundInAsync(
-        [FromServices] IGetService<FundInQuery, FundInResult> service,
-        FundQueryViewModel model)
-    {
-        var result = await service.GetAsync(new FundInQuery(
-            model.ApiUrl,
-            model.AgentId,
-            model.Cert,
-            model.PlayerCode,
-            model.TransactionId,
-            model.Amount)).ConfigureAwait(false);
-
-        return new FundResultViewModel(
-            result.Success,
-            result.Message,
-            result.TransactionId,
-            result.GameProviderTransactionId,
-            result.Amount,
-            result.CurrentBalance);
-    }
-
-    /// <summary>
-    /// Funds the order checking asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Head
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692D"
-    ///         }
-    /// </remarks>
-    [HttpPost("fundorderchecking")]
-    public ValueTask<bool> FundOrderCheckingAsync(
-        [FromServices] IGetService<FundOrderCheckingQuery, bool> service,
-        FundOrderCheckingViewModel model)
-            => service.GetAsync(new FundOrderCheckingQuery(
-                model.ApiUrl,
-                model.AgentId,
-                model.Cert,
-                model.TransactionId));
-
-    /// <summary>
-    /// Funds the out asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692C",
-    ///             "amount": 100
-    ///         }
-    /// </remarks>
-    [HttpPost("fund-out")]
-    public async ValueTask<FundResultViewModel> FundOutAsync(
-        [FromServices] IGetService<FundOutQuery, FundOutResult> service,
-        FundQueryViewModel model)
-    {
-        var result = await service.GetAsync(new FundOutQuery(
-            model.ApiUrl,
-            model.AgentId,
-            model.Cert,
-            model.PlayerCode,
-            model.TransactionId,
-            model.Amount)).ConfigureAwait(false);
-
-        return new FundResultViewModel(
-            result.Success,
-            result.Message,
-            result.TransactionId,
-            result.GameProviderTransactionId,
-            result.Amount,
-            result.CurrentBalance);
-    }
-
-    /// <summary>
-    /// Games the URL asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "isMobileLogin": false,
-    ///             "backUrl": "https://dev-t1.rpgp.cc/",
-    ///             "externalGameId": "PG-SLOT-001",
-    ///             "language": "cn"
-    ///         }
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "isMobileLogin": false,
-    ///             "backUrl": "https://dev-t1.rpgp.cc/",
-    ///             "externalGameId": "PG-TABLE-001",
-    ///             "language": "cn"
-    ///         }
-    /// </remarks>
-    [HttpPost("gameurl")]
-    public async ValueTask<GameUrlResultViewModel> GameUrlAsync(
-        [FromServices] IGetService<GameUrlQuery, GameUrlResult> service,
-        GameUrlQueryViewModel model)
-    {
-        var result = await service.GetAsync(new GameUrlQuery(
-            ApiUrl: model.ApiUrl,
-            AgentId: model.AgentId,
-            Cert: model.Cert,
-            PlayerCode: model.PlayerCode,
-            IsMobileLogin: model.IsMobileLogin,
-            BackUrl: model.BackUrl,
-            Platform: AwcPlatforms.AWC_PGS,
-            ExternalGameId: model.ExternalGameId,
-            Language: model.Language
-            )).ConfigureAwait(false);
-
-        return new GameUrlResultViewModel(
-            Success: result.Success,
-            Message: result.Message,
-            IsPlayerExist: result.IsPlayerExist,
-            GameUrl: result.GameUrl);
-    }
-
-    /// <summary>
-    /// Gets the balance asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029"
-    ///         }
-    /// </remarks>
-    [HttpPost("balance")]
-    public async ValueTask<BalanceResultViewModel> GetBalanceAsync(
-        [FromServices] IGetService<BalanceQuery, BalanceResult> service,
-        BalanceQueryViewModel model)
-    {
-        var result = await service.GetAsync(new BalanceQuery(
-            model.ApiUrl,
-            model.AgentId,
-            model.Cert,
-            model.PlayerCode
-            )).ConfigureAwait(false);
-
-        return new BalanceResultViewModel(
-            result.Success,
-            result.Message,
-            result.IsPlayerExist,
-            result.Balance);
-    }
-
-    /// <summary>
-    /// Gets the balances asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpipgs",
-    ///             "cert": "te2LfPbKlL4f4rQTEBV"
-    ///         }
-    /// </remarks>
-    [HttpPost("balances")]
-    public async IAsyncEnumerable<AllBalanceViewModel> GetBalancesAsync(
-        [FromServices] IQueryService<AllBalanceQuery, AllBalance> service,
-        AllBalanceQueryViewModel model)
-    {
-        var balances = await service.QueryAsync(
-              query: new AllBalanceQuery(
-                  ApiUrl: model.ApiUrl,
-                  AgentId: model.AgentId,
-                  Cert: model.Cert),
-              cancellationToken: HttpContext.RequestAborted)
-              .ToArrayAsync()
-              .ConfigureAwait(false)
-              ?? Enumerable.Empty<AllBalance>();
-
-        if (!balances.Any())
-        {
-            yield break;
-        }
-
-        foreach (var balance in balances)
-        {
-            yield return new AllBalanceViewModel(
-                UserId: balance.UserId,
-                Balance: balance.Balance,
-                LastModified: balance.LastModified);
-        }
-    }
-
-    /// <summary>
-    /// Gets the game pull record asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
+    /// <param name="source">The source.</param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -318,17 +31,23 @@ public class PocketGamesSoftController : ControllerBase,
     ///         }
     ///
     /// </remarks>
-    [HttpPost("game/pullrecord")]
-    public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
-        [FromServices] IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> service,
-        GamePullRecordQueryViewModel model)
+    public override async IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync(
+        [FromServices] IQueryService<GameRecordPullQuery, GameRecordPullResult> service,
+        GamePullRecordQueryViewModel source)
     {
-        var result = await service.QueryAsync(new TransactionByUpdateDateQuery(
-            ApiUrl: model.ApiUrl,
-            AgentId: model.AgentId,
-            Cert: model.Cert,
+        var query = new GameRecordPullQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
             Platform: AwcPlatforms.AWC_PGS,
-            TimeFrom: model.TimeFrom)).ToArrayAsync().ConfigureAwait(false);
+            TimeFrom: source.TimeFrom);
+
+        var result = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync()
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         if (!result.Any())
         {
@@ -365,10 +84,10 @@ public class PocketGamesSoftController : ControllerBase,
     }
 
     /// <summary>
-    /// Gets the game settle asynchronous.
+    /// Games the record settled asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
+    /// <param name="source">The source.</param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -383,19 +102,24 @@ public class PocketGamesSoftController : ControllerBase,
     ///         }
     ///
     /// </remarks>
-    [HttpPost("game/settle")]
-    public async IAsyncEnumerable<GameSettleTransactionViewModel> GetGameSettleAsync(
-        [FromServices] IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> service,
-        GameSettleQueryViewModel model)
+    public override async IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
+        [FromServices] IQueryService<GameRecordSettledQuery, GameRecordSettledResult> service,
+        GameSettleQueryViewModel source)
     {
-        var result = await service.QueryAsync(new TransactionByTxTimeQuery(
-            ApiUrl: model.ApiUrl,
-            AgentId: model.AgentId,
-            Cert: model.Cert,
+        var query = new GameRecordSettledQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
             Platform: AwcPlatforms.AWC_PGS,
-            StartTime: model.StartTime,
-            EndTime: model.EndTime
-            )).ToArrayAsync().ConfigureAwait(false);
+            StartTime: source.StartTime,
+            EndTime: source.EndTime);
+
+        var result = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync()
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         if (!result.Any())
         {
@@ -432,10 +156,10 @@ public class PocketGamesSoftController : ControllerBase,
     }
 
     /// <summary>
-    /// Kicks the player asynchronous.
+    /// Games the URL asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
+    /// <param name="source">The source.</param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -445,16 +169,87 @@ public class PocketGamesSoftController : ControllerBase,
     ///             "apiUrl": "https://tttint.onlinegames22.com/",
     ///             "agentId": "cnygpipgs",
     ///             "cert": "te2LfPbKlL4f4rQTEBV",
-    ///             "playerCode": "4ucmqplxb029"
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "isMobileLogin": false,
+    ///             "backUrl": "https://dev-t1.rpgp.cc/",
+    ///             "externalGameId": "PG-SLOT-001",
+    ///             "language": "cn"
+    ///         }
+    ///
+    ///     Post
+    ///         {
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpipgs",
+    ///             "cert": "te2LfPbKlL4f4rQTEBV",
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "isMobileLogin": false,
+    ///             "backUrl": "https://dev-t1.rpgp.cc/",
+    ///             "externalGameId": "PG-TABLE-001",
+    ///             "language": "cn"
     ///         }
     /// </remarks>
-    [HttpPost("kick")]
-    public ValueTask KickPlayerAsync(
-        [FromServices] ICommandService<LogoutCommand> service,
-        KickPlayerViewModel model)
-    => service.ExecuteAsync(new LogoutCommand(
-        model.ApiUrl,
-        model.AgentId,
-        model.Cert,
-        model.PlayerCode));
+    [HttpPost("game/url")]
+    public async ValueTask<GameUrlResultViewModel> GameUrlAsync(
+        [FromServices] IGetService<GameUrlQuery, GameUrlResult> service,
+        GameUrlQueryViewModel source)
+    {
+        var query = new GameUrlQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
+            PlayerCode: source.PlayerCode,
+            IsMobileLogin: source.IsMobileLogin,
+            BackUrl: source.BackUrl,
+            Platform: AwcPlatforms.AWC_PGS,
+            ExternalGameId: source.ExternalGameId,
+            Language: source.Language);
+
+        var result = await service.GetAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ConfigureAwait(false);
+
+        return new GameUrlResultViewModel(
+            IsPlayerExist: result.IsPlayerExist,
+            GameUrl: result.GameUrl);
+    }
+
+    /// <summary>
+    /// Players the create asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///         {
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpipgs",
+    ///             "cert": "te2LfPbKlL4f4rQTEBV",
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "userName": "4ucmqplxb029",
+    ///             "currency": "CNY",
+    ///             "language": "cn"
+    ///         }
+    /// </remarks>
+    [HttpPost("player/create")]
+    public ValueTask PlayerCreateAsync(
+        [FromServices] ICommandService<PlayerCreateCommand> service,
+        CreatePlayerViewModel source)
+    {
+        var command = new PlayerCreateCommand(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
+            PlayerCode: source.PlayerCode,
+            UserName: source.UserName,
+            Currency: source.Currency,
+            Language: source.Language);
+
+        return service.ExecuteAsync(
+            command: command,
+            cancellationToken: HttpContext.RequestAborted);
+    }
 }

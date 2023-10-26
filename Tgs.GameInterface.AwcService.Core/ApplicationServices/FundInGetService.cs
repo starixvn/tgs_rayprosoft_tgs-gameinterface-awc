@@ -2,7 +2,7 @@
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class FundInGetService : IGetService<FundInQuery, FundInResult>
+internal class FundInGetService : IGetService<FundInQuery, FundResult>
 {
     private readonly IGameApiClient _client;
 
@@ -11,23 +11,23 @@ internal class FundInGetService : IGetService<FundInQuery, FundInResult>
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async ValueTask<FundInResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
+    public async ValueTask<FundResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
     {
         var result = await _client.WithdrawAsync(
-            query.ApiUrl,
-            query.AgentId,
-            query.Cert,
-            query.PlayerCode,
-            query.TransactionId,
-            query.Amount,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            apiUrl: query.ApiUrl,
+            agentId: query.AgentId,
+            cert: query.Cert,
+            playerCode: query.PlayerCode,
+            transactionId: query.OrderId,
+            amount: query.Amount,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        return new FundInResult(
-            Success: result.Success,
-            Message: result.Message,
-            TransactionId: result.TransactionId,
+        return new FundResult(
+            OrderId: result.TransactionId,
             GameProviderTransactionId: result.GameProviderTransactionId,
             Amount: result.Amount,
-            CurrentBalance: result.CurrentBalance);
+            CurrentBalance: result.CurrentBalance,
+            Resp: result.Resp);
     }
 }

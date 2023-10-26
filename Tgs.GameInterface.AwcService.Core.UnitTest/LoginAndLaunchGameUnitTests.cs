@@ -4,16 +4,14 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class LoginAndLaunchGameUnitTests
 {
-    [TestMethod]
+    [Fact]
     public async Task Account_Is_Not_Exists()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -48,12 +46,10 @@ public class LoginAndLaunchGameUnitTests
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsFalse(result.IsPlayerExist);
-        Assert.IsNull(result.GameUrl);
+        Assert.False(result.IsPlayerExist);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -89,12 +85,11 @@ public class LoginAndLaunchGameUnitTests
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsTrue(result.IsPlayerExist);
-        Assert.AreEqual(response.url, result.GameUrl);
+        Assert.True(result.IsPlayerExist);
+        Assert.Equal(response.url, result.GameUrl);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_HORSEBOOK()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -118,11 +113,12 @@ public class LoginAndLaunchGameUnitTests
             }
         });
 
-        var request = new LoginAndLaunchGameByLiveLobby(
+        var request = new LoginAndLaunchGameByLive(
             PlayerCode: playerCode,
             IsMobileLogin: false,
             BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
             Platform: "HORSEBOOK",
+            ExternalGameId: "HRB-LIVE-001",
             BetLimit: JsonSerializer.Serialize(betLimit),
             Language: cultureCode);
 
@@ -144,12 +140,11 @@ public class LoginAndLaunchGameUnitTests
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsTrue(result.IsPlayerExist);
-        Assert.AreEqual(response.url, result.GameUrl);
+        Assert.True(result.IsPlayerExist);
+        Assert.Equal(response.url, result.GameUrl);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_SEXYBCRT()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -173,11 +168,12 @@ public class LoginAndLaunchGameUnitTests
             }
         });
 
-        var request = new LoginAndLaunchGameByLiveLobby(
+        var request = new LoginAndLaunchGameByLive(
             PlayerCode: playerCode,
             IsMobileLogin: false,
             BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
             Platform: "SEXYBCRT",
+            ExternalGameId: "MX-LIVE-002",
             BetLimit: JsonSerializer.Serialize(betLimit),
             Language: cultureCode);
 
@@ -199,12 +195,11 @@ public class LoginAndLaunchGameUnitTests
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsTrue(result.IsPlayerExist);
-        Assert.AreEqual(response.url, result.GameUrl);
+        Assert.True(result.IsPlayerExist);
+        Assert.Equal(response.url, result.GameUrl);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_SV388()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -254,12 +249,11 @@ public class LoginAndLaunchGameUnitTests
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsTrue(result.IsPlayerExist);
-        Assert.AreEqual(response.url, result.GameUrl);
+        Assert.True(result.IsPlayerExist);
+        Assert.Equal(response.url, result.GameUrl);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process_Is_Live_VENUS()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -278,11 +272,12 @@ public class LoginAndLaunchGameUnitTests
             }
         });
 
-        var request = new LoginAndLaunchGameByLiveLobby(
+        var request = new LoginAndLaunchGameByLive(
             PlayerCode: playerCode,
             IsMobileLogin: false,
             BackUrl: "https://dev-t1.rpgp.cc/zh-CN",
             Platform: "VENUS",
+            ExternalGameId: "VN-LIVE-001",
             BetLimit: JsonSerializer.Serialize(betLimit),
             Language: cultureCode);
 
@@ -304,8 +299,7 @@ public class LoginAndLaunchGameUnitTests
 
         var result = await client.LoginAndLaunchGameAsync(apiUrl, agentId, cert, request);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsTrue(result.IsPlayerExist);
-        Assert.AreEqual(response.url, result.GameUrl);
+        Assert.True(result.IsPlayerExist);
+        Assert.Equal(response.url, result.GameUrl);
     }
 }

@@ -55,7 +55,7 @@ public interface IGameApiClient
     /// <param name="amount">The amount.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<FundResult> DepositAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
+    ValueTask<FundResp> DepositAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets all balances asynchronous.
@@ -65,7 +65,7 @@ public interface IGameApiClient
     /// <param name="cert">The cert.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    IAsyncEnumerable<AllBalance> GetAllBalancesAsync(Uri apiUrl, string agentId, string cert, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<BalanceInfo> GetAllBalancesAsync(Uri apiUrl, string agentId, string cert, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the balance asynchronous.
@@ -76,7 +76,7 @@ public interface IGameApiClient
     /// <param name="playerCode">The player code.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<GetBalanceResult> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);
+    ValueTask<GetBalanceResp> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Logins the and launch game asynchronous.
@@ -88,17 +88,6 @@ public interface IGameApiClient
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
     ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGame data, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Logins the and launch game asynchronous.
-    /// </summary>
-    /// <param name="apiUrl">The API URL.</param>
-    /// <param name="agentId">The agent identifier.</param>
-    /// <param name="cert">The cert.</param>
-    /// <param name="data">The data.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns></returns>
-    ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGameByLiveLobby data, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Logins the and launch game asynchronous.
@@ -134,5 +123,5 @@ public interface IGameApiClient
     /// <param name="withdrawType">Type of the withdraw.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<FundResult> WithdrawAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, int withdrawType = 0, CancellationToken cancellationToken = default);
+    ValueTask<FundResp> WithdrawAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, int withdrawType = 0, CancellationToken cancellationToken = default);
 }

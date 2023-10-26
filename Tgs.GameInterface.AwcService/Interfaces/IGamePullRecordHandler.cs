@@ -7,8 +7,14 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 
 public interface IGamePullRecordHandler
 {
-    [HttpPost("game/pullrecord")]
-    IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
-        [FromServices] IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> service,
-        GamePullRecordQueryViewModel model);
+    /// <summary>
+    /// Games the record pull asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    [HttpPost("game/record/pull")]
+    IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync(
+        [FromServices] IQueryService<GameRecordPullQuery, GameRecordPullResult> service,
+        GamePullRecordQueryViewModel source);
 }

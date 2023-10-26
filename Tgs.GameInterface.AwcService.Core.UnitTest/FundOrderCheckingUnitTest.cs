@@ -4,15 +4,14 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.AwcService.Core.Exceptions;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class FundOrderCheckingUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -42,10 +41,10 @@ public class FundOrderCheckingUnitTest
 
         var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
-        Assert.IsTrue(actual);
+        Assert.True(actual);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Transfer_Fail()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -75,10 +74,10 @@ public class FundOrderCheckingUnitTest
 
         var actual = await client.CheckTransferOperationAsync(apiUrl, agentId, cert, txCode);
 
-        Assert.IsFalse(actual);
+        Assert.False(actual);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Txcode_Is_Not_Exist()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -101,13 +100,12 @@ public class FundOrderCheckingUnitTest
         var fakeLog = NullLogger<GameApiClient>.Instance;
         var client = new GameApiClient(fakeLog, fakeHttpClient);
 
-        _ = await Assert.ThrowsExceptionAsync<Exception>(async () =>
-        {
-            _ = await client.CheckTransferOperationAsync(
-                apiUrl,
-                agentId,
-                cert,
-                txCode).AsTask().ConfigureAwait(false);
-        });
+        _ = await Assert.ThrowsAsync<StatusException>(
+            () => client.CheckTransferOperationAsync(
+                apiUrl: apiUrl,
+                agentId: agentId,
+                cert: cert,
+                transactionId: txCode)
+                 .AsTask());
     }
 }

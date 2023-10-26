@@ -8,28 +8,28 @@ namespace Tgs.GameInterface.AwcService.GrpcServices;
 
 public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceBase
 {
+    private readonly IQueryService<GameRecordPullQuery, GameRecordPullResult> _gameRecordPullService;
+    private readonly IQueryService<GameRecordSettledQuery, GameRecordSettledResult> _gameRecordSettledService;
     private readonly IQueryService<OutstandingByBetTimeQuery, OutstandingByBetTimeResult> _outstandingByBetTimeService;
-    private readonly IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> _transactionByTxTimeQuery;
-    private readonly IQueryService<TransactionByUpdateDateByStatusQuery, TransactionByUpdateDateResult> _transactionByUpdateDateByStatusService;
-    private readonly IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> _transactionByUpdateDateService;
+    private readonly IQueryService<TransactionByUpdateDateByStatusQuery, GameRecordPullResult> _transactionByUpdateDateByStatusService;
 
     public GameInterfaceAwcRecordGrpcService(
-        IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> transactionByTxTimeQuery,
+        IQueryService<GameRecordSettledQuery, GameRecordSettledResult> gameRecordSettledService,
         IQueryService<OutstandingByBetTimeQuery, OutstandingByBetTimeResult> outstandingByBetTimeService,
-        IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> transactionByUpdateDateService,
-        IQueryService<TransactionByUpdateDateByStatusQuery, TransactionByUpdateDateResult> transactionByUpdateDateByStatusService)
+        IQueryService<GameRecordPullQuery, GameRecordPullResult> gameRecordPullService,
+        IQueryService<TransactionByUpdateDateByStatusQuery, GameRecordPullResult> transactionByUpdateDateByStatusService)
     {
-        _transactionByTxTimeQuery = transactionByTxTimeQuery ?? throw new ArgumentNullException(nameof(transactionByTxTimeQuery));
+        _gameRecordSettledService = gameRecordSettledService ?? throw new ArgumentNullException(nameof(gameRecordSettledService));
         _outstandingByBetTimeService = outstandingByBetTimeService ?? throw new ArgumentNullException(nameof(outstandingByBetTimeService));
-        _transactionByUpdateDateService = transactionByUpdateDateService ?? throw new ArgumentNullException(nameof(transactionByUpdateDateService));
+        _gameRecordPullService = gameRecordPullService ?? throw new ArgumentNullException(nameof(gameRecordPullService));
         _transactionByUpdateDateByStatusService = transactionByUpdateDateByStatusService ?? throw new ArgumentNullException(nameof(transactionByUpdateDateByStatusService));
     }
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcAeLotto(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -38,7 +38,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -80,9 +80,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcAws(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -92,7 +92,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             )
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -134,9 +134,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcCockfight(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -145,7 +145,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -187,9 +187,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcFacai(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -198,7 +198,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -240,9 +240,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcFs(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -251,7 +251,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -293,9 +293,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcKm(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -304,7 +304,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -346,9 +346,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcLudo(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -357,7 +357,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -399,9 +399,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcPgs(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -410,7 +410,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -452,9 +452,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcRcb(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -463,7 +463,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -505,9 +505,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcSg(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -516,7 +516,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -558,9 +558,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcSpade(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -569,7 +569,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -611,9 +611,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcVenus(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -622,7 +622,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -664,9 +664,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcYl(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _transactionByUpdateDateService
+        var result = await _gameRecordPullService
             .QueryAsync(
-            query: new TransactionByUpdateDateQuery(
+            query: new GameRecordPullQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -675,7 +675,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GamePullRecordReply();
 
@@ -717,9 +717,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcAeLotto(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -729,7 +729,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -771,9 +771,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcAws(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -783,7 +783,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -825,9 +825,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcCockfight(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -837,7 +837,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -879,9 +879,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcFacai(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -891,7 +891,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -933,9 +933,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcFs(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -945,7 +945,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -987,9 +987,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcKm(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -999,7 +999,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1041,9 +1041,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcLudo(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1053,7 +1053,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1095,9 +1095,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcPgs(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1107,7 +1107,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1149,9 +1149,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcRcb(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1161,7 +1161,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1203,9 +1203,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcSg(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1215,7 +1215,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1257,9 +1257,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcSpade(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1269,7 +1269,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1311,9 +1311,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcVenus(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1323,7 +1323,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1365,9 +1365,9 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GameSettleRecordReply> GameSettleByAwcYl(GameSettleRequest request, ServerCallContext context)
     {
-        var result = await _transactionByTxTimeQuery
+        var result = await _gameRecordSettledService
             .QueryAsync(
-            query: new TransactionByTxTimeQuery(
+            query: new GameRecordSettledQuery(
                 ApiUrl: new(request.ApiUrl),
                 AgentId: request.AgentId,
                 Cert: request.Cert,
@@ -1377,7 +1377,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByTxTimeResult>();
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         var reply = new GameSettleRecordReply();
 
@@ -1477,7 +1477,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             cancellationToken: context.CancellationToken)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<TransactionByUpdateDateResult>();
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         var reply = new GameUnsettleRecordReply();
 

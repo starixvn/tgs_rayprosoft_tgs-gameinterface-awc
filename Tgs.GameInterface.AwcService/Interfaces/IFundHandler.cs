@@ -7,18 +7,36 @@ namespace Tgs.GameInterface.AwcService.Interfaces;
 
 public interface IFundHandler
 {
-    [HttpPost("fundin")]
+    /// <summary>
+    /// Funds the in asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    [HttpPost("fund/in")]
     ValueTask<FundResultViewModel> FundInAsync(
-        [FromServices] IGetService<FundInQuery, FundInResult> service,
-        FundQueryViewModel model);
+        [FromServices] IGetService<FundInQuery, FundResult> service,
+        FundQueryViewModel source);
 
-    [HttpPost("fundorderchecking")]
-    ValueTask<bool> FundOrderCheckingAsync(
-        [FromServices] IGetService<FundOrderCheckingQuery, bool> service,
-        FundOrderCheckingViewModel model);
-
-    [HttpPost("fundout")]
+    /// <summary>
+    /// Funds the out asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    [HttpPost("fund/out")]
     ValueTask<FundResultViewModel> FundOutAsync(
-        [FromServices] IGetService<FundOutQuery, FundOutResult> service,
-        FundQueryViewModel model);
+        [FromServices] IGetService<FundOutQuery, FundResult> service,
+        FundQueryViewModel source);
+
+    /// <summary>
+    /// Funds the status asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    [HttpPost("fund/Status")]
+    ValueTask<bool> FundStatusAsync(
+        [FromServices] IGetService<FundStatusQuery, bool> service,
+        FundOrderCheckingViewModel source);
 }

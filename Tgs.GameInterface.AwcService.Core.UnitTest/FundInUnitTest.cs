@@ -1,43 +1,39 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class FundInUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
         var agentId = "testagentid";
         var cert = "testcert";
         var playerCode = "4ucmqplxb029";
-        string transactionId = Guid.NewGuid().ToString("N");
-        decimal amount = 100m;
+        string transactionId = "018b69d42cef0000000107e7cfe506aa";
+        decimal amount = 16000m;
 
-        var response = new
+        var response = new JsonObject
         {
-            status = ((int)GameApiClientError.Success).ToString("d4"),
-            desc = GameApiClientError.Success.ToString(),
-            amount = amount.ToString(),
-            method = "WITHDRAW",
-            databaseId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
-            currentBalance = "0",
-            lastModified = DateTime.UtcNow,
-            txCode = transactionId
+            ["method"] = "WITHDRAW",
+            ["databaseId"] = 1556992469,
+            ["currentBalance"] = "0.35",
+            ["lastModified"] = "2023-10-26T10:33:14.763+08:00",
+            ["txCode"] = "018b69d42cef0000000107e7cfe506aa",
+            ["amount"] = "16000",
+            ["status"] = "0000"
         };
 
-        var content = JsonSerializer.Serialize(response);
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, "/wallet/withdraw")
-        .Respond(HttpStatusCode.OK, new StringContent(content));
+        .Respond(HttpStatusCode.OK, new StringContent(response.ToJsonString()));
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -45,10 +41,10 @@ public class FundInUnitTest
 
         var actual = await client.WithdrawAsync(apiUrl, agentId, cert, playerCode, transactionId, amount);
 
-        Assert.IsTrue(actual.Success);
-        Assert.AreEqual(response.txCode, actual.TransactionId);
-        Assert.AreEqual(response.databaseId, actual.GameProviderTransactionId);
-        Assert.AreEqual(decimal.Parse(response.amount), actual.Amount);
-        Assert.AreEqual(decimal.Parse(response.currentBalance), actual.CurrentBalance);
+        Assert.Equal("018b69d42cef0000000107e7cfe506aa", actual.TransactionId);
+        Assert.Equal("1556992469", actual.GameProviderTransactionId);
+        Assert.Equal(16000m, actual.Amount);
+        Assert.Equal(0.35m, actual.CurrentBalance);
+        Assert.Equal(response.ToJsonString(), actual.Resp);
     }
 }

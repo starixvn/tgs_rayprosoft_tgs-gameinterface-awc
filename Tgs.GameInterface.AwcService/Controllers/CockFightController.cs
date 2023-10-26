@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.AwcService.Core;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
-using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.GameInterface.AwcService.Interfaces;
 using Tgs.GameInterface.AwcService.ViewModels;
 using Tgs.ServiceUtility;
@@ -10,245 +9,15 @@ namespace Tgs.GameInterface.AwcService.Controllers;
 
 [Route("AWC_COCKFIGHT")]
 [ApiController]
-public class CockFightController : ControllerBase,
-    IBalanceHandler,
-    IBalancesHandler,
-    IFundHandler,
-    IKickPlayerHandler,
-    ICreatePlayerByBetLimitHandler,
-    IGamePullRecordHandler,
-    IGameSettleHandler
+public class CockFightController : AwcController,
+    IGameUrlLobbyByLiveHandler,
+    IPlayerCreateByBetLimitHandler
 {
     /// <summary>
-    /// Creates the player asynchronous.
+    /// Games the record pull asynchronous.
     /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "userName": "4ucmqplxb029",
-    ///             "currency": "CNY",
-    ///             "betLimit": "{\"SV388\":{\"LIVE\":{\"maxbet\":2400,\"minbet\":1,\"mindraw\":1,\"matchlimit\":4800,\"maxdraw\":1200}}}",
-    ///             "language": "cn"
-    ///         }
-    /// </remarks>
-    [HttpPost("create")]
-    public ValueTask CreatePlayerAsync(
-        [FromServices] ICommandService<CreatePlayerByBetLimitCommand> service,
-        CreatePlayerByBetLimitViewModel model)
-                => service.ExecuteAsync(new CreatePlayerByBetLimitCommand(
-                    model.ApiUrl,
-                    model.AgentId,
-                    model.Cert,
-                    model.PlayerCode,
-                    model.UserName,
-                    model.Currency,
-                    model.BetLimit,
-                    model.Language));
-
-    /// <summary>
-    /// Funds the in asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692D",
-    ///             "amount": 100
-    ///         }
-    /// </remarks>
-    [HttpPost("fund-in")]
-    public async ValueTask<FundResultViewModel> FundInAsync(
-        [FromServices] IGetService<FundInQuery, FundInResult> service,
-        FundQueryViewModel model)
-    {
-        var result = await service.GetAsync(new FundInQuery(
-            model.ApiUrl,
-            model.AgentId,
-            model.Cert,
-            model.PlayerCode,
-            model.TransactionId,
-            model.Amount)).ConfigureAwait(false);
-
-        return new FundResultViewModel(
-            result.Success,
-            result.Message,
-            result.TransactionId,
-            result.GameProviderTransactionId,
-            result.Amount,
-            result.CurrentBalance);
-    }
-
-    /// <summary>
-    /// Funds the order checking asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Head
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692D"
-    ///         }
-    /// </remarks>
-    [HttpPost("fundorderchecking")]
-    public ValueTask<bool> FundOrderCheckingAsync(
-        [FromServices] IGetService<FundOrderCheckingQuery, bool> service,
-        FundOrderCheckingViewModel model)
-            => service.GetAsync(new FundOrderCheckingQuery(
-                model.ApiUrl,
-                model.AgentId,
-                model.Cert,
-                model.TransactionId));
-
-    /// <summary>
-    /// Funds the out asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "playerCode": "4ucmqplxb029",
-    ///             "transactionId": "8BF8BE2F096D33EBE7A3AF808E26692C",
-    ///             "amount": 100
-    ///         }
-    /// </remarks>
-    [HttpPost("fund-out")]
-    public async ValueTask<FundResultViewModel> FundOutAsync(
-        [FromServices] IGetService<FundOutQuery, FundOutResult> service,
-        FundQueryViewModel model)
-    {
-        var result = await service.GetAsync(new FundOutQuery(
-            model.ApiUrl,
-            model.AgentId,
-            model.Cert,
-            model.PlayerCode,
-            model.TransactionId,
-            model.Amount)).ConfigureAwait(false);
-
-        return new FundResultViewModel(
-            result.Success,
-            result.Message,
-            result.TransactionId,
-            result.GameProviderTransactionId,
-            result.Amount,
-            result.CurrentBalance);
-    }
-
-    /// <summary>
-    /// Gets the balance asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "playerCode": "4ucmqplxb029"
-    ///         }
-    /// </remarks>
-    [HttpPost("balance")]
-    public async ValueTask<BalanceResultViewModel> GetBalanceAsync(
-        [FromServices] IGetService<BalanceQuery, BalanceResult> service,
-        BalanceQueryViewModel model)
-    {
-        var result = await service.GetAsync(new BalanceQuery(
-            model.ApiUrl,
-            model.AgentId,
-            model.Cert,
-            model.PlayerCode
-            )).ConfigureAwait(false);
-
-        return new BalanceResultViewModel(
-            result.Success,
-            result.Message,
-            result.IsPlayerExist,
-            result.Balance);
-    }
-
-    /// <summary>
-    /// Gets the balances asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpiawsslot",
-    ///             "cert": "ohh3uhFCoeFA66US28G"
-    ///         }
-    /// </remarks>
-    [HttpPost("balances")]
-    public async IAsyncEnumerable<AllBalanceViewModel> GetBalancesAsync(
-        [FromServices] IQueryService<AllBalanceQuery, AllBalance> service,
-        AllBalanceQueryViewModel model)
-    {
-        var balances = await service.QueryAsync(
-              query: new AllBalanceQuery(
-                  ApiUrl: model.ApiUrl,
-                  AgentId: model.AgentId,
-                  Cert: model.Cert),
-              cancellationToken: HttpContext.RequestAborted)
-              .ToArrayAsync()
-              .ConfigureAwait(false)
-              ?? Enumerable.Empty<AllBalance>();
-
-        if (!balances.Any())
-        {
-            yield break;
-        }
-
-        foreach (var balance in balances)
-        {
-            yield return new AllBalanceViewModel(
-                UserId: balance.UserId,
-                Balance: balance.Balance,
-                LastModified: balance.LastModified);
-        }
-    }
-
-    /// <summary>
-    /// Gets the game pull record asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
+    /// <param name="service"></param>
+    /// <param name="source"></param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -262,17 +31,23 @@ public class CockFightController : ControllerBase,
     ///         }
     ///
     /// </remarks>
-    [HttpPost("game/pullrecord")]
-    public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
-        [FromServices] IQueryService<TransactionByUpdateDateQuery, TransactionByUpdateDateResult> service,
-        GamePullRecordQueryViewModel model)
+    public override async IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync(
+        [FromServices] IQueryService<GameRecordPullQuery, GameRecordPullResult> service,
+        GamePullRecordQueryViewModel source)
     {
-        var result = await service.QueryAsync(new TransactionByUpdateDateQuery(
-            ApiUrl: model.ApiUrl,
-            AgentId: model.AgentId,
-            Cert: model.Cert,
+        var query = new GameRecordPullQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
             Platform: AwcPlatforms.AWC_COCKFIGHT,
-            TimeFrom: model.TimeFrom)).ToArrayAsync().ConfigureAwait(false);
+            TimeFrom: source.TimeFrom);
+
+        var result = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync()
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordPullResult>();
 
         if (!result.Any())
         {
@@ -309,10 +84,10 @@ public class CockFightController : ControllerBase,
     }
 
     /// <summary>
-    /// Gets the game settle asynchronous.
+    /// Games the record settled asynchronous.
     /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
+    /// <param name="service"></param>
+    /// <param name="source"></param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -327,19 +102,24 @@ public class CockFightController : ControllerBase,
     ///         }
     ///
     /// </remarks>
-    [HttpPost("game/settle")]
-    public async IAsyncEnumerable<GameSettleTransactionViewModel> GetGameSettleAsync(
-        [FromServices] IQueryService<TransactionByTxTimeQuery, TransactionByTxTimeResult> service,
-        GameSettleQueryViewModel model)
+    public override async IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
+        [FromServices] IQueryService<GameRecordSettledQuery, GameRecordSettledResult> service,
+        GameSettleQueryViewModel source)
     {
-        var result = await service.QueryAsync(new TransactionByTxTimeQuery(
-            ApiUrl: model.ApiUrl,
-            AgentId: model.AgentId,
-            Cert: model.Cert,
+        var query = new GameRecordSettledQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
             Platform: AwcPlatforms.AWC_COCKFIGHT,
-            StartTime: model.StartTime,
-            EndTime: model.EndTime
-            )).ToArrayAsync().ConfigureAwait(false);
+            StartTime: source.StartTime,
+            EndTime: source.EndTime);
+
+        var result = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync()
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordSettledResult>();
 
         if (!result.Any())
         {
@@ -376,37 +156,10 @@ public class CockFightController : ControllerBase,
     }
 
     /// <summary>
-    /// Kicks the player asynchronous.
+    /// Games the URL lobby by live asynchronous.
     /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "playerCode": "4ucmqplxb029"
-    ///         }
-    /// </remarks>
-    [HttpPost("kick")]
-    public ValueTask KickPlayerAsync(
-        [FromServices] ICommandService<LogoutCommand> service,
-        KickPlayerViewModel model)
-    => service.ExecuteAsync(new LogoutCommand(
-        model.ApiUrl,
-        model.AgentId,
-        model.Cert,
-        model.PlayerCode));
-
-    /// <summary>
-    /// Lobbies the game URL by live asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="model">The model.</param>
+    /// <param name="service"></param>
+    /// <param name="source"></param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -424,28 +177,71 @@ public class CockFightController : ControllerBase,
     ///         }
     ///
     /// </remarks>
-    [HttpPost("lobby/live")]
-    public async ValueTask<GameUrlResultViewModel> LobbyGameUrlByLiveAsync(
-        [FromServices] IGetService<GameUrlByLiveQuery, GameUrlResult> service,
-        GameUrlByLiveLobbyQueryViewModel model)
-
+    [HttpPost("game/url/lobby/live")]
+    public async ValueTask<GameUrlResultViewModel> GameUrlLobbyByLiveAsync(
+        [FromServices] IGetService<GameUrlLobbyByLiveQuery, GameUrlResult> service,
+        GameUrlByLiveLobbyQueryViewModel source)
     {
-        var result = await service.GetAsync(new GameUrlByLiveQuery(
-            ApiUrl: model.ApiUrl,
-            AgentId: model.AgentId,
-            Cert: model.Cert,
-            PlayerCode: model.PlayerCode,
-            IsMobileLogin: model.IsMobileLogin,
-            BackUrl: model.BackUrl,
+        var query = new GameUrlLobbyByLiveQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
+            PlayerCode: source.PlayerCode,
+            IsMobileLogin: source.IsMobileLogin,
+            BackUrl: source.BackUrl,
             Platform: AwcPlatforms.AWC_COCKFIGHT,
             ExternalGameId: "SV-LIVE-001",
-            BetLimit: model.BetLimit,
-            Language: model.Language)).ConfigureAwait(false);
+            BetLimit: source.BetLimit,
+            Language: source.Language);
+
+        var result = await service.GetAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ConfigureAwait(false);
 
         return new GameUrlResultViewModel(
-            Success: result.Success,
-            Message: result.Message,
             IsPlayerExist: result.IsPlayerExist,
             GameUrl: result.GameUrl);
+    }
+
+    /// <summary>
+    /// Creates the player asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///         {
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpicockfight",
+    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "userName": "4ucmqplxb029",
+    ///             "currency": "CNY",
+    ///             "betLimit": "{\"SV388\":{\"LIVE\":{\"maxbet\":2400,\"minbet\":1,\"mindraw\":1,\"matchlimit\":4800,\"maxdraw\":1200}}}",
+    ///             "language": "cn"
+    ///         }
+    /// </remarks>
+    [HttpPost("player/create")]
+    public ValueTask PlayerCreateByBetLimitAsync(
+        [FromServices] ICommandService<PlayerCreateByBetLimitCommand> service,
+        CreatePlayerByBetLimitViewModel source)
+    {
+        var command = new PlayerCreateByBetLimitCommand(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
+            PlayerCode: source.PlayerCode,
+            UserName: source.UserName,
+            Currency: source.Currency,
+            BetLimit: source.BetLimit,
+            Language: source.Language);
+
+        return service.ExecuteAsync(
+            command: command,
+            cancellationToken: HttpContext.RequestAborted);
     }
 }

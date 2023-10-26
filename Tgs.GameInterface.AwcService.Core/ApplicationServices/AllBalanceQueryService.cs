@@ -1,9 +1,10 @@
-﻿using Tgs.GameInterface.AwcService.Core.Models;
+﻿using System.Runtime.CompilerServices;
+using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class AllBalanceQueryService : IQueryService<AllBalanceQuery, AllBalance>
+internal class AllBalanceQueryService : IQueryService<AllBalanceQuery, AllBalanceResult>
 {
     private readonly IGameApiClient _client;
 
@@ -12,13 +13,30 @@ internal class AllBalanceQueryService : IQueryService<AllBalanceQuery, AllBalanc
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public IAsyncEnumerable<AllBalance> QueryAsync(
+    public async IAsyncEnumerable<AllBalanceResult> QueryAsync(
         AllBalanceQuery query,
-        CancellationToken cancellationToken = default)
-        => _client
-        .GetAllBalancesAsync(
-            query.ApiUrl,
-            query.AgentId,
-            query.Cert,
-            cancellationToken);
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var balances = await _client.GetAllBalancesAsync(
+            apiUrl: query.ApiUrl,
+            agentId: query.AgentId,
+            cert: query.Cert,
+            cancellationToken: cancellationToken)
+            .ToArrayAsync(
+            cancellationToken: cancellationToken)
+            ?? Enumerable.Empty<BalanceInfo>();
+
+        if (!balances.Any())
+        {
+            yield break;
+        }
+
+        foreach (var balance in balances)
+        {
+            yield return new AllBalanceResult(
+                balance.UserId,
+                balance.Balance,
+                balance.LastModified);
+        }
+    }
 }

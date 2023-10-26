@@ -43,8 +43,6 @@ internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
             cancellationToken).ConfigureAwait(false);
 
         return new GameUrlResult(
-            Success: result.Success,
-            Message: result.Message,
             IsPlayerExist: result.IsPlayerExist,
             GameUrl: result.GameUrl);
     }

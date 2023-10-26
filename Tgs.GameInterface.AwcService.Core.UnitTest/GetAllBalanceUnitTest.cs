@@ -5,15 +5,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class GetAllBalanceUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("https://tttint.onlinegames22.com/");
@@ -56,15 +54,13 @@ public class GetAllBalanceUnitTest
         var fakeLog = NullLogger<GameApiClient>.Instance;
         var client = new GameApiClient(fakeLog, fakeHttpClient);
 
-        var result = await client
-            .GetAllBalancesAsync(
-                apiUrl,
-                agentId,
-                cert)
-            .ToArrayAsync()
-            .ConfigureAwait(false);
+        var result = await client.GetAllBalancesAsync(
+            apiUrl: apiUrl,
+            agentId: agentId,
+            cert: cert)
+            .ToArrayAsync();
 
-        Assert.IsNotNull(result);
-        Assert.IsTrue(result.Any());
+        Assert.NotNull(result);
+        Assert.True(result.Any());
     }
 }

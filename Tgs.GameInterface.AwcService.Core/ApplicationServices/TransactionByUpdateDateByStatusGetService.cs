@@ -4,7 +4,7 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class TransactionByUpdateDateByStatusGetService : IQueryService<TransactionByUpdateDateByStatusQuery, TransactionByUpdateDateResult>
+internal class TransactionByUpdateDateByStatusGetService : IQueryService<TransactionByUpdateDateByStatusQuery, GameRecordPullResult>
 {
     private readonly IGameRecordApiClient _client;
     private readonly ILogger<TransactionByUpdateDateByStatusGetService> _logger;
@@ -17,7 +17,7 @@ internal class TransactionByUpdateDateByStatusGetService : IQueryService<Transac
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async IAsyncEnumerable<TransactionByUpdateDateResult> QueryAsync(TransactionByUpdateDateByStatusQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordPullResult> QueryAsync(TransactionByUpdateDateByStatusQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var result = await _client.GetTransactionByUpdateDateAsync(
             apiUrl: query.ApiUrl,
@@ -41,7 +41,7 @@ internal class TransactionByUpdateDateByStatusGetService : IQueryService<Transac
 
         foreach (var transaction in result.Transactions)
         {
-            yield return new TransactionByUpdateDateResult(
+            yield return new GameRecordPullResult(
                 ExternalRoundId: string.Format("{0}-{1}", query.Platform, transaction.PlatformTxId),
                 Platform: query.Platform ?? string.Empty,
                 PlatformTxId: transaction.PlatformTxId ?? string.Empty,

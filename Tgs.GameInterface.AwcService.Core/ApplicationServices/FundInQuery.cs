@@ -5,5 +5,5 @@ public record FundInQuery(
     string AgentId,
     string Cert,
     string PlayerCode,
-    string TransactionId,
+    string OrderId,
     decimal Amount);

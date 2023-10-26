@@ -4,4 +4,4 @@ public record FundOrderCheckingViewModel(
     Uri ApiUrl,
     string AgentId,
     string Cert,
-    string TransactionId);
+    string OrderId);

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class AllBalanceQueryServiceUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -25,9 +23,9 @@ public class AllBalanceQueryServiceUnitTest
 
         var fakeClient = Substitute.For<IGameApiClient>();
 
-        var balances = new AllBalance[]
+        var balances = new BalanceInfo[]
         {
-            new AllBalance(
+            new BalanceInfo(
                 UserId: "4udw90nrgp5f",
                 Balance: 6541m,
                 LastModified: DateTime.UtcNow)
@@ -41,11 +39,10 @@ public class AllBalanceQueryServiceUnitTest
 
         var actual = await service
             .QueryAsync(
-                query)
-            .ToArrayAsync()
-            .ConfigureAwait(false);
+            query)
+            .ToArrayAsync();
 
-        Assert.IsNotNull(actual);
-        Assert.IsTrue(actual.Any());
+        Assert.NotNull(actual);
+        Assert.True(actual.Any());
     }
 }

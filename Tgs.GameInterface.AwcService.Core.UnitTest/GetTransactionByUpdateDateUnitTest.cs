@@ -5,15 +5,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class GetTransactionByUpdateDateUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task No_Transactions_Data()
 
     {
@@ -40,11 +38,11 @@ public class GetTransactionByUpdateDateUnitTest
 
         var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom, TransactionStatus.Settled);
 
-        Assert.IsTrue(result.Success);
-        Assert.IsFalse(result.Transactions.Any());
+        Assert.True(result.Success);
+        Assert.False(result.Transactions.Any());
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -97,11 +95,11 @@ public class GetTransactionByUpdateDateUnitTest
 
         var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom);
 
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(response.transactions.First().roundId, result.Transactions!.First().RoundId);
+        Assert.True(result.Success);
+        Assert.Equal(response.transactions.First().roundId, result.Transactions!.First().RoundId);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_ProcessByStatus()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -154,7 +152,7 @@ public class GetTransactionByUpdateDateUnitTest
 
         var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom, TransactionStatus.Settled);
 
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(response.transactions.First().roundId, result.Transactions!.First().RoundId);
+        Assert.True(result.Success);
+        Assert.Equal(response.transactions.First().roundId, result.Transactions!.First().RoundId);
     }
 }

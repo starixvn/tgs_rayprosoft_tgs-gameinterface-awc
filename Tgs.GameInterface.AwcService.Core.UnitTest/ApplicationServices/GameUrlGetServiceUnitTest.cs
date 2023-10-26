@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
@@ -8,10 +7,9 @@ using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class GameUrlGetServiceUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Account_Is_Not_Exists()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -43,9 +41,8 @@ public class GameUrlGetServiceUnitTest
             Language: query.Language);
 
         var result = new LoginAndLaunchGameResult(
-            Success: true,
             IsPlayerExist: false,
-            GameUrl: null
+            GameUrl: string.Empty
             );
 
         _ = fakeClient.LoginAndLaunchGameAsync(
@@ -56,14 +53,12 @@ public class GameUrlGetServiceUnitTest
 
         var service = new GameUrlGetService(fakeClient);
 
-        var actual = await service.GetAsync(query).ConfigureAwait(false);
+        var actual = await service.GetAsync(query);
 
-        Assert.IsTrue(actual.Success);
-        Assert.IsFalse(actual.IsPlayerExist);
-        Assert.IsNull(actual.GameUrl);
+        Assert.False(actual.IsPlayerExist);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Exception_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -102,10 +97,10 @@ public class GameUrlGetServiceUnitTest
 
         var service = new GameUrlGetService(fakeClient);
 
-        _ = await Assert.ThrowsExceptionAsync<Exception>(() => service.GetAsync(query).AsTask()).ConfigureAwait(false);
+        _ = await Assert.ThrowsAsync<Exception>(() => service.GetAsync(query).AsTask());
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -137,7 +132,6 @@ public class GameUrlGetServiceUnitTest
             Language: query.Language);
 
         var result = new LoginAndLaunchGameResult(
-            Success: true,
             IsPlayerExist: true,
             GameUrl: "http://localhost"
             );
@@ -150,10 +144,9 @@ public class GameUrlGetServiceUnitTest
 
         var service = new GameUrlGetService(fakeClient);
 
-        var actual = await service.GetAsync(query).ConfigureAwait(false);
+        var actual = await service.GetAsync(query);
 
-        Assert.IsTrue(actual.Success);
-        Assert.IsTrue(actual.IsPlayerExist);
-        Assert.AreEqual(result.GameUrl, actual.GameUrl);
+        Assert.True(actual.IsPlayerExist);
+        Assert.Equal(result.GameUrl, actual.GameUrl);
     }
 }

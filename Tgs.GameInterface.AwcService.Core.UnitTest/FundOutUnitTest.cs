@@ -1,43 +1,39 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
-[TestClass]
 public class FundOutUnitTest
 {
-    [TestMethod]
+    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
         var agentId = "testagentid";
         var cert = "testcert";
         var playerCode = "4ucmqplxb029";
-        string txCode = Guid.NewGuid().ToString("N");
-        decimal amount = 100m;
+        string txCode = "018b69f88cfa0000000107e72e647968";
+        decimal amount = 25m;
 
-        var response = new
+        var response = new JsonObject
         {
-            status = ((int)GameApiClientError.Success).ToString("d4"),
-            desc = GameApiClientError.Success.ToString(),
-            amount = amount.ToString(),
-            method = "DEPOSIT",
-            databaseId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
-            currentBalance = "100",
-            lastModified = DateTime.UtcNow,
-            txCode
+            ["method"] = "DEPOSIT",
+            ["databaseId"] = 1557023954,
+            ["currentBalance"] = "25.51",
+            ["lastModified"] = "2023-10-26T11:12:58.662+08:00",
+            ["txCode"] = "018b69f88cfa0000000107e72e647968",
+            ["amount"] = "25",
+            ["status"] = "0000"
         };
 
-        var content = JsonSerializer.Serialize(response);
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, "/wallet/deposit")
-        .Respond(HttpStatusCode.OK, new StringContent(content));
+        .Respond(HttpStatusCode.OK, new StringContent(response.ToJsonString()));
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -45,10 +41,10 @@ public class FundOutUnitTest
 
         var actual = await client.DepositAsync(apiUrl, agentId, cert, playerCode, txCode, amount);
 
-        Assert.IsTrue(actual.Success);
-        Assert.AreEqual(response.txCode, actual.TransactionId);
-        Assert.AreEqual(response.databaseId, actual.GameProviderTransactionId);
-        Assert.AreEqual(decimal.Parse(response.amount), actual.Amount);
-        Assert.AreEqual(decimal.Parse(response.currentBalance), actual.CurrentBalance);
+        Assert.Equal("018b69f88cfa0000000107e72e647968", actual.TransactionId);
+        Assert.Equal("1557023954", actual.GameProviderTransactionId);
+        Assert.Equal(25m, actual.Amount);
+        Assert.Equal(25.51m, actual.CurrentBalance);
+        Assert.Equal(response.ToJsonString(), actual.Resp);
     }
 }
