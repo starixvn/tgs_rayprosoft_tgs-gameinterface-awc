@@ -262,11 +262,15 @@ internal class GameApiClient : IGameApiClient
 
         var result = jsonNode["results"]!.AsArray()
             .Where(x => x!["userId"]!.ToString().Equals(playerCode, StringComparison.InvariantCultureIgnoreCase))
-            .Single();
+            .FirstOrDefault();
 
-        return new GetBalanceResp(
-            IsPlayerExist: true,
-            Balance: decimal.Parse(result!["balance"]!.ToString()));
+        return result is null
+            ? new GetBalanceResp(
+                IsPlayerExist: false,
+                Balance: 0)
+            : new GetBalanceResp(
+                IsPlayerExist: true,
+                Balance: decimal.Parse(result!["balance"]!.ToString()));
     }
 
     public ValueTask<LoginAndLaunchGameResult> LoginAndLaunchGameAsync(Uri apiUrl, string agentId, string cert, LoginAndLaunchGame data, CancellationToken cancellationToken = default)
