@@ -296,7 +296,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             .ConfigureAwait(false);
     }
 
-    public async ValueTask<PlayerBalanceReply> GetBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
+    public async ValueTask<PlayerBalanceReply> PlayerBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default)
     {
         var request = new PlayerBalanceRequest
         {
