@@ -1,47 +1,40 @@
 ﻿using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Logging;
+using Tgs.GameInterface.AwcService.Core.Models;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class TransactionByUpdateDateByStatusGetService : IQueryService<TransactionByUpdateDateByStatusQuery, GameRecordPullResult>
+internal class GameRecordByUpdateQueryService : IQueryService<GameRecordByUpdateQuery, GameRecordResult>
 {
     private readonly IGameRecordApiClient _client;
-    private readonly ILogger<TransactionByUpdateDateByStatusGetService> _logger;
 
-    public TransactionByUpdateDateByStatusGetService(
-        ILogger<TransactionByUpdateDateByStatusGetService> logger,
-        IGameRecordApiClient client)
+    public GameRecordByUpdateQueryService(IGameRecordApiClient client)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async IAsyncEnumerable<GameRecordPullResult> QueryAsync(TransactionByUpdateDateByStatusQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordResult> QueryAsync(GameRecordByUpdateQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var result = await _client.GetTransactionByUpdateDateAsync(
+        var transactions = await _client.GetTransactionByUpdateDateAsync(
             apiUrl: query.ApiUrl,
             agentId: query.AgentId,
             cert: query.Cert,
             platform: query.Platform,
             timeFrom: query.TimeFrom,
-            transactionStatus: query.TransactionStatus,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken)
+            .ToArrayAsync(
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>();
 
-        if (!result.Success)
-        {
-            _logger.LogError("Logon:{logon} | Message:{message}", DateTime.UtcNow.ToString("O"), result.Message ?? string.Empty);
-            yield break;
-        }
-
-        if (result.Transactions is null || !result.Transactions.Any())
+        if (!transactions.Any())
         {
             yield break;
         }
 
-        foreach (var transaction in result.Transactions)
+        foreach (var transaction in transactions)
         {
-            yield return new GameRecordPullResult(
+            yield return new GameRecordResult(
                 ExternalRoundId: string.Format("{0}-{1}", query.Platform, transaction.PlatformTxId),
                 Platform: query.Platform ?? string.Empty,
                 PlatformTxId: transaction.PlatformTxId ?? string.Empty,
@@ -64,7 +57,8 @@ internal class TransactionByUpdateDateByStatusGetService : IQueryService<Transac
                 RealWinAmount: transaction.RealWinAmount,
                 JackpotBetAmount: transaction.JackpotBetAmount,
                 JackpotWinAmount: transaction.JackpotWinAmount,
-                GameInfo: transaction.GameInfo ?? string.Empty);
+                GameInfo: transaction.GameInfo ?? string.Empty,
+                AdditionalData: transaction.AdditionalData ?? string.Empty);
         }
     }
 }

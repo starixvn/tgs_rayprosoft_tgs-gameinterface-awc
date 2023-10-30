@@ -15,4 +15,5 @@ public record GameUnsettleTransactionViewModel(
     decimal BetAmount,
     decimal RealBetAmount,
     decimal JackpotBetAmount,
-    string GameInfo);
+    string GameInfo,
+    string AdditionalData);

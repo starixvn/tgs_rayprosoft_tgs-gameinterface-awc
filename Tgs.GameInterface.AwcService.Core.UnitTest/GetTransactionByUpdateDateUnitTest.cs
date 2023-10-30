@@ -3,9 +3,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
@@ -24,7 +26,7 @@ public class GetTransactionByUpdateDateUnitTest
         var response = new
         {
             status = ((int)GameApiClientError.Success).ToString("d4"),
-            transactions = default(Nullable)
+            transactions = new JsonArray()
         };
 
         var content = JsonSerializer.Serialize(response);
@@ -36,10 +38,17 @@ public class GetTransactionByUpdateDateUnitTest
         var fakeLog = NullLogger<GameRecordApiClient>.Instance;
         var client = new GameRecordApiClient(fakeLog, fakeHttpClient);
 
-        var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom, TransactionStatus.Settled);
+        var transactions = await client.GetTransactionByUpdateDateAsync(
+            apiUrl: apiUrl,
+            agentId: agentId,
+            cert: cert,
+            platform: platform,
+            timeFrom: timeFrom,
+            transactionStatus: TransactionStatus.Settled)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>();
 
-        Assert.True(result.Success);
-        Assert.False(result.Transactions.Any());
+        Assert.False(transactions.Any());
     }
 
     [Fact]
@@ -51,52 +60,78 @@ public class GetTransactionByUpdateDateUnitTest
         var platform = "SEXYBCRT";
         var timeFrom = DateTimeOffset.Now.AddMinutes(-2);
 
-        var response = new
+        var response = new JsonObject
         {
-            status = ((int)GameApiClientError.Success).ToString("d4"),
-            transactions = new[]
+            ["status"] = "0000",
+            ["transactions"] = new JsonArray
             {
-                new
+                new JsonObject
                 {
-                    gameType= "LIVE",
-                    winAmount= 0,
-                    txTime= "2021-03-11T10:05:33+08:00",
-                    settleStatus= 0,
-                    gameInfo= "{\"result\":[\"C13\",\"D06\",\"\",\"D11\",\"D04\",\"C10\"],\"roundStartTime\":\"03/11/2021 13:35:57.648\",\"winner\":\"BANKER\",\"ip\":\"192.172.0.1\",\"odds\":-1.0,\"streamerId\":\"\",\"tableId\":1,\"dealerDomain\":\"Mexico\",\"winLoss\":-20.0,\"status\":\"LOSE\"}",
-                    realWinAmount= 0,
-                    updateTime= "2021-03-11T13:36:35+08:00",
-                    realBetAmount= 20,
-                    userId= "testuser",
-                    betType= "Banker",
-                    platform= "SEXYBCRT",
-                    txStatus= 1,
-                    betAmount= 20,
-                    gameName= "BaccaratClassic",
-                    platformTxId= "BAC-134152039",
-                    betTime= "2021-03-11T13:36:06+08:00",
-                    gameCode= "MX-LIVE-001",
-                    currency= "CNY",
-                    jackpotWinAmount= 0,
-                    jackpotBetAmount= 0,
-                    turnover= 20,
-                    roundId= "Mexico-01-GA356200030"
+                    ["gameType"] =  "SLOT",
+                    ["winAmount"] =  0,
+                    ["txTime"] =  "2023-10-30T15:10:04+08:00",
+                    ["settleStatus"] =  0,
+                    ["gameInfo"] =  "{\"freeGameTransactionId\":\"\",\"isAdjustment\":false,\"isEndRound\":true,\"bonusTransactionId\":\"\",\"isBuyFreeSpin\":false,\"isFeature\":false}",
+                    ["realWinAmount"] =  0,
+                    ["updateTime"] =  "2023-10-30T15:10:04+08:00",
+                    ["realBetAmount"] =  3,
+                    ["userId"] =  "4ulb1qdzcm1w",
+                    ["betType"] =  "1",
+                    ["platform"] =  "PG",
+                    ["txStatus"] =  1,
+                    ["betAmount"] =  3,
+                    ["gameName"] =  "Dragon Hatch",
+                    ["platformTxId"] =  "1718887979100956672",
+                    ["betTime"] =  "2023-10-30T15:10:04+08:00",
+                    ["gameCode"] =  "PG-SLOT-042",
+                    ["currency"] =  "PHP",
+                    ["jackpotWinAmount"] =  0,
+                    ["jackpotBetAmount"] =  0,
+                    ["turnover"] =  3,
+                    ["roundId"] =  "1718887979100956672"
                 }
             }
         };
 
-        var content = JsonSerializer.Serialize(response);
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, "/fetch/gzip/getTransactionByUpdateDate")
-        .Respond(HttpStatusCode.OK, new StringContent(content));
+        .Respond(HttpStatusCode.OK, new StringContent(response.ToJsonString()));
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameRecordApiClient>.Instance;
         var client = new GameRecordApiClient(fakeLog, fakeHttpClient);
 
-        var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom);
+        var transactions = await client.GetTransactionByUpdateDateAsync(
+            apiUrl: apiUrl,
+            agentId: agentId,
+            cert: cert,
+            platform: platform,
+            timeFrom: timeFrom)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>();
 
-        Assert.True(result.Success);
-        Assert.Equal(response.transactions.First().roundId, result.Transactions!.First().RoundId);
+        Assert.True(transactions.Any());
+        Assert.Equal("1718887979100956672", transactions!.First().PlatformTxId);
+        Assert.Equal("1718887979100956672", transactions!.First().RoundId);
+        Assert.Equal("SLOT", transactions!.First().GameType);
+        Assert.Equal("4ulb1qdzcm1w", transactions!.First().UserId);
+        Assert.Equal("PHP", transactions!.First().Currency);
+        Assert.Equal("PG-SLOT-042", transactions!.First().GameCode);
+        Assert.Equal("Dragon Hatch", transactions!.First().GameName);
+        Assert.Equal(1, transactions!.First().TxStatus);
+        Assert.Equal(0, transactions!.First().SettleStatus);
+        Assert.Equal("2023-10-30T15:10:04+08:00", transactions!.First().BetTime);
+        Assert.Equal("2023-10-30T15:10:04+08:00", transactions!.First().TxTime);
+        Assert.Equal("2023-10-30T15:10:04+08:00", transactions!.First().UpdateTime);
+        Assert.Equal("1", transactions!.First().BetType);
+        Assert.Equal(3.0m, transactions!.First().BetAmount);
+        Assert.Equal(3.0m, transactions!.First().RealBetAmount);
+        Assert.Equal(3.0m, transactions!.First().Turnover);
+        Assert.Equal(0.0m, transactions!.First().WinAmount);
+        Assert.Equal(0.0m, transactions!.First().RealWinAmount);
+        Assert.Equal(0.0m, transactions!.First().JackpotBetAmount);
+        Assert.Equal(0.0m, transactions!.First().JackpotWinAmount);
+        Assert.Equal(response["transactions"]!.AsArray()!.First()!.ToJsonString(), transactions!.First().AdditionalData);
     }
 
     [Fact]
@@ -108,51 +143,78 @@ public class GetTransactionByUpdateDateUnitTest
         var platform = "SEXYBCRT";
         var timeFrom = DateTimeOffset.Now.AddMinutes(-2);
 
-        var response = new
+        var response = new JsonObject
         {
-            status = ((int)GameApiClientError.Success).ToString("d4"),
-            transactions = new[]
+            ["status"] = "0000",
+            ["transactions"] = new JsonArray
             {
-                new
+                new JsonObject
                 {
-                    gameType= "LIVE",
-                    winAmount= 0,
-                    txTime= "2021-03-11T10:05:33+08:00",
-                    settleStatus= 0,
-                    gameInfo= "{\"result\":[\"C13\",\"D06\",\"\",\"D11\",\"D04\",\"C10\"],\"roundStartTime\":\"03/11/2021 13:35:57.648\",\"winner\":\"BANKER\",\"ip\":\"192.172.0.1\",\"odds\":-1.0,\"streamerId\":\"\",\"tableId\":1,\"dealerDomain\":\"Mexico\",\"winLoss\":-20.0,\"status\":\"LOSE\"}",
-                    realWinAmount= 0,
-                    updateTime= "2021-03-11T13:36:35+08:00",
-                    realBetAmount= 20,
-                    userId= "testuser",
-                    betType= "Banker",
-                    platform= "SEXYBCRT",
-                    txStatus= 1,
-                    betAmount= 20,
-                    gameName= "BaccaratClassic",
-                    platformTxId= "BAC-134152039",
-                    betTime= "2021-03-11T13:36:06+08:00",
-                    gameCode= "MX-LIVE-001",
-                    currency= "CNY",
-                    jackpotWinAmount= 0,
-                    jackpotBetAmount= 0,
-                    turnover= 20,
-                    roundId= "Mexico-01-GA356200030"
+                    ["gameType"] =  "SLOT",
+                    ["winAmount"] =  0,
+                    ["txTime"] =  "2023-10-30T15:10:04+08:00",
+                    ["settleStatus"] =  0,
+                    ["gameInfo"] =  "{\"freeGameTransactionId\":\"\",\"isAdjustment\":false,\"isEndRound\":true,\"bonusTransactionId\":\"\",\"isBuyFreeSpin\":false,\"isFeature\":false}",
+                    ["realWinAmount"] =  0,
+                    ["updateTime"] =  "2023-10-30T15:10:04+08:00",
+                    ["realBetAmount"] =  3,
+                    ["userId"] =  "4ulb1qdzcm1w",
+                    ["betType"] =  "1",
+                    ["platform"] =  "PG",
+                    ["txStatus"] =  1,
+                    ["betAmount"] =  3,
+                    ["gameName"] =  "Dragon Hatch",
+                    ["platformTxId"] =  "1718887979100956672",
+                    ["betTime"] =  "2023-10-30T15:10:04+08:00",
+                    ["gameCode"] =  "PG-SLOT-042",
+                    ["currency"] =  "PHP",
+                    ["jackpotWinAmount"] =  0,
+                    ["jackpotBetAmount"] =  0,
+                    ["turnover"] =  3,
+                    ["roundId"] =  "1718887979100956672"
                 }
             }
         };
 
-        var content = JsonSerializer.Serialize(response);
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, "/fetch/gzip/getTransactionByUpdateDate")
-        .Respond(HttpStatusCode.OK, new StringContent(content));
+        .Respond(HttpStatusCode.OK, new StringContent(response.ToJsonString()));
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameRecordApiClient>.Instance;
         var client = new GameRecordApiClient(fakeLog, fakeHttpClient);
 
-        var result = await client.GetTransactionByUpdateDateAsync(apiUrl, agentId, cert, platform, timeFrom, TransactionStatus.Settled);
+        var transactions = await client.GetTransactionByUpdateDateAsync(
+            apiUrl: apiUrl,
+            agentId: agentId,
+            cert: cert,
+            platform: platform,
+            timeFrom: timeFrom,
+            transactionStatus: TransactionStatus.Settled)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>();
 
-        Assert.True(result.Success);
-        Assert.Equal(response.transactions.First().roundId, result.Transactions!.First().RoundId);
+        Assert.True(transactions.Any());
+        Assert.Equal("1718887979100956672", transactions!.First().PlatformTxId);
+        Assert.Equal("1718887979100956672", transactions!.First().RoundId);
+        Assert.Equal("SLOT", transactions!.First().GameType);
+        Assert.Equal("4ulb1qdzcm1w", transactions!.First().UserId);
+        Assert.Equal("PHP", transactions!.First().Currency);
+        Assert.Equal("PG-SLOT-042", transactions!.First().GameCode);
+        Assert.Equal("Dragon Hatch", transactions!.First().GameName);
+        Assert.Equal(1, transactions!.First().TxStatus);
+        Assert.Equal(0, transactions!.First().SettleStatus);
+        Assert.Equal("2023-10-30T15:10:04+08:00", transactions!.First().BetTime);
+        Assert.Equal("2023-10-30T15:10:04+08:00", transactions!.First().TxTime);
+        Assert.Equal("2023-10-30T15:10:04+08:00", transactions!.First().UpdateTime);
+        Assert.Equal("1", transactions!.First().BetType);
+        Assert.Equal(3.0m, transactions!.First().BetAmount);
+        Assert.Equal(3.0m, transactions!.First().RealBetAmount);
+        Assert.Equal(3.0m, transactions!.First().Turnover);
+        Assert.Equal(0.0m, transactions!.First().WinAmount);
+        Assert.Equal(0.0m, transactions!.First().RealWinAmount);
+        Assert.Equal(0.0m, transactions!.First().JackpotBetAmount);
+        Assert.Equal(0.0m, transactions!.First().JackpotWinAmount);
+        Assert.Equal(response["transactions"]!.AsArray()!.First()!.ToJsonString(), transactions!.First().AdditionalData);
     }
 }

@@ -57,4 +57,9 @@ public record GetOutstandingByBetTimeTransaction
     /// The game information(游戏讯息会由游戏商以 JSON 格式提供)
     /// </summary>
     public string GameInfo { get; set; } = default!;
+
+    /// <summary>
+    /// The additional data
+    /// </summary>
+    public string AdditionalData { get; set; } = default!;
 }

@@ -23,4 +23,5 @@ public record GameSettleTransactionViewModel(
     decimal RealWinAmount,
     decimal JackpotBetAmount,
     decimal JackpotWinAmount,
-    string GameInfo);
+    string GameInfo,
+    string AdditionalData);

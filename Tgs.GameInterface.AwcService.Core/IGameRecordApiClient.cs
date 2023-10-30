@@ -15,7 +15,7 @@ public interface IGameRecordApiClient
     /// <param name="endTime">The end time.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<GetOutstandingByBetTimeResult> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<GetOutstandingByBetTimeTransaction> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the transaction by tx time asynchronous.
@@ -28,7 +28,7 @@ public interface IGameRecordApiClient
     /// <param name="endTime">The end time.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<GetTransactionByTxTimeResult> GetTransactionByTxTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<GetTransactionByTxTimeTransaction> GetTransactionByTxTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the transaction by update date asynchronous.
@@ -41,7 +41,7 @@ public interface IGameRecordApiClient
     /// <param name="transactionStatus">The transaction status.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<GetTransactionByUpdateDateTransaction> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the transaction by update date asynchronous.
@@ -53,5 +53,5 @@ public interface IGameRecordApiClient
     /// <param name="timeFrom">The time from.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<GetTransactionByUpdateDateTransaction> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, CancellationToken cancellationToken = default);
 }

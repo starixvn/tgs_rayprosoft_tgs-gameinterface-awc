@@ -1,9 +1,9 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-public record TransactionByUpdateDateByStatusQuery(
+public record GameRecordUnsettledQuery(
     Uri ApiUrl,
     string AgentId,
     string Cert,
     string Platform,
-    DateTimeOffset TimeFrom,
-    TransactionStatus TransactionStatus);
+    DateTimeOffset StartTime,
+    DateTimeOffset EndTime);

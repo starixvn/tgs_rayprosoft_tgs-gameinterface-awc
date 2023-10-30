@@ -3,9 +3,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
@@ -25,7 +27,7 @@ public class GetTransactionByTxTimeUnitTest
         var response = new
         {
             status = ((int)GameApiClientError.Success).ToString("d4"),
-            transactions = default(Nullable)
+            transactions = new JsonArray()
         };
 
         var content = JsonSerializer.Serialize(response);
@@ -37,10 +39,17 @@ public class GetTransactionByTxTimeUnitTest
         var fakeLog = NullLogger<GameRecordApiClient>.Instance;
         var client = new GameRecordApiClient(fakeLog, fakeHttpClient);
 
-        var result = await client.GetTransactionByTxTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
+        var transactions = await client.GetTransactionByTxTimeAsync(
+            apiUrl: apiUrl,
+            agentId: agentId,
+            cert: cert,
+            platform: platform,
+            startTime: startTime,
+            endTime: endTime)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GetTransactionByTxTimeTransaction>();
 
-        Assert.True(result.Success);
-        Assert.False(result.Transactions.Any());
+        Assert.False(transactions.Any());
     }
 
     [Fact]
@@ -94,9 +103,36 @@ public class GetTransactionByTxTimeUnitTest
         var fakeLog = NullLogger<GameRecordApiClient>.Instance;
         var client = new GameRecordApiClient(fakeLog, fakeHttpClient);
 
-        var result = await client.GetTransactionByTxTimeAsync(apiUrl, agentId, cert, platform, startTime, endTime);
+        var transactions = await client.GetTransactionByTxTimeAsync(
+            apiUrl: apiUrl,
+            agentId: agentId,
+            cert: cert,
+            platform: platform,
+            startTime: startTime,
+            endTime: endTime)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GetTransactionByTxTimeTransaction>();
 
-        Assert.True(result.Success);
-        Assert.Equal(response.transactions.First().roundId, result.Transactions!.First().RoundId);
+        Assert.True(transactions.Any());
+        Assert.Equal("BAC-133992630", transactions!.First().PlatformTxId);
+        Assert.Equal("Mexico-01-GA355950059", transactions!.First().RoundId);
+        Assert.Equal("LIVE", transactions!.First().GameType);
+        Assert.Equal("testuser", transactions!.First().UserId);
+        Assert.Equal("CNY", transactions!.First().Currency);
+        Assert.Equal("MX-LIVE-001", transactions!.First().GameCode);
+        Assert.Equal("BaccaratClassic", transactions!.First().GameName);
+        Assert.Equal(1, transactions!.First().TxStatus);
+        Assert.Equal(0, transactions!.First().SettleStatus);
+        Assert.Equal("2021-03-10T15:49:00+08:00", transactions!.First().BetTime);
+        Assert.Equal("2021-03-10T15:49:00+08:00", transactions!.First().TxTime);
+        Assert.Equal("2021-03-10T15:49:24+08:00", transactions!.First().UpdateTime);
+        Assert.Equal("Banker", transactions!.First().BetType);
+        Assert.Equal(50.0m, transactions!.First().BetAmount);
+        Assert.Equal(50.0m, transactions!.First().RealBetAmount);
+        Assert.Equal(47.5m, transactions!.First().Turnover);
+        Assert.Equal(97.5m, transactions!.First().WinAmount);
+        Assert.Equal(97.5m, transactions!.First().RealWinAmount);
+        Assert.Equal(0.0m, transactions!.First().JackpotBetAmount);
+        Assert.Equal(0.0m, transactions!.First().JackpotWinAmount);
     }
 }

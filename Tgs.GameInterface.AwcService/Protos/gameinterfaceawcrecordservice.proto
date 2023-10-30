@@ -101,6 +101,7 @@ message GamePullRecord {
 	phoenix.protobuf.DecimalValue jackpot_bet_amount = 21;
 	phoenix.protobuf.DecimalValue jackpot_win_amount = 22;
 	string game_info = 23;
+	string additional_data = 24;
 }
 
 message GameSettleRecordReply {
@@ -131,6 +132,7 @@ message GameSettleRecord {
 	phoenix.protobuf.DecimalValue jackpot_bet_amount = 21;
 	phoenix.protobuf.DecimalValue jackpot_win_amount = 22;
 	string game_info = 23;
+	string additional_data = 24;
 }
 
 message GameUnsettleRecordReply {
@@ -153,4 +155,5 @@ message GameUnsettleRecord {
 	phoenix.protobuf.DecimalValue real_bet_amount = 13;
 	phoenix.protobuf.DecimalValue jackpot_bet_amount = 14;
 	string game_info = 15;
+	string additional_data = 16;
 }

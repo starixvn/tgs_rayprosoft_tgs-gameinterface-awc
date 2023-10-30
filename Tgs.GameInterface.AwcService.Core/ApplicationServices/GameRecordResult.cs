@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-public record OutstandingByBetTimeResult(
+public record GameRecordResult(
     string ExternalRoundId,
     string Platform,
     string PlatformTxId,
@@ -10,9 +10,18 @@ public record OutstandingByBetTimeResult(
     string RoundId,
     string UserId,
     string Currency,
+    int TxStatus,
+    int SettleStatus,
     string BetTime,
+    string TxTime,
+    string UpdateTime,
     string BetType,
     decimal BetAmount,
     decimal RealBetAmount,
+    decimal Turnover,
+    decimal WinAmount,
+    decimal RealWinAmount,
     decimal JackpotBetAmount,
-    string GameInfo);
+    decimal JackpotWinAmount,
+    string GameInfo,
+    string AdditionalData);

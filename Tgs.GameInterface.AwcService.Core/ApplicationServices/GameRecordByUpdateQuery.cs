@@ -1,9 +1,8 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-public record OutstandingByBetTimeQuery(
+public record GameRecordByUpdateQuery(
     Uri ApiUrl,
     string AgentId,
     string Cert,
     string Platform,
-    DateTimeOffset StartTime,
-    DateTimeOffset EndTime);
+    DateTimeOffset TimeFrom);

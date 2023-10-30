@@ -32,10 +32,10 @@ public class FastSpinController : AwcController,
     ///
     /// </remarks>
     public override async IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync(
-        [FromServices] IQueryService<GameRecordPullQuery, GameRecordPullResult> service,
+        [FromServices] IQueryService<GameRecordByUpdateQuery, GameRecordResult> service,
         GamePullRecordQueryViewModel source)
     {
-        var query = new GameRecordPullQuery(
+        var query = new GameRecordByUpdateQuery(
             ApiUrl: source.ApiUrl,
             AgentId: source.AgentId,
             Cert: source.Cert,
@@ -47,7 +47,7 @@ public class FastSpinController : AwcController,
             cancellationToken: HttpContext.RequestAborted)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordPullResult>();
+            ?? Enumerable.Empty<GameRecordResult>();
 
         if (!result.Any())
         {
@@ -79,7 +79,8 @@ public class FastSpinController : AwcController,
                 RealWinAmount: transaction.RealWinAmount,
                 JackpotBetAmount: transaction.JackpotBetAmount,
                 JackpotWinAmount: transaction.JackpotWinAmount,
-                GameInfo: transaction.GameInfo);
+                GameInfo: transaction.GameInfo,
+                AdditionalData: transaction.AdditionalData);
         }
     }
 
@@ -103,10 +104,10 @@ public class FastSpinController : AwcController,
     ///
     /// </remarks>
     public override async IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
-        [FromServices] IQueryService<GameRecordSettledQuery, GameRecordSettledResult> service,
+        [FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
         GameSettleQueryViewModel source)
     {
-        var query = new GameRecordSettledQuery(
+        var query = new GameRecordQuery(
             ApiUrl: source.ApiUrl,
             AgentId: source.AgentId,
             Cert: source.Cert,
@@ -119,7 +120,7 @@ public class FastSpinController : AwcController,
             cancellationToken: HttpContext.RequestAborted)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordSettledResult>();
+            ?? Enumerable.Empty<GameRecordResult>();
 
         if (!result.Any())
         {
@@ -151,7 +152,8 @@ public class FastSpinController : AwcController,
                 RealWinAmount: transaction.RealWinAmount,
                 JackpotBetAmount: transaction.JackpotBetAmount,
                 JackpotWinAmount: transaction.JackpotWinAmount,
-                GameInfo: transaction.GameInfo);
+                GameInfo: transaction.GameInfo,
+                AdditionalData: transaction.AdditionalData);
         }
     }
 

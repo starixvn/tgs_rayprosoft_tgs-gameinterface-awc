@@ -48,8 +48,7 @@ internal class GameApiClient : IGameApiClient
            parameters: parameters,
            logPrefix: "checkTransferOperation",
            cancellationToken: cancellationToken)
-           .ConfigureAwait(false)
-           ?? throw new Exception("Document is empty.");
+           .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
@@ -63,8 +62,7 @@ internal class GameApiClient : IGameApiClient
         return txStatus == 1;
     }
 
-    public async ValueTask CreatePlayerAsync(
-        Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string language = "en", CancellationToken cancellationToken = default)
+    public async ValueTask CreatePlayerAsync(Uri apiUrl, string agentId, string cert, string playerCode, string userName, string currency, string language = "en", CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -78,13 +76,12 @@ internal class GameApiClient : IGameApiClient
         };
 
         var jsonNode = await PostAsync(
-            apiUrl,
-            "/wallet/createMember",
-            parameters,
-            "createMember",
-            cancellationToken)
-            .ConfigureAwait(false)
-            ?? throw new Exception("Document is empty.");
+            apiUrl: apiUrl,
+            path: "/wallet/createMember",
+            parameters: parameters,
+            logPrefix: "createMember",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
@@ -116,8 +113,7 @@ internal class GameApiClient : IGameApiClient
             parameters: parameters,
             logPrefix: "createMember",
             cancellationToken: cancellationToken)
-            .ConfigureAwait(false)
-            ?? throw new Exception("Document is empty.");
+            .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
@@ -130,8 +126,7 @@ internal class GameApiClient : IGameApiClient
         }
     }
 
-    public async ValueTask<FundResp> DepositAsync(
-        Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
+    public async ValueTask<FundResp> DepositAsync(Uri apiUrl, string agentId, string cert, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -168,7 +163,8 @@ internal class GameApiClient : IGameApiClient
                 path: "/wallet/deposit",
                 parameters: parameters,
                 logPrefix: "deposit",
-                cancellationToken: cancellationToken))
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
             .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
@@ -194,19 +190,18 @@ internal class GameApiClient : IGameApiClient
         };
 
         var jsonNode = await PostAsync(
-                apiUrl: apiUrl,
-                path: "/wallet/getBalance",
-                parameters: parameters,
-                logPrefix: "getAllBalances",
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false)
-            ?? throw new Exception("Document is empty.");
+            apiUrl: apiUrl,
+            path: "/wallet/getBalance",
+            parameters: parameters,
+            logPrefix: "getAllBalances",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
         if (status != ((int)GameApiClientError.Success).ToString("d4"))
         {
-            throw new Exception(jsonNode["desc"]?.ToString() ?? string.Empty);
+            throw new StatusException(status);
         }
 
         var balances = jsonNode["results"]!.AsArray();
@@ -241,13 +236,12 @@ internal class GameApiClient : IGameApiClient
         };
 
         var jsonNode = await PostAsync(
-                apiUrl: apiUrl,
-                path: "/wallet/getBalance",
-                parameters: parameters,
-                logPrefix: "getBalance",
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false)
-            ?? throw new Exception("Document is empty.");
+            apiUrl: apiUrl,
+            path: "/wallet/getBalance",
+            parameters: parameters,
+            logPrefix: "getBalance",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
@@ -345,14 +339,15 @@ internal class GameApiClient : IGameApiClient
                 path: "/wallet/logout",
                 parameters: parameters,
                 logPrefix: "logout",
-                cancellationToken: cancellationToken))
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
             .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
         if (status != ((int)GameApiClientError.Success).ToString("d4"))
         {
-            throw new Exception($"The player has failed to kick the line.({playerCode}) |({JsonSerializer.Serialize(jsonNode)})");
+            throw new StatusException(status);
         }
     }
 
@@ -433,15 +428,14 @@ internal class GameApiClient : IGameApiClient
             });
 
         var jsonNode = await retryPolicy.ExecuteAsync(
-            async () =>
-            await PostAsync(
+            async () => await PostAsync(
                 apiUrl: apiUrl,
                 path: "/wallet/doLoginAndLaunchGame",
                 parameters: parameters,
                 logPrefix: "GetGamingLoginGameAsync",
-                cancellationToken: cancellationToken))
-            .ConfigureAwait(false)
-            ?? throw new Exception("Document is empty.");
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
+            .ConfigureAwait(false);
 
         var status = jsonNode["status"]!.GetValue<string>();
 
@@ -469,7 +463,11 @@ internal class GameApiClient : IGameApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(url, content, cancellationToken);
+        var httpResponseMessage = await _client.PostAsync(
+            requestUri: url,
+            content: content,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         sw.Stop();
 

@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Tgs.GameInterface.AwcService.Core.Exceptions;
 using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core;
@@ -30,7 +33,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async ValueTask<GetOutstandingByBetTimeResult> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GetOutstandingByBetTimeTransaction> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -42,9 +45,9 @@ internal class GameRecordApiClient : IGameRecordApiClient
         };
 
         var retryPolicy = Policy
-            .HandleResult<JsonDocument?>(r =>
+            .HandleResult<JsonNode>(jsonNode =>
             {
-                var status = r?.RootElement.GetProperty("status").GetString();
+                var status = jsonNode["status"]!.GetValue<string>();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
             .WaitAndRetryAsync(
@@ -66,35 +69,58 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy
-            .ExecuteAsync(
-            async () =>
-            await PostAsync(
+        var jsonNode = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getOutstandingByBetTime",
                 parameters: parameters,
                 logPrefix: "getOutstandingByBetTime",
-                cancellationToken: cancellationToken))
-            .ConfigureAwait(false)
-            ?? throw new Exception("Document is empty.");
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
+            .ConfigureAwait(false);
 
-        var status = document.RootElement.GetProperty("status").ToString();
+        var status = jsonNode["status"]!.GetValue<string>();
 
-        return
-            status != ((int)GameApiClientError.Success).ToString("d4")
-            ? new GetOutstandingByBetTimeResult(
-                Success: false,
-                Transactions: Enumerable.Empty<GetOutstandingByBetTimeTransaction>(),
-                Message: document.RootElement.GetProperty("desc").ToString())
-            : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
-            ? throw new Exception("JsonElement failed to parse transactions.")
-            : new GetOutstandingByBetTimeResult(
-            Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetOutstandingByBetTimeTransaction>>(_SerializerOptions)
-            ?? Enumerable.Empty<GetOutstandingByBetTimeTransaction>());
+        if (status != ((int)GameApiClientError.Success).ToString("d4"))
+        {
+            throw new StatusException(status);
+        }
+
+        var transactions = jsonNode["transactions"]!.AsArray();
+
+        if (!transactions.Any())
+        {
+            yield break;
+        }
+
+        foreach (var transaction in transactions)
+        {
+            if (transaction is null)
+            {
+                continue;
+            }
+
+            yield return new GetOutstandingByBetTimeTransaction
+            {
+                PlatformTxId = transaction["platformTxId"]!.ToString(),
+                GameType = transaction["gameType"]!.ToString(),
+                GameCode = transaction["gameCode"]!.ToString(),
+                GameName = transaction["gameName"]!.ToString(),
+                RoundId = transaction["roundId"]!.ToString(),
+                UserId = transaction["userId"]!.ToString(),
+                Currency = transaction["currency"]!.ToString(),
+                BetTime = transaction["betTime"]!.ToString(),
+                BetType = transaction["betType"]!.ToString(),
+                BetAmount = transaction["betAmount"]!.GetValue<decimal>(),
+                RealBetAmount = transaction["realBetAmount"]!.GetValue<decimal>(),
+                JackpotBetAmount = transaction["jackpotBetAmount"]!.GetValue<decimal>(),
+                GameInfo = transaction["gameInfo"]!.ToString(),
+                AdditionalData = transaction.ToJsonString()
+            };
+        }
     }
 
-    public async ValueTask<GetTransactionByTxTimeResult> GetTransactionByTxTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GetTransactionByTxTimeTransaction> GetTransactionByTxTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -106,9 +132,9 @@ internal class GameRecordApiClient : IGameRecordApiClient
         };
 
         var retryPolicy = Policy
-            .HandleResult<JsonDocument?>(r =>
+            .HandleResult<JsonNode>(jsonNode =>
             {
-                var status = r?.RootElement.GetProperty("status").GetString();
+                var status = jsonNode["status"]!.GetValue<string>();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
             .WaitAndRetryAsync(
@@ -130,35 +156,67 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(
+        var jsonNode = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
             apiUrl: apiUrl,
             path: "/fetch/gzip/getTransactionByTxTime",
             parameters: parameters,
             logPrefix: "getTransactionByTxTime",
-            cancellationToken: cancellationToken)).ConfigureAwait(false); ;
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
+            .ConfigureAwait(false); ;
 
-        if (document is null)
+        var status = jsonNode["status"]!.GetValue<string>();
+
+        if (status != ((int)GameApiClientError.Success).ToString("d4"))
         {
-            throw new Exception("Document is empty.");
+            throw new StatusException(status);
         }
 
-        var status = document.RootElement.GetProperty("status").ToString();
+        var transactions = jsonNode["transactions"]!.AsArray();
 
-        return
-            status != ((int)GameApiClientError.Success).ToString("d4")
-            ? new GetTransactionByTxTimeResult(
-                Success: false,
-                Transactions: Enumerable.Empty<GetTransactionByTxTimeTransaction>(),
-                Message: document.RootElement.GetProperty("desc").ToString())
-            : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
-            ? throw new Exception("JsonElement failed to parse transactions.")
-            : new GetTransactionByTxTimeResult(
-            Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByTxTimeTransaction>>(_SerializerOptions)
-            ?? Enumerable.Empty<GetTransactionByTxTimeTransaction>());
+        if (!transactions.Any())
+        {
+            yield break;
+        }
+
+        foreach (var transaction in transactions)
+        {
+            if (transaction is null)
+            {
+                continue;
+            }
+
+            yield return new GetTransactionByTxTimeTransaction
+            {
+                Platform = transaction["platform"]!.ToString(),
+                PlatformTxId = transaction["platformTxId"]!.ToString(),
+                GameType = transaction["gameType"]!.ToString(),
+                GameCode = transaction["gameCode"]!.ToString(),
+                GameName = transaction["gameName"]!.ToString(),
+                RoundId = transaction["roundId"]!.ToString(),
+                UserId = transaction["userId"]!.ToString(),
+                Currency = transaction["currency"]!.ToString(),
+                TxStatus = transaction["txStatus"]!.GetValue<int>(),
+                SettleStatus = transaction["settleStatus"]!.GetValue<int>(),
+                BetTime = transaction["betTime"]!.ToString(),
+                TxTime = transaction["txTime"]!.ToString(),
+                UpdateTime = transaction["updateTime"]!.ToString(),
+                BetType = transaction["betType"]!.ToString(),
+                BetAmount = transaction["betAmount"]!.GetValue<decimal>(),
+                RealBetAmount = transaction["realBetAmount"]!.GetValue<decimal>(),
+                Turnover = transaction["turnover"]!.GetValue<decimal>(),
+                WinAmount = transaction["winAmount"]!.GetValue<decimal>(),
+                RealWinAmount = transaction["realWinAmount"]!.GetValue<decimal>(),
+                JackpotBetAmount = transaction["jackpotBetAmount"]!.GetValue<decimal>(),
+                JackpotWinAmount = transaction["jackpotWinAmount"]!.GetValue<decimal>(),
+                GameInfo = transaction["gameInfo"]!.ToString(),
+                AdditionalData = transaction.ToJsonString()
+            };
+        }
     }
 
-    public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GetTransactionByUpdateDateTransaction> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, TransactionStatus transactionStatus, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -170,9 +228,9 @@ internal class GameRecordApiClient : IGameRecordApiClient
         };
 
         var retryPolicy = Policy
-            .HandleResult<JsonDocument?>(r =>
+            .HandleResult<JsonNode>(jsonNode =>
             {
-                var status = r?.RootElement.GetProperty("status").GetString();
+                var status = jsonNode["status"]!.GetValue<string>();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
             .WaitAndRetryAsync(
@@ -194,34 +252,67 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy.ExecuteAsync(
-            async () =>
-            await PostAsync(
+        var jsonNode = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getTransactionByUpdateDate",
                 parameters: parameters,
                 logPrefix: "getTransactionByUpdateDate",
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false))
-            ?? throw new Exception("Document is empty.");
+            .ConfigureAwait(false);
 
-        var status = document.RootElement.GetProperty("status").ToString();
+        var status = jsonNode["status"]!.GetValue<string>();
 
-        return
-            status != ((int)GameApiClientError.Success).ToString("d4")
-            ? new GetTransactionByUpdateDateResult(
-                Success: false,
-                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>(),
-                Message: document.RootElement.GetProperty("desc").ToString())
-            : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
-            ? throw new Exception("JsonElement failed to parse transactions.")
-            : new GetTransactionByUpdateDateResult(
-            Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions)
-            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>());
+        if (status != ((int)GameApiClientError.Success).ToString("d4"))
+        {
+            throw new StatusException(status);
+        }
+
+        var transactions = jsonNode["transactions"]!.AsArray();
+
+        if (!transactions.Any())
+        {
+            yield break;
+        }
+
+        foreach (var transaction in transactions)
+        {
+            if (transaction is null)
+            {
+                continue;
+            }
+
+            yield return new GetTransactionByUpdateDateTransaction
+            {
+                Platform = transaction["platform"]!.ToString(),
+                PlatformTxId = transaction["platformTxId"]!.ToString(),
+                GameType = transaction["gameType"]!.ToString(),
+                GameCode = transaction["gameCode"]!.ToString(),
+                GameName = transaction["gameName"]!.ToString(),
+                RoundId = transaction["roundId"]!.ToString(),
+                UserId = transaction["userId"]!.ToString(),
+                Currency = transaction["currency"]!.ToString(),
+                TxStatus = transaction["txStatus"]!.GetValue<int>(),
+                SettleStatus = transaction["settleStatus"]!.GetValue<int>(),
+                BetTime = transaction["betTime"]!.ToString(),
+                TxTime = transaction["txTime"]!.ToString(),
+                UpdateTime = transaction["updateTime"]!.ToString(),
+                BetType = transaction["betType"]!.ToString(),
+                BetAmount = transaction["betAmount"]!.GetValue<decimal>(),
+                RealBetAmount = transaction["realBetAmount"]!.GetValue<decimal>(),
+                Turnover = transaction["turnover"]!.GetValue<decimal>(),
+                WinAmount = transaction["winAmount"]!.GetValue<decimal>(),
+                RealWinAmount = transaction["realWinAmount"]!.GetValue<decimal>(),
+                JackpotBetAmount = transaction["jackpotBetAmount"]!.GetValue<decimal>(),
+                JackpotWinAmount = transaction["jackpotWinAmount"]!.GetValue<decimal>(),
+                GameInfo = transaction["gameInfo"]!.ToString(),
+                AdditionalData = transaction.ToJsonString()
+            };
+        }
     }
 
-    public async ValueTask<GetTransactionByUpdateDateResult> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GetTransactionByUpdateDateTransaction> GetTransactionByUpdateDateAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset timeFrom, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -232,9 +323,9 @@ internal class GameRecordApiClient : IGameRecordApiClient
         };
 
         var retryPolicy = Policy
-            .HandleResult<JsonDocument?>(r =>
+            .HandleResult<JsonNode>(jsonNode =>
             {
-                var status = r?.RootElement.GetProperty("status").GetString();
+                var status = jsonNode["status"]!.GetValue<string>();
                 return status == ((int)GameApiClientError.UnableToProceedPleaseTryAgainLater).ToString("d4");
             })
             .WaitAndRetryAsync(
@@ -256,34 +347,67 @@ internal class GameRecordApiClient : IGameRecordApiClient
                     retryTime);
             });
 
-        var document = await retryPolicy.ExecuteAsync(
-            async () =>
-            await PostAsync(
+        var jsonNode = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
                 apiUrl: apiUrl,
                 path: "/fetch/gzip/getTransactionByUpdateDate",
                 parameters: parameters,
                 logPrefix: "getTransactionByUpdateDate",
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false))
-            ?? throw new Exception("Document is empty.");
+            .ConfigureAwait(false);
 
-        var status = document.RootElement.GetProperty("status").ToString();
+        var status = jsonNode["status"]!.GetValue<string>();
 
-        return
-            status != ((int)GameApiClientError.Success).ToString("d4")
-            ? new GetTransactionByUpdateDateResult(
-                Success: false,
-                Transactions: Enumerable.Empty<GetTransactionByUpdateDateTransaction>(),
-                Message: document.RootElement.GetProperty("desc").ToString())
-            : !document.RootElement.TryGetProperty(("transactions"), out JsonElement transactions)
-            ? throw new Exception("JsonElement failed to parse transactions.")
-            : new GetTransactionByUpdateDateResult(
-            Success: true,
-            Transactions: transactions.Deserialize<IEnumerable<GetTransactionByUpdateDateTransaction>>(_SerializerOptions)
-            ?? Enumerable.Empty<GetTransactionByUpdateDateTransaction>());
+        if (status != ((int)GameApiClientError.Success).ToString("d4"))
+        {
+            throw new StatusException(status);
+        }
+
+        var transactions = jsonNode["transactions"]!.AsArray();
+
+        if (!transactions.Any())
+        {
+            yield break;
+        }
+
+        foreach (var transaction in transactions)
+        {
+            if (transaction is null)
+            {
+                continue;
+            }
+
+            yield return new GetTransactionByUpdateDateTransaction
+            {
+                Platform = transaction["platform"]!.ToString(),
+                PlatformTxId = transaction["platformTxId"]!.ToString(),
+                GameType = transaction["gameType"]!.ToString(),
+                GameCode = transaction["gameCode"]!.ToString(),
+                GameName = transaction["gameName"]!.ToString(),
+                RoundId = transaction["roundId"]!.ToString(),
+                UserId = transaction["userId"]!.ToString(),
+                Currency = transaction["currency"]!.ToString(),
+                TxStatus = transaction["txStatus"]!.GetValue<int>(),
+                SettleStatus = transaction["settleStatus"]!.GetValue<int>(),
+                BetTime = transaction["betTime"]!.ToString(),
+                TxTime = transaction["txTime"]!.ToString(),
+                UpdateTime = transaction["updateTime"]!.ToString(),
+                BetType = transaction["betType"]!.ToString(),
+                BetAmount = transaction["betAmount"]!.GetValue<decimal>(),
+                RealBetAmount = transaction["realBetAmount"]!.GetValue<decimal>(),
+                Turnover = transaction["turnover"]!.GetValue<decimal>(),
+                WinAmount = transaction["winAmount"]!.GetValue<decimal>(),
+                RealWinAmount = transaction["realWinAmount"]!.GetValue<decimal>(),
+                JackpotBetAmount = transaction["jackpotBetAmount"]!.GetValue<decimal>(),
+                JackpotWinAmount = transaction["jackpotWinAmount"]!.GetValue<decimal>(),
+                GameInfo = transaction["gameInfo"]!.ToString(),
+                AdditionalData = transaction.ToJsonString()
+            };
+        }
     }
 
-    private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
+    private async ValueTask<JsonNode> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
     {
         logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
 
@@ -296,7 +420,11 @@ internal class GameRecordApiClient : IGameRecordApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(url, content, cancellationToken);
+        var httpResponseMessage = await _client.PostAsync(
+            requestUri: url,
+            content: content,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         sw.Stop();
 
@@ -304,9 +432,8 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr
-                .ReadToEndAsync(
-                    cancellationToken: cancellationToken)
+            responseMessage = await sr.ReadToEndAsync(
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false) ?? string.Empty;
         }
 
@@ -328,6 +455,6 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 
-        return JsonDocument.Parse(responseMessage);
+        return JsonNode.Parse(responseMessage)!;
     }
 }

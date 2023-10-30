@@ -1,8 +1,9 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-public record GameRecordPullQuery(
+public record GameRecordByStatusQuery(
     Uri ApiUrl,
     string AgentId,
     string Cert,
     string Platform,
-    DateTimeOffset TimeFrom);
+    DateTimeOffset TimeFrom,
+    TransactionStatus TransactionStatus);

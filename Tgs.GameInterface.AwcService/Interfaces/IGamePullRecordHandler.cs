@@ -15,6 +15,6 @@ public interface IGamePullRecordHandler
     /// <returns></returns>
     [HttpPost("game/record/pull")]
     IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync(
-        [FromServices] IQueryService<GameRecordPullQuery, GameRecordPullResult> service,
+        [FromServices] IQueryService<GameRecordByUpdateQuery, GameRecordResult> service,
         GamePullRecordQueryViewModel source);
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Tgs.GameInterface.AwcService.Core.ApplicationServices;
 using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
-public class OutstandingByBetTimeGetServiceUnitTest
+public class GameRecordUnsettledQueryServiceUnitTest
 {
     [Fact]
     public async Task Normal_Process()
@@ -20,7 +19,7 @@ public class OutstandingByBetTimeGetServiceUnitTest
         var startTime = DateTimeOffset.Now.AddMinutes(-5);
         var endTime = DateTimeOffset.Now;
 
-        var query = new OutstandingByBetTimeQuery(
+        var query = new GameRecordUnsettledQuery(
             ApiUrl: apiUrl,
             AgentId: agentId,
             Cert: cert,
@@ -28,12 +27,9 @@ public class OutstandingByBetTimeGetServiceUnitTest
             StartTime: startTime,
             EndTime: endTime);
 
-        var fakeLogger = NullLogger<OutstandingByBetTimeGetService>.Instance;
         var fakeClient = Substitute.For<IGameRecordApiClient>();
 
-        var result = new GetOutstandingByBetTimeResult(
-            Success: true,
-            Transactions: new GetOutstandingByBetTimeTransaction[] {
+        var transactions = new GetOutstandingByBetTimeTransaction[] {
                 new GetOutstandingByBetTimeTransaction(){
                     PlatformTxId= "7623",
                     GameType= "VIRTUAL",
@@ -49,23 +45,26 @@ public class OutstandingByBetTimeGetServiceUnitTest
                     JackpotBetAmount= 0,
                     GameInfo= "{\"sportTypeName\":\"Soccer\",\"oddsId\":\"321097418\",\"sportType\":\"1\",\"homeName\":\"VfL Wolfsburg (V)\",\"awayId\":\"675922\",\"oddsType\":\"4\",\"betChoice\":\"h\",\"leagueName\":\"SABA CLUB FRIENDLY Virtual PES 21 - 15 Mins Play\",\"awayName\":\"FSV Mainz 05 (V)\",\"leagueId\":\"95730\",\"odds\":\"0.75\",\"homeId\":\"674922\"}"
                 }
-            });
+            };
         _ = fakeClient.GetOutstandingByBetTimeAsync(
             Arg.Is(apiUrl),
             Arg.Is(agentId),
             Arg.Is(cert),
             Arg.Is(platform),
             Arg.Is(startTime),
-            Arg.Is(endTime)).Returns(ValueTask.FromResult(result));
+            Arg.Is(endTime))
+            .Returns(transactions.ToAsyncEnumerable());
 
-        var service = new OutstandingByBetTimeGetService(
-            fakeLogger,
+        var service = new GameRecordUnsettledQueryService(
             fakeClient);
 
-        var actual = await service.QueryAsync(query).ToArrayAsync();
+        var actual = await service.QueryAsync(
+            query)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GameRecordUnsettledResult>();
 
         Assert.NotNull(actual);
-        Assert.Equal($"{platform}-{result.Transactions!.First().PlatformTxId}", actual.First().ExternalRoundId);
+        Assert.Equal($"{platform}-{transactions!.First().PlatformTxId}", actual.First().ExternalRoundId);
         Assert.Equal(platform, actual.First().Platform);
     }
 }

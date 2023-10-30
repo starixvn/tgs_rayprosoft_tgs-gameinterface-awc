@@ -41,36 +41,6 @@ public class GetBalanceUnitTest
     }
 
     [Fact]
-    public async Task The_result_is_an_empty_array()
-    {
-        var apiUrl = new Uri("http://localhost/");
-        var agentId = "testagentid";
-        var cert = "testcert";
-        var playerCode = "4ucmqplxb029";
-
-        var response = new JsonObject
-        {
-            ["results"] = new JsonArray(),
-            ["count"] = 0,
-            ["querytime"] = "2023-10-27T16:38:24.593+08:00",
-            ["status"] = ((int)GameApiClientError.Success).ToString("d4")
-        };
-
-        var content = JsonSerializer.Serialize(response);
-        var handler = new MockHttpMessageHandler();
-        _ = handler.Expect(HttpMethod.Post, "/wallet/getBalance")
-        .Respond(HttpStatusCode.OK, new StringContent(content));
-
-        var fakeHttpClient = handler.ToHttpClient();
-        var fakeLog = NullLogger<GameApiClient>.Instance;
-        var client = new GameApiClient(fakeLog, fakeHttpClient);
-
-        var result = await client.GetBalanceAsync(apiUrl, agentId, cert, playerCode);
-
-        Assert.False(result.IsPlayerExist);
-    }
-
-    [Fact]
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
@@ -106,5 +76,35 @@ public class GetBalanceUnitTest
 
         Assert.True(result.IsPlayerExist);
         Assert.Equal(decimal.Parse(response.results.First().balance), result.Balance);
+    }
+
+    [Fact]
+    public async Task The_result_is_an_empty_array()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var agentId = "testagentid";
+        var cert = "testcert";
+        var playerCode = "4ucmqplxb029";
+
+        var response = new JsonObject
+        {
+            ["results"] = new JsonArray(),
+            ["count"] = 0,
+            ["querytime"] = "2023-10-27T16:38:24.593+08:00",
+            ["status"] = ((int)GameApiClientError.Success).ToString("d4")
+        };
+
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, "/wallet/getBalance")
+        .Respond(HttpStatusCode.OK, new StringContent(content));
+
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
+
+        var result = await client.GetBalanceAsync(apiUrl, agentId, cert, playerCode);
+
+        Assert.False(result.IsPlayerExist);
     }
 }
