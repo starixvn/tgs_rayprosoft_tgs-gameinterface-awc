@@ -98,8 +98,8 @@ public class CockFightController : AwcController,
     ///             "apiUrl": "https://tttint.onlinegames22.com/",
     ///             "agentId": "cnygpicockfight",
     ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
-    ///             "startTime": "2022-06-10T05:30:00.000Z",
-    ///             "endTime": "2022-06-10T06:30:00.000Z"
+    ///             "startTime": "2023-10-31T11:00:00+08:00",
+    ///             "endTime": "2023-10-31T12:00:00+08:00"
     ///         }
     ///
     /// </remarks>
@@ -168,17 +168,18 @@ public class CockFightController : AwcController,
     ///
     ///     Post
     ///         {
-    ///             "apiUrl": "https://fetch.onlinegames22.com/",
-    ///             "agentId": "k8cncockfight",
-    ///             "cert": "UwfFNPXwytye6SLWxBb",
-    ///             "timeFrom": "2023-10-30T00:00:00.000Z"
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpicockfight",
+    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
+    ///             "startTime": "2023-10-31T11:00:00+08:00",
+    ///             "endTime": "2023-10-31T12:00:00+08:00"
     ///         }
     ///
     /// </remarks>
     [HttpPost("game/record/unsettled")]
     public async IAsyncEnumerable<GameRecordUnsettledResultViewModel> GameRecordUnsettledAsync(
-        [FromServices] IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> service,
-        GameRecordUnsettledViewModel source)
+            [FromServices] IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> service,
+            GameRecordUnsettledViewModel source)
     {
         var query = new GameRecordUnsettledQuery(
             ApiUrl: source.ApiUrl,
