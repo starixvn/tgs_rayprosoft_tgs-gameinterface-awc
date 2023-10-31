@@ -72,6 +72,9 @@ public record GetTransactionByTxTimeTransaction
     public string UpdateTime { get; set; } = default!;
     /// <summary>
     /// The bet type(游戏平台的下注项目)
+    /// 此參數僅支援以下平台
+    /// 支援平台：
+    /// PG, SEXYBCRT, VENUS, SV388, SABA, HORSEBOOK, E1SPORT
     /// </summary>
     public string BetType { get; set; } = default!;
     /// <summary>

@@ -52,43 +52,42 @@ public class GetOutstandingByBetTimeUnitTest
     }
 
     [Fact]
-    public async Task Normal_Process()
+    public async Task SV388_Normal_Process()
     {
         var apiUrl = new Uri("http://localhost/");
         var agentId = "testagentid";
         var cert = "testcert";
-        string platform = "SEXYBCRT";
+        string platform = "SV388";
         DateTimeOffset startTime = DateTimeOffset.Now.AddMinutes(-5);
         DateTimeOffset endTime = DateTimeOffset.Now;
 
-        var response = new
+        var response = new JsonObject
         {
-            status = ((int)GameApiClientError.Success).ToString("d4"),
-            transactions = new[]
+            ["status"] = ((int)GameApiClientError.Success).ToString("d4"),
+            ["transactions"] = new JsonArray
             {
-                new
+                new JsonObject
                 {
-                    gameType= "VIRTUAL",
-                    gameInfo= "{\"sportTypeName\":\"Soccer\",\"oddsId\":\"321097418\",\"sportType\":\"1\",\"homeName\":\"VfL Wolfsburg (V)\",\"awayId\":\"675922\",\"oddsType\":\"4\",\"betChoice\":\"h\",\"leagueName\":\"SABA CLUB FRIENDLY Virtual PES 21 - 15 Mins Play\",\"awayName\":\"FSV Mainz 05 (V)\",\"leagueId\":\"95730\",\"odds\":\"0.75\",\"homeId\":\"674922\"}",
-                    realBetAmount= 1,
-                    userId= "testuser",
-                    betType= "1",
-                    betAmount= 1,
-                    gameName= "Virtual Sports",
-                    platformTxId= "7623",
-                    betTime= "2021-03-10T17:36:36+08:00",
-                    gameCode= "SABA-VIRTUAL-001",
-                    currency= "THB",
-                    jackpotBetAmount= 0,
-                    roundId= "42186783"
+                    ["gameType"] = "LIVE",
+                    ["gameInfo"] = "{\"arenaCode\":\"_FG1\",\"odds\":\"0.92\",\"matchno\":2,\"location\":\"PHI\",\"realBetAmount\":-10.0,\"live\":0,\"matchId\":\"957416\",\"eventDate\":\"2023-10-30T16:00:00.000+0000\"}",
+                    ["realBetAmount"] = 10,
+                    ["userId"] = "4ucmqplxb029",
+                    ["betType"] = "MERON",
+                    ["betAmount"] = 10,
+                    ["gameName"] = "CockFight_PHI",
+                    ["platformTxId"] = "TXN1150171151",
+                    ["betTime"] = "2023-10-31T03:47:00Z",
+                    ["gameCode"] = "SV-LIVE-001",
+                    ["currency"] = "CNY",
+                    ["jackpotBetAmount"] = 0,
+                    ["roundId"] = "957416"
                 }
             }
         };
 
-        var content = JsonSerializer.Serialize(response);
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, "/fetch/gzip/getOutstandingByBetTime")
-        .Respond(HttpStatusCode.OK, new StringContent(content));
+        .Respond(HttpStatusCode.OK, new StringContent(response.ToJsonString()));
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameRecordApiClient>.Instance;
@@ -105,17 +104,18 @@ public class GetOutstandingByBetTimeUnitTest
             ?? Enumerable.Empty<GetOutstandingByBetTimeTransaction>();
 
         Assert.True(transactions.Any());
-        Assert.Equal("7623", transactions!.First().PlatformTxId);
-        Assert.Equal("42186783", transactions!.First().RoundId);
-        Assert.Equal("VIRTUAL", transactions!.First().GameType);
-        Assert.Equal("testuser", transactions!.First().UserId);
-        Assert.Equal("THB", transactions!.First().Currency);
-        Assert.Equal("SABA-VIRTUAL-001", transactions!.First().GameCode);
-        Assert.Equal("Virtual Sports", transactions!.First().GameName);
-        Assert.Equal("2021-03-10T17:36:36+08:00", transactions!.First().BetTime);
-        Assert.Equal("1", transactions!.First().BetType);
-        Assert.Equal(1.0m, transactions!.First().BetAmount);
-        Assert.Equal(1.0m, transactions!.First().RealBetAmount);
+        Assert.Equal("TXN1150171151", transactions!.First().PlatformTxId);
+        Assert.Equal("957416", transactions!.First().RoundId);
+        Assert.Equal("LIVE", transactions!.First().GameType);
+        Assert.Equal("4ucmqplxb029", transactions!.First().UserId);
+        Assert.Equal("CNY", transactions!.First().Currency);
+        Assert.Equal("SV-LIVE-001", transactions!.First().GameCode);
+        Assert.Equal("CockFight_PHI", transactions!.First().GameName);
+        Assert.Equal("2023-10-31T03:47:00Z", transactions!.First().BetTime);
+        Assert.Equal("MERON", transactions!.First().BetType);
+        Assert.Equal(10.0m, transactions!.First().BetAmount);
+        Assert.Equal(10.0m, transactions!.First().RealBetAmount);
         Assert.Equal(0.0m, transactions!.First().JackpotBetAmount);
+        Assert.Equal(response["transactions"]!.AsArray()!.FirstOrDefault()!.ToJsonString(), transactions!.First().AdditionalData);
     }
 }

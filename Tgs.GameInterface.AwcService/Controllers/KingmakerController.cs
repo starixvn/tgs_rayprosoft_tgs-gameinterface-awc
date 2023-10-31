@@ -32,10 +32,10 @@ public class KingmakerController : AwcController,
     ///
     /// </remarks>
     public override async IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync(
-        [FromServices] IQueryService<GameRecordByUpdateQuery, GameRecordResult> service,
+        [FromServices] IQueryService<GameRecordSettledQuery, GameRecordResult> service,
         GamePullRecordQueryViewModel source)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: source.ApiUrl,
             AgentId: source.AgentId,
             Cert: source.Cert,

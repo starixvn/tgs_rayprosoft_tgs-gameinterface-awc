@@ -7,7 +7,7 @@ using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
-public class GameRecordByUpdateQueryServiceUnitTest
+public class GameRecordSettledQueryServiceUnitTest
 {
     [Fact]
     public async Task Normal_Process()
@@ -18,7 +18,7 @@ public class GameRecordByUpdateQueryServiceUnitTest
         var platform = "SEXYBCRT";
         var timeFrom = DateTimeOffset.Now;
 
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: apiUrl,
             AgentId: agentId,
             Cert: cert,
@@ -61,7 +61,7 @@ public class GameRecordByUpdateQueryServiceUnitTest
             Arg.Is(timeFrom))
             .Returns(transactions.ToAsyncEnumerable());
 
-        var service = new GameRecordByUpdateQueryService(
+        var service = new GameRecordSettledQueryService(
             fakeClient);
 
         var actual = await service.QueryAsync(

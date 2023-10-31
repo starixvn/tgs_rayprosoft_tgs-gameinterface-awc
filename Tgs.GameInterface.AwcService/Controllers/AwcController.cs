@@ -186,7 +186,7 @@ public class AwcController : ControllerBase,
     /// <returns></returns>
     /// <exception cref="System.NotImplementedException"></exception>
     [HttpPost("game/record/pull")]
-    public virtual IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync([FromServices] IQueryService<GameRecordByUpdateQuery, GameRecordResult> service, GamePullRecordQueryViewModel source) => throw new NotImplementedException();
+    public virtual IAsyncEnumerable<GamePullRecordResultViewModel> GameRecordPullAsync([FromServices] IQueryService<GameRecordSettledQuery, GameRecordResult> service, GamePullRecordQueryViewModel source) => throw new NotImplementedException();
 
     /// <summary>
     /// Games the record settled asynchronous.

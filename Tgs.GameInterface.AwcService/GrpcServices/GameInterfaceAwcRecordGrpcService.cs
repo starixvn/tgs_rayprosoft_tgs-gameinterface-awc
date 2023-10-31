@@ -8,12 +8,12 @@ namespace Tgs.GameInterface.AwcService.GrpcServices;
 
 public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceBase
 {
-    private readonly IQueryService<GameRecordByUpdateQuery, GameRecordResult> _gameRecordByUpdateSerivce;
+    private readonly IQueryService<GameRecordSettledQuery, GameRecordResult> _gameRecordByUpdateSerivce;
     private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
     private readonly IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> _gameRecordUnsettledService;
 
     public GameInterfaceAwcRecordGrpcService(
-        IQueryService<GameRecordByUpdateQuery, GameRecordResult> gameRecordByUpdateSerivce,
+        IQueryService<GameRecordSettledQuery, GameRecordResult> gameRecordByUpdateSerivce,
         IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
         IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> gameRecordUnsettledService
        )
@@ -25,7 +25,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcAeLotto(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -81,7 +81,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcAws(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -137,7 +137,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcCockfight(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -193,7 +193,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcFacai(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -249,7 +249,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcFs(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -305,7 +305,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcKm(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -361,7 +361,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcLudo(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -417,7 +417,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcPgs(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -473,7 +473,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcRcb(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -529,7 +529,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcSg(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -585,7 +585,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcSpade(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -641,7 +641,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcVenus(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
@@ -697,7 +697,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcYl(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByUpdateQuery(
+        var query = new GameRecordSettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,

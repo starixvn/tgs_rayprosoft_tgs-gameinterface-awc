@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-public record GameRecordByUpdateQuery(
+public record GameRecordSettledQuery(
     Uri ApiUrl,
     string AgentId,
     string Cert,
