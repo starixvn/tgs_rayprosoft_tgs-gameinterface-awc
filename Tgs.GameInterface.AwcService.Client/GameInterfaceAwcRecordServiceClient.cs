@@ -269,13 +269,14 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
             EndTime = endTime.ToTimestamp(),
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-    public async ValueTask<GameUnsettleRecordReply> GameUnsettleByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset timeFrom, CancellationToken cancellationToken = default)
-        => await _client.GameUnsettleByAwcCockfightAsync(new CockFightGameUnsettleRequest()
+    public async ValueTask<GameUnsettleRecordReply> GameUnsettleByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
+        => await _client.GameUnsettleByAwcCockfightAsync(new GameUnsettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
             Cert = cert,
-            TimeFrom = timeFrom.ToTimestamp(),
+            StartTime = startTime.ToTimestamp(),
+            EndTime = endTime.ToTimestamp(),
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameUnsettleRecordReply> GameUnsettleByAwcRcbAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)

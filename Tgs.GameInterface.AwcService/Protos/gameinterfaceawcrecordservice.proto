@@ -37,7 +37,7 @@ service GameInterfaceAwcRecordService {
   rpc GameSettleByAwcVenus (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameSettleByAwcYl (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameUnsettleByAwcAeLotto (GameUnsettleRequest) returns (GameUnsettleRecordReply);
-  rpc GameUnsettleByAwcCockfight (CockFightGameUnsettleRequest) returns (GameUnsettleRecordReply);
+  rpc GameUnsettleByAwcCockfight (GameUnsettleRequest) returns (GameUnsettleRecordReply);
   rpc GameUnsettleByAwcRcb (GameUnsettleRequest) returns (GameUnsettleRecordReply);
 }
 
@@ -56,13 +56,6 @@ message GameUnsettleRequest {
 	string cert = 3;
 	google.protobuf.Timestamp start_time=4; 
     google.protobuf.Timestamp end_time=5; 
-}
-
-message CockFightGameUnsettleRequest {
-	string api_url = 1 ;
-	string agent_id = 2;
-	string cert = 3;
-	google.protobuf.Timestamp time_from=4; 
 }
 
 message GamePullRecordeRequest {

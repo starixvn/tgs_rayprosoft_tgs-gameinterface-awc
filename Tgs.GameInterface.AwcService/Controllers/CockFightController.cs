@@ -158,7 +158,7 @@ public class CockFightController : AwcController,
     }
 
     /// <summary>
-    /// Games the record unsettle asynchronous.
+    /// Games the record unsettled asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
     /// <param name="source">The source.</param>
@@ -168,7 +168,7 @@ public class CockFightController : AwcController,
     ///
     ///     Post
     ///         {
-    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "apiUrl": "https://fetch.onlinegames22.com/",
     ///             "agentId": "k8cncockfight",
     ///             "cert": "UwfFNPXwytye6SLWxBb",
     ///             "timeFrom": "2023-10-30T00:00:00.000Z"
@@ -176,24 +176,24 @@ public class CockFightController : AwcController,
     ///
     /// </remarks>
     [HttpPost("game/record/unsettled")]
-    public async IAsyncEnumerable<GameTransactionViewModel> GameRecordUnsettleAsync(
-        [FromServices] IQueryService<GameRecordByStatusQuery, GameRecordResult> service,
-        GameRecordUnsettleByAwcCockfightViewModel source)
+    public async IAsyncEnumerable<GameRecordUnsettledResultViewModel> GameRecordUnsettledAsync(
+        [FromServices] IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> service,
+        GameRecordUnsettledViewModel source)
     {
-        var query = new GameRecordByStatusQuery(
+        var query = new GameRecordUnsettledQuery(
             ApiUrl: source.ApiUrl,
             AgentId: source.AgentId,
             Cert: source.Cert,
             Platform: AwcPlatforms.AWC_COCKFIGHT,
-            TimeFrom: source.TimeFrom,
-            TransactionStatus: TransactionStatus.Bet);
+            StartTime: source.StartTime,
+            EndTime: source.EndTime);
 
         var result = await service.QueryAsync(
             query: query,
             cancellationToken: HttpContext.RequestAborted)
             .ToArrayAsync()
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordResult>();
+            ?? Enumerable.Empty<GameRecordUnsettledResult>();
 
         if (!result.Any())
         {
@@ -202,7 +202,7 @@ public class CockFightController : AwcController,
 
         foreach (var transaction in result)
         {
-            yield return new GameTransactionViewModel(
+            yield return new GameRecordUnsettledResultViewModel(
                 ExternalRoundId: transaction.ExternalRoundId,
                 Platform: transaction.Platform,
                 PlatformTxId: transaction.PlatformTxId,
@@ -212,19 +212,11 @@ public class CockFightController : AwcController,
                 RoundId: transaction.RoundId,
                 UserId: transaction.UserId,
                 Currency: transaction.Currency,
-                TxStatus: transaction.TxStatus,
-                SettleStatus: transaction.SettleStatus,
                 BetTime: transaction.BetTime,
-                TxTime: transaction.TxTime,
-                UpdateTime: transaction.UpdateTime,
                 BetType: transaction.BetType,
                 BetAmount: transaction.BetAmount,
                 RealBetAmount: transaction.RealBetAmount,
-                Turnover: transaction.Turnover,
-                WinAmount: transaction.WinAmount,
-                RealWinAmount: transaction.RealWinAmount,
                 JackpotBetAmount: transaction.JackpotBetAmount,
-                JackpotWinAmount: transaction.JackpotWinAmount,
                 GameInfo: transaction.GameInfo,
                 AdditionalData: transaction.AdditionalData);
         }

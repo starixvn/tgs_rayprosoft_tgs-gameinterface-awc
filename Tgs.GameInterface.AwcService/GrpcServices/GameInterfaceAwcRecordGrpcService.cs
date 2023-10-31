@@ -8,14 +8,12 @@ namespace Tgs.GameInterface.AwcService.GrpcServices;
 
 public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceBase
 {
-    private readonly IQueryService<GameRecordByStatusQuery, GameRecordResult> _gameRecordByStatusService;
     private readonly IQueryService<GameRecordByUpdateQuery, GameRecordResult> _gameRecordByUpdateSerivce;
     private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
     private readonly IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> _gameRecordUnsettledService;
 
     public GameInterfaceAwcRecordGrpcService(
         IQueryService<GameRecordByUpdateQuery, GameRecordResult> gameRecordByUpdateSerivce,
-        IQueryService<GameRecordByStatusQuery, GameRecordResult> gameRecordByStatusService,
         IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
         IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> gameRecordUnsettledService
        )
@@ -23,7 +21,6 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
         _gameRecordUnsettledService = gameRecordUnsettledService ?? throw new ArgumentNullException(nameof(gameRecordUnsettledService));
         _gameRecordByUpdateSerivce = gameRecordByUpdateSerivce ?? throw new ArgumentNullException(nameof(gameRecordByUpdateSerivce));
-        _gameRecordByStatusService = gameRecordByStatusService ?? throw new ArgumentNullException(nameof(gameRecordByStatusService));
     }
 
     public override async Task<GamePullRecordReply> GamePullRecordByAwcAeLotto(GamePullRecordeRequest request, ServerCallContext context)
@@ -1544,23 +1541,23 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
-    public override async Task<GameUnsettleRecordReply> GameUnsettleByAwcCockfight(CockFightGameUnsettleRequest request, ServerCallContext context)
+    public override async Task<GameUnsettleRecordReply> GameUnsettleByAwcCockfight(GameUnsettleRequest request, ServerCallContext context)
     {
-        var query = new GameRecordByStatusQuery(
+        var query = new GameRecordUnsettledQuery(
             ApiUrl: new(request.ApiUrl),
             AgentId: request.AgentId,
             Cert: request.Cert,
             Platform: AwcPlatforms.AWC_COCKFIGHT,
-            TimeFrom: request.TimeFrom.ToDateTimeOffset(),
-            TransactionStatus: TransactionStatus.Bet);
+            StartTime: request.StartTime.ToDateTimeOffset(),
+            EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordByStatusService.QueryAsync(
+        var result = await _gameRecordUnsettledService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
             cancellationToken: context.CancellationToken)
             .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordResult>();
+            ?? Enumerable.Empty<GameRecordUnsettledResult>();
 
         var reply = new GameUnsettleRecordReply();
 
