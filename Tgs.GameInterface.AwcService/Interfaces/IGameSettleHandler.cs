@@ -14,7 +14,7 @@ public interface IGameSettleHandler
     /// <param name="source">The source.</param>
     /// <returns></returns>
     [HttpPost("game/record/settled")]
-    IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
+    IAsyncEnumerable<GameTransactionViewModel> GameRecordSettledAsync(
         [FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
         GameSettleQueryViewModel source);
 }

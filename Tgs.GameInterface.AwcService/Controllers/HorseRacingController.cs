@@ -103,7 +103,7 @@ public class HorseRacingController : AwcController,
     ///         }
     ///
     /// </remarks>
-    public override async IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
+    public override async IAsyncEnumerable<GameTransactionViewModel> GameRecordSettledAsync(
         [FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
         GameSettleQueryViewModel source)
     {
@@ -129,7 +129,7 @@ public class HorseRacingController : AwcController,
 
         foreach (var transaction in result)
         {
-            yield return new GameSettleTransactionViewModel(
+            yield return new GameTransactionViewModel(
                 ExternalRoundId: transaction.ExternalRoundId,
                 Platform: transaction.Platform,
                 PlatformTxId: transaction.PlatformTxId,

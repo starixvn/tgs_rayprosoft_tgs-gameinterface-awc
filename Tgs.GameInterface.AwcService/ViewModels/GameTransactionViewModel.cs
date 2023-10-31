@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.AwcService.ViewModels;
 
-public record GameSettleTransactionViewModel(
+public record GameTransactionViewModel(
     string ExternalRoundId,
     string Platform,
     string PlatformTxId,

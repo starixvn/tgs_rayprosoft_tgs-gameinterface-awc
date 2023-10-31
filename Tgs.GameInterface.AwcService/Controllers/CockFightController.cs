@@ -103,7 +103,7 @@ public class CockFightController : AwcController,
     ///         }
     ///
     /// </remarks>
-    public override async IAsyncEnumerable<GameSettleTransactionViewModel> GameRecordSettledAsync(
+    public override async IAsyncEnumerable<GameTransactionViewModel> GameRecordSettledAsync(
         [FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
         GameSettleQueryViewModel source)
     {
@@ -129,7 +129,79 @@ public class CockFightController : AwcController,
 
         foreach (var transaction in result)
         {
-            yield return new GameSettleTransactionViewModel(
+            yield return new GameTransactionViewModel(
+                ExternalRoundId: transaction.ExternalRoundId,
+                Platform: transaction.Platform,
+                PlatformTxId: transaction.PlatformTxId,
+                GameType: transaction.GameType,
+                GameCode: transaction.GameCode,
+                GameName: transaction.GameName,
+                RoundId: transaction.RoundId,
+                UserId: transaction.UserId,
+                Currency: transaction.Currency,
+                TxStatus: transaction.TxStatus,
+                SettleStatus: transaction.SettleStatus,
+                BetTime: transaction.BetTime,
+                TxTime: transaction.TxTime,
+                UpdateTime: transaction.UpdateTime,
+                BetType: transaction.BetType,
+                BetAmount: transaction.BetAmount,
+                RealBetAmount: transaction.RealBetAmount,
+                Turnover: transaction.Turnover,
+                WinAmount: transaction.WinAmount,
+                RealWinAmount: transaction.RealWinAmount,
+                JackpotBetAmount: transaction.JackpotBetAmount,
+                JackpotWinAmount: transaction.JackpotWinAmount,
+                GameInfo: transaction.GameInfo,
+                AdditionalData: transaction.AdditionalData);
+        }
+    }
+
+    /// <summary>
+    /// Games the record settled asynchronous.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///         {
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpicockfight",
+    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
+    ///             "timeFrom": "2023-10-30T00:00:00.000Z"
+    ///         }
+    ///
+    /// </remarks>
+    public async IAsyncEnumerable<GameTransactionViewModel> GameRecordUnsettleAsync(
+        [FromServices] IQueryService<GameRecordByStatusQuery, GameRecordResult> service,
+        GameRecordUnsettleByAwcCockfightViewModel source)
+    {
+        var query = new GameRecordByStatusQuery(
+            ApiUrl: source.ApiUrl,
+            AgentId: source.AgentId,
+            Cert: source.Cert,
+            Platform: AwcPlatforms.AWC_COCKFIGHT,
+            TimeFrom: source.TimeFrom,
+            TransactionStatus: TransactionStatus.Bet);
+
+        var result = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync()
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordResult>();
+
+        if (!result.Any())
+        {
+            yield break;
+        }
+
+        foreach (var transaction in result)
+        {
+            yield return new GameTransactionViewModel(
                 ExternalRoundId: transaction.ExternalRoundId,
                 Platform: transaction.Platform,
                 PlatformTxId: transaction.PlatformTxId,

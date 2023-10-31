@@ -1,8 +1,7 @@
 ﻿namespace Tgs.GameInterface.AwcService.ViewModels;
 
-public record GameUnsettleQueryViewModel(
+public record GameRecordUnsettleByAwcCockfightViewModel(
     Uri ApiUrl,
     string AgentId,
     string Cert,
-    DateTimeOffset StartTime,
-    DateTimeOffset EndTime);
+    DateTimeOffset TimeFrom);
