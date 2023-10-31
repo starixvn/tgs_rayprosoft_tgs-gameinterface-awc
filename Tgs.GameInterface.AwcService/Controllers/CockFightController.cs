@@ -158,10 +158,10 @@ public class CockFightController : AwcController,
     }
 
     /// <summary>
-    /// Games the record settled asynchronous.
+    /// Games the record unsettle asynchronous.
     /// </summary>
-    /// <param name="service"></param>
-    /// <param name="source"></param>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
@@ -169,12 +169,13 @@ public class CockFightController : AwcController,
     ///     Post
     ///         {
     ///             "apiUrl": "https://tttint.onlinegames22.com/",
-    ///             "agentId": "cnygpicockfight",
-    ///             "cert": "qsXFZmTNeLiMrNz1cIJ",
+    ///             "agentId": "k8cncockfight",
+    ///             "cert": "UwfFNPXwytye6SLWxBb",
     ///             "timeFrom": "2023-10-30T00:00:00.000Z"
     ///         }
     ///
     /// </remarks>
+    [HttpPost("game/record/unsettled")]
     public async IAsyncEnumerable<GameTransactionViewModel> GameRecordUnsettleAsync(
         [FromServices] IQueryService<GameRecordByStatusQuery, GameRecordResult> service,
         GameRecordUnsettleByAwcCockfightViewModel source)
