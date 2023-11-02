@@ -276,6 +276,26 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             .ConfigureAwait(false);
     }
 
+    public async ValueTask<GameUrlReply> GameUrlByAwcYesbingoAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string externalGameId, string language, CancellationToken cancellationToken = default)
+    {
+        var request = new GameUrlRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AgentId = agentId,
+            Cert = cert,
+            PlayerCode = playerCode,
+            IsMobileLogin = isMobileLogin,
+            BackUrl = backUrl,
+            ExternalGameId = externalGameId,
+            Language = language,
+        };
+
+        return await _client.GameUrlByAwcYesbingoAsync(
+            request: request,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public async ValueTask<GameUrlReply> GameUrlByAwcYlAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string externalGameId, string language, CancellationToken cancellationToken = default)
     {
         var request = new GameUrlRequest

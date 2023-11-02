@@ -32,6 +32,8 @@ public interface IGameInterfaceAwcServiceClient
 
     ValueTask<GameUrlReply> GameUrlByAwcVenusAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string betLimit, string language, CancellationToken cancellationToken = default);
 
+    ValueTask<GameUrlReply> GameUrlByAwcYesbingoAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string externalGameId, string language, CancellationToken cancellationToken = default);
+
     ValueTask<GameUrlReply> GameUrlByAwcYlAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string externalGameId, string language, CancellationToken cancellationToken = default);
 
     ValueTask<PlayerBalanceReply> PlayerBalanceAsync(Uri apiUrl, string agentId, string cert, string playerCode, CancellationToken cancellationToken = default);

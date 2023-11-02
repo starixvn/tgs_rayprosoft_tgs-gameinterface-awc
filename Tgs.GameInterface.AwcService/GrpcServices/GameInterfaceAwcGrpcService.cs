@@ -346,6 +346,27 @@ public class GameInterfaceAwcGrpcService : GameInterfaceAwcService.GameInterface
         };
     }
 
+    public override async Task<GameUrlReply> GameUrlByAwcYesbingo(GameUrlRequest request, ServerCallContext context)
+    {
+        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_YESBINGO,
+            ExternalGameId: request.ExternalGameId,
+            Language: request.Language
+            )).ConfigureAwait(false);
+
+        return new GameUrlReply()
+        {
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl
+        };
+    }
+
     public override async Task<GameUrlReply> GameUrlByAwcYl(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
