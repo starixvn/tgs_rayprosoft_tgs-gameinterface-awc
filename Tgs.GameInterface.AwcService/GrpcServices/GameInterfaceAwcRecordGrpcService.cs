@@ -695,6 +695,62 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
         return reply;
     }
 
+    public override async Task<GamePullRecordReply> GamePullRecordByAwcYesbingo(GamePullRecordeRequest request, ServerCallContext context)
+    {
+        var query = new GameRecordSettledQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            Platform: AwcPlatforms.AWC_YESBINGO,
+            TimeFrom: request.TimeFrom.ToDateTimeOffset());
+
+        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+            query: query,
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(
+            context.CancellationToken)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordResult>();
+
+        var reply = new GamePullRecordReply();
+
+        if (result.Any())
+        {
+            foreach (var transaction in result)
+            {
+                reply.Items.Add(new GamePullRecord()
+                {
+                    ExternalRoundId = transaction.ExternalRoundId,
+                    Platform = transaction.Platform,
+                    PlatformTxId = transaction.PlatformTxId,
+                    GameType = transaction.GameType,
+                    GameCode = transaction.GameCode,
+                    GameName = transaction.GameName,
+                    RoundId = transaction.RoundId,
+                    UserId = transaction.UserId,
+                    Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
+                    BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
+                    BetType = transaction.BetType,
+                    BetAmount = transaction.BetAmount,
+                    RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
+                    JackpotBetAmount = transaction.JackpotBetAmount,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo,
+                    AdditionalData = transaction.AdditionalData
+                });
+            };
+        }
+
+        return reply;
+    }
+
     public override async Task<GamePullRecordReply> GamePullRecordByAwcYl(GamePullRecordeRequest request, ServerCallContext context)
     {
         var query = new GameRecordSettledQuery(
@@ -1385,6 +1441,63 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             AgentId: request.AgentId,
             Cert: request.Cert,
             Platform: AwcPlatforms.AWC_VENUS,
+            StartTime: request.StartTime.ToDateTimeOffset(),
+            EndTime: request.EndTime.ToDateTimeOffset());
+
+        var result = await _gameRecordService.QueryAsync(
+            query: query,
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordResult>();
+
+        var reply = new GameSettleRecordReply();
+
+        if (result.Any())
+        {
+            foreach (var transaction in result)
+            {
+                reply.Items.Add(new GameSettleRecord()
+                {
+                    ExternalRoundId = transaction.ExternalRoundId,
+                    Platform = transaction.Platform,
+                    PlatformTxId = transaction.PlatformTxId,
+                    GameType = transaction.GameType,
+                    GameCode = transaction.GameCode,
+                    GameName = transaction.GameName,
+                    RoundId = transaction.RoundId,
+                    UserId = transaction.UserId,
+                    Currency = transaction.Currency,
+                    TxStatus = transaction.TxStatus,
+                    SettleStatus = transaction.SettleStatus,
+                    BetTime = transaction.BetTime,
+                    TxTime = transaction.TxTime,
+                    UpdateTime = transaction.UpdateTime,
+                    BetType = transaction.BetType,
+                    BetAmount = transaction.BetAmount,
+                    RealBetAmount = transaction.RealBetAmount,
+                    Turnover = transaction.Turnover,
+                    WinAmount = transaction.WinAmount,
+                    RealWinAmount = transaction.RealWinAmount,
+                    JackpotBetAmount = transaction.JackpotBetAmount,
+                    JackpotWinAmount = transaction.JackpotWinAmount,
+                    GameInfo = transaction.GameInfo,
+                    AdditionalData = transaction.AdditionalData
+                });
+            };
+        }
+
+        return reply;
+    }
+
+    public override async Task<GameSettleRecordReply> GameSettleByAwcYesbingo(GameSettleRequest request, ServerCallContext context)
+    {
+        var query = new GameRecordQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            Platform: AwcPlatforms.AWC_YESBINGO,
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 

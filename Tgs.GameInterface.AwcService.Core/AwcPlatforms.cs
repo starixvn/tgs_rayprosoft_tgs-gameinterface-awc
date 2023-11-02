@@ -14,5 +14,6 @@ public static class AwcPlatforms
     public static readonly string AWC_SG = "SEXYBCRT";
     public static readonly string AWC_SPADE = "SPADE";
     public static readonly string AWC_VENUS = "VENUS";
+    public static readonly string AWC_YESBINGO = "YESBINGO";
     public static readonly string AWC_YL = "YL";
 }

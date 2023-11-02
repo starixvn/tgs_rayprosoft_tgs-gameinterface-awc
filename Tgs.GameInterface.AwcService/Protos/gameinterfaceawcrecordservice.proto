@@ -23,6 +23,7 @@ service GameInterfaceAwcRecordService {
   rpc GamePullRecordByAwcSpade (GamePullRecordeRequest) returns (GamePullRecordReply);
   rpc GamePullRecordByAwcVenus (GamePullRecordeRequest) returns (GamePullRecordReply);
   rpc GamePullRecordByAwcYl (GamePullRecordeRequest) returns (GamePullRecordReply);
+  rpc GamePullRecordByAwcYesbingo(GamePullRecordeRequest) returns (GamePullRecordReply);
   rpc GameSettleByAwcAeLotto (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameSettleByAwcAws (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameSettleByAwcCockfight (GameSettleRequest) returns (GameSettleRecordReply);
@@ -36,6 +37,7 @@ service GameInterfaceAwcRecordService {
   rpc GameSettleByAwcSpade (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameSettleByAwcVenus (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameSettleByAwcYl (GameSettleRequest) returns (GameSettleRecordReply);
+  rpc GameSettleByAwcYesbingo (GameSettleRequest) returns (GameSettleRecordReply);
   rpc GameUnsettleByAwcAeLotto (GameUnsettleRequest) returns (GameUnsettleRecordReply);
   rpc GameUnsettleByAwcCockfight (GameUnsettleRequest) returns (GameUnsettleRecordReply);
   rpc GameUnsettleByAwcRcb (GameUnsettleRequest) returns (GameUnsettleRecordReply);

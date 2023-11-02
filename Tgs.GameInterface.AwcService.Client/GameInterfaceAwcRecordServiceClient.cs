@@ -120,6 +120,15 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
             TimeFrom = time_from.ToTimestamp()
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
+    public async ValueTask<GamePullRecordReply> GamePullRecordByAwcYesbingoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
+        => await _client.GamePullRecordByAwcYesbingoAsync(new GamePullRecordeRequest()
+        {
+            ApiUrl = apiUrl.ToString(),
+            AgentId = agentId,
+            Cert = cert,
+            TimeFrom = time_from.ToTimestamp()
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcYlAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
         => await _client.GamePullRecordByAwcYlAsync(new GamePullRecordeRequest()
         {
@@ -241,6 +250,16 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcVenusAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
         => await _client.GameSettleByAwcVenusAsync(new GameSettleRequest()
+        {
+            ApiUrl = apiUrl.ToString(),
+            AgentId = agentId,
+            Cert = cert,
+            StartTime = startTime.ToTimestamp(),
+            EndTime = endTime.ToTimestamp(),
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+    public async ValueTask<GameSettleRecordReply> GameSettleByAwcYesbingoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
+        => await _client.GameSettleByAwcYesbingoAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
