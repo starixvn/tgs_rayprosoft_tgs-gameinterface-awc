@@ -23,6 +23,7 @@ internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
             "EGAME" => AwcGameTypes.EGAME.ToString(),
             "TABLE" => AwcGameTypes.TABLE.ToString(),
             "LOTTO" => AwcGameTypes.LOTTO.ToString(),
+            "BINGO" => AwcGameTypes.BINGO.ToString(),
             _ => throw new NotImplementedException(),
         };
 
@@ -36,11 +37,12 @@ internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
             Language: query.Language);
 
         var result = await _client.LoginAndLaunchGameAsync(
-            query.ApiUrl,
-            query.AgentId,
-            query.Cert,
-            data,
-            cancellationToken).ConfigureAwait(false);
+            apiUrl: query.ApiUrl,
+            agentId: query.AgentId,
+            cert: query.Cert,
+            data: data,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         return new GameUrlResult(
             IsPlayerExist: result.IsPlayerExist,

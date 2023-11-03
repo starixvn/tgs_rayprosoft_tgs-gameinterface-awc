@@ -189,6 +189,18 @@ public class YesbingoController : AwcController,
     ///             "externalGameId": "YesBingo-BINGO-001",
     ///             "language": "cn"
     ///         }
+    ///
+    ///     Post
+    ///         {
+    ///             "apiUrl": "https://tttint.onlinegames22.com/",
+    ///             "agentId": "cnygpiyesbingo",
+    ///             "cert": "K6o8NgepzBGRoGorvbQ",
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "isMobileLogin": false,
+    ///             "backUrl": "https://dev-t1.rpgp.cc/",
+    ///             "externalGameId": "YesBingo-FH-001",
+    ///             "language": "cn"
+    ///         }
     /// </remarks>
     [HttpPost("game/url")]
     public async ValueTask<GameUrlResultViewModel> GameUrlAsync(
