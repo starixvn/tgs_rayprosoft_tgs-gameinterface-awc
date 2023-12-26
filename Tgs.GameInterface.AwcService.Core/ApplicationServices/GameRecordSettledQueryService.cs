@@ -4,18 +4,11 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class GameRecordSettledQueryService : IQueryService<GameRecordSettledQuery, GameRecordResult>
+internal class GameRecordSettledQueryService(IGameRecordApiClient client) : IQueryService<GameRecordSettledQuery, GameRecordResult>
 {
-    private readonly IGameRecordApiClient _client;
-
-    public GameRecordSettledQueryService(IGameRecordApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<GameRecordResult> QueryAsync(GameRecordSettledQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var transactions = await _client.GetTransactionByUpdateDateAsync(
+        var transactions = await client.GetTransactionByUpdateDateAsync(
             apiUrl: query.ApiUrl,
             agentId: query.AgentId,
             cert: query.Cert,

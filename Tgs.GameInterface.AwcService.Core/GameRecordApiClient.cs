@@ -11,7 +11,9 @@ using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core;
 
-internal class GameRecordApiClient : IGameRecordApiClient
+internal class GameRecordApiClient(
+    ILogger<GameRecordApiClient> logger,
+    HttpClient client) : IGameRecordApiClient
 {
     private static readonly JsonSerializerOptions? _SerializerOptions = new()
     {
@@ -21,17 +23,6 @@ internal class GameRecordApiClient : IGameRecordApiClient
             new JsonStringEnumConverter()
         }
     };
-
-    private readonly HttpClient _client;
-    private readonly ILogger<GameRecordApiClient> _logger;
-
-    public GameRecordApiClient(
-        ILogger<GameRecordApiClient> logger,
-        HttpClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
 
     public async IAsyncEnumerable<GetOutstandingByBetTimeTransaction> GetOutstandingByBetTimeAsync(Uri apiUrl, string agentId, string cert, string platform, DateTimeOffset startTime, DateTimeOffset endTime, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -54,15 +45,15 @@ internal class GameRecordApiClient : IGameRecordApiClient
             retryCount: 2,
             retryAttempt =>
             {
-                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
-                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
+                logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
+                logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
                 var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
-                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
+                logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
                 return timeToRetry;
             },
             (result, retryTime, context) =>
             {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
                     DateTime.Now.ToString("o"),
                     parameters,
                     result,
@@ -88,7 +79,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var transactions = jsonNode["transactions"]!.AsArray();
 
-        if (!transactions.Any())
+        if (transactions.Count == 0)
         {
             yield break;
         }
@@ -141,15 +132,15 @@ internal class GameRecordApiClient : IGameRecordApiClient
             retryCount: 2,
             retryAttempt =>
             {
-                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
-                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
+                logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
+                logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
                 var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
-                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
+                logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
                 return timeToRetry;
             },
             (result, retryTime, context) =>
             {
-                _logger.LogWarning("LogOn:{logOn} Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                logger.LogWarning("LogOn:{logOn} Parameter:{parameters} Result:{result} Delay:{retryTime}",
                     DateTime.Now.ToString("o"),
                     parameters,
                     result,
@@ -175,7 +166,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var transactions = jsonNode["transactions"]!.AsArray();
 
-        if (!transactions.Any())
+        if (transactions.Count == 0)
         {
             yield break;
         }
@@ -236,15 +227,15 @@ internal class GameRecordApiClient : IGameRecordApiClient
             retryCount: 2,
             retryAttempt =>
             {
-                _logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
-                _logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
+                logger.LogWarning("LogOn:{logOn} Attempt... {retryAttempt}", DateTime.Now.ToString("o"), retryAttempt);
+                logger.LogWarning("LogOn:{logOn} parameters: {parameters}", DateTime.Now.ToString("o"), parameters);
                 var timeToRetry = TimeSpan.FromSeconds(Random.Shared.Next(20, 60));
-                _logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
+                logger.LogWarning("LogOn:{logOn} Waiting {timeToRetry} seconds", DateTime.Now.ToString("o"), timeToRetry.TotalSeconds);
                 return timeToRetry;
             },
             (result, retryTime, context) =>
             {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
                     DateTime.Now.ToString("o"),
                     parameters,
                     result,
@@ -270,7 +261,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
 
         var transactions = jsonNode["transactions"]!.AsArray();
 
-        if (!transactions.Any())
+        if (transactions.Count == 0)
         {
             yield break;
         }
@@ -324,7 +315,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(
+        var httpResponseMessage = await client.PostAsync(
             requestUri: url,
             content: content,
             cancellationToken: cancellationToken)
@@ -355,7 +346,7 @@ internal class GameRecordApiClient : IGameRecordApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 

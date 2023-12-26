@@ -3,15 +3,8 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class GameUrlLobbyByLiveGetService : IGetService<GameUrlLobbyByLiveQuery, GameUrlResult>
+internal class GameUrlLobbyByLiveGetService(IGameApiClient client) : IGetService<GameUrlLobbyByLiveQuery, GameUrlResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GameUrlLobbyByLiveGetService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<GameUrlResult> GetAsync(GameUrlLobbyByLiveQuery query, CancellationToken cancellationToken = default)
     {
         var data = new LoginAndLaunchGameByLive(
@@ -23,7 +16,7 @@ internal class GameUrlLobbyByLiveGetService : IGetService<GameUrlLobbyByLiveQuer
             BetLimit: query.BetLimit,
             Language: query.Language);
 
-        var result = await _client.LoginAndLaunchGameAsync(
+        var result = await client.LoginAndLaunchGameAsync(
             query.ApiUrl,
             query.AgentId,
             query.Cert,

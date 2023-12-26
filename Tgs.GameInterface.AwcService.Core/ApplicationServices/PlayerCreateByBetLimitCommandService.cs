@@ -2,17 +2,10 @@
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class PlayerCreateByBetLimitCommandService : ICommandService<PlayerCreateByBetLimitCommand>
+internal class PlayerCreateByBetLimitCommandService(IGameApiClient client) : ICommandService<PlayerCreateByBetLimitCommand>
 {
-    private readonly IGameApiClient _client;
-
-    public PlayerCreateByBetLimitCommandService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public ValueTask ExecuteAsync(PlayerCreateByBetLimitCommand command, CancellationToken cancellationToken = default)
-        => _client.CreatePlayerAsync(
+        => client.CreatePlayerAsync(
             apiUrl: command.ApiUrl,
             agentId: command.AgentId,
             cert: command.Cert,

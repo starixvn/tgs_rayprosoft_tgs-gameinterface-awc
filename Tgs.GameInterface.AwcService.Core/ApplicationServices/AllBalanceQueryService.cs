@@ -4,20 +4,13 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class AllBalanceQueryService : IQueryService<AllBalanceQuery, AllBalanceResult>
+internal class AllBalanceQueryService(IGameApiClient client) : IQueryService<AllBalanceQuery, AllBalanceResult>
 {
-    private readonly IGameApiClient _client;
-
-    public AllBalanceQueryService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<AllBalanceResult> QueryAsync(
         AllBalanceQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var balances = await _client.GetAllBalancesAsync(
+        var balances = await client.GetAllBalancesAsync(
             apiUrl: query.ApiUrl,
             agentId: query.AgentId,
             cert: query.Cert,

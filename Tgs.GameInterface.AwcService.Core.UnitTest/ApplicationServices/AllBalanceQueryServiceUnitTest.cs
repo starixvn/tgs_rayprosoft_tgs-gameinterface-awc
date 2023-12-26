@@ -25,7 +25,7 @@ public class AllBalanceQueryServiceUnitTest
 
         var balances = new BalanceInfo[]
         {
-            new BalanceInfo(
+            new(
                 UserId: "4udw90nrgp5f",
                 Balance: 6541m,
                 LastModified: DateTime.UtcNow)
@@ -37,10 +37,10 @@ public class AllBalanceQueryServiceUnitTest
 
         var service = new AllBalanceQueryService(fakeClient);
 
-        var actual = await service
-            .QueryAsync(
-            query)
-            .ToArrayAsync();
+        var actual = await service.QueryAsync(
+            query: query)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<AllBalanceResult>();
 
         Assert.NotNull(actual);
         Assert.True(actual.Any());

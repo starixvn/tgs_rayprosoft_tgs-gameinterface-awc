@@ -3,17 +3,11 @@ using Tgs.GameInterface.AwcService.Protos;
 
 namespace Tgs.GameInterface.AwcService.Client;
 
-internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServiceClient
+internal class GameInterfaceAwcRecordServiceClient(
+    GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceClient client) : IGameInterfaceAwcRecordServiceClient
 {
-    private readonly GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceClient _client;
-
-    public GameInterfaceAwcRecordServiceClient(GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcAeLottoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcAeLottoAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcAeLottoAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -22,7 +16,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcAwsAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcAwsAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcAwsAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -31,7 +25,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcCockfightAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcCockfightAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -40,7 +34,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcFacaiAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcFacaiAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcFacaiAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -49,7 +43,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcFsAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcFsAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcFsAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -58,7 +52,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcKmAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcKmAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcKmAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -67,7 +61,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcLudoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcLudoAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcLudoAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -76,7 +70,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcPgsAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcPgsAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcPgsAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -85,7 +79,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcRcbAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcRcbAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcRcbAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -94,7 +88,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcSgAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcSgAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcSgAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -103,7 +97,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcSpadeAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcSpadeAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcSpadeAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -112,7 +106,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcVenusAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcVenusAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcVenusAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -121,7 +115,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcYesbingoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcYesbingoAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcYesbingoAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -130,7 +124,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GamePullRecordReply> GamePullRecordByAwcYlAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset time_from, CancellationToken cancellationToken = default)
-        => await _client.GamePullRecordByAwcYlAsync(new GamePullRecordeRequest()
+        => await client.GamePullRecordByAwcYlAsync(new GamePullRecordeRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -139,7 +133,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcAeLottoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcAeLottoAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcAeLottoAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -149,7 +143,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcAwsAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcAwsAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcAwsAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -159,7 +153,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcCockfightAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcCockfightAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -169,7 +163,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcFacaiAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcFacaiAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcFacaiAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -179,7 +173,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcFsAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcFsAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcFsAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -189,7 +183,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcKmAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcKmAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcKmAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -199,7 +193,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcLudoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcLudoAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcLudoAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -209,7 +203,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcPgsAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcPgsAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcPgsAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -219,7 +213,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcRcbAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcRcbAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcRcbAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -229,7 +223,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcSgAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcSgAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcSgAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -239,7 +233,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcSpadeAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcSpadeAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcSpadeAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -249,7 +243,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcVenusAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcVenusAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcVenusAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -259,7 +253,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcYesbingoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcYesbingoAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcYesbingoAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -269,7 +263,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameSettleRecordReply> GameSettleByAwcYlAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameSettleByAwcYlAsync(new GameSettleRequest()
+        => await client.GameSettleByAwcYlAsync(new GameSettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -279,7 +273,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameUnsettleRecordReply> GameUnsettleByAwcAeLottoAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameUnsettleByAwcAeLottoAsync(new GameUnsettleRequest()
+        => await client.GameUnsettleByAwcAeLottoAsync(new GameUnsettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -289,7 +283,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameUnsettleRecordReply> GameUnsettleByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameUnsettleByAwcCockfightAsync(new GameUnsettleRequest()
+        => await client.GameUnsettleByAwcCockfightAsync(new GameUnsettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -299,7 +293,7 @@ internal class GameInterfaceAwcRecordServiceClient : IGameInterfaceAwcRecordServ
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<GameUnsettleRecordReply> GameUnsettleByAwcRcbAsync(Uri apiUrl, string agentId, string cert, DateTimeOffset startTime, DateTimeOffset endTime, CancellationToken cancellationToken = default)
-        => await _client.GameUnsettleByAwcRcbAsync(new GameUnsettleRequest()
+        => await client.GameUnsettleByAwcRcbAsync(new GameUnsettleRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,

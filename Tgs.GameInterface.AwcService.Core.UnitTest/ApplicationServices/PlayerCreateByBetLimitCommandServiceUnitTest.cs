@@ -9,6 +9,9 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 public class PlayerCreateByBetLimitCommandServiceUnitTest
 {
+    private static readonly string[] _Value = ["280303", "280304", "280305"];
+    private static readonly string[] _ValueArray = ["280303", "280304", "280305"];
+
     [Fact]
     public async Task Failed_To_Create_Member()
     {
@@ -25,7 +28,7 @@ public class PlayerCreateByBetLimitCommandServiceUnitTest
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _Value
                 }
             }
         });
@@ -73,7 +76,7 @@ public class PlayerCreateByBetLimitCommandServiceUnitTest
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _ValueArray
                 }
             }
         });

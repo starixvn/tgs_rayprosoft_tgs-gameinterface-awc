@@ -1,11 +1,7 @@
 ﻿namespace Tgs.GameInterface.AwcService.Core.Exceptions;
 
-public class StatusException : Exception
+public class StatusException(string status) : Exception(ConvertErrorMesaage(status))
 {
-    public StatusException(string status) : base(ConvertErrorMesaage(status))
-    {
-    }
-
     private static string ConvertErrorMesaage(string status)
         => status switch
         {

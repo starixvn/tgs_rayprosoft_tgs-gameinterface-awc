@@ -28,7 +28,7 @@ public class GameRecordSettledQueryServiceUnitTest
         var fakeClient = Substitute.For<IGameRecordApiClient>();
 
         var transactions = new GetTransactionByUpdateDateTransaction[] {
-                new GetTransactionByUpdateDateTransaction(){
+                new(){
                     Platform= "SEXYBCRT",
                     PlatformTxId= "BAC-133992630",
                     GameType= "LIVE",
@@ -70,7 +70,7 @@ public class GameRecordSettledQueryServiceUnitTest
             ?? Enumerable.Empty<GameRecordResult>();
 
         Assert.NotNull(actual);
-        Assert.True(transactions.Any());
+        Assert.NotEmpty(transactions);
         Assert.Equal("SEXYBCRT-BAC-133992630", actual!.First().ExternalRoundId);
         Assert.Equal("BAC-133992630", actual!.First().PlatformTxId);
         Assert.Equal("Mexico-01-GA355950059", actual!.First().RoundId);

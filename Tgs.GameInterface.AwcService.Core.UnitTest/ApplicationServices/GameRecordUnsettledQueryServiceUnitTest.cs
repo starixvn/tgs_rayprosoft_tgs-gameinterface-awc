@@ -30,7 +30,7 @@ public class GameRecordUnsettledQueryServiceUnitTest
         var fakeClient = Substitute.For<IGameRecordApiClient>();
 
         var transactions = new GetOutstandingByBetTimeTransaction[] {
-                new GetOutstandingByBetTimeTransaction(){
+                new(){
                     PlatformTxId= "7623",
                     GameType= "VIRTUAL",
                     GameCode= "SABA-VIRTUAL-001",

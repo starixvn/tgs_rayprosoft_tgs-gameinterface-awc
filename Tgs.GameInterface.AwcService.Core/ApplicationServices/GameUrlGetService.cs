@@ -3,15 +3,8 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.Core.ApplicationServices;
 
-internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
+internal class GameUrlGetService(IGameApiClient client) : IGetService<GameUrlQuery, GameUrlResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GameUrlGetService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<GameUrlResult> GetAsync(GameUrlQuery query, CancellationToken cancellationToken = default)
     {
         var gameCodeSplits = query.ExternalGameId.Split("-");
@@ -36,7 +29,7 @@ internal class GameUrlGetService : IGetService<GameUrlQuery, GameUrlResult>
             ExternalGameId: query.ExternalGameId,
             Language: query.Language);
 
-        var result = await _client.LoginAndLaunchGameAsync(
+        var result = await client.LoginAndLaunchGameAsync(
             apiUrl: query.ApiUrl,
             agentId: query.AgentId,
             cert: query.Cert,

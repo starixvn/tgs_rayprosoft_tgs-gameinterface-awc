@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.AwcService.Core.Models;
 
 namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
@@ -58,7 +59,8 @@ public class GetAllBalanceUnitTest
             apiUrl: apiUrl,
             agentId: agentId,
             cert: cert)
-            .ToArrayAsync();
+            .ToArrayAsync()
+            ?? Enumerable.Empty<BalanceInfo>();
 
         Assert.NotNull(result);
         Assert.True(result.Any());

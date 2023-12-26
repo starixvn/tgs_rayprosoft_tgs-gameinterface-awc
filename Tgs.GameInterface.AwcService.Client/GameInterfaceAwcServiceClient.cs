@@ -3,15 +3,9 @@ using Tgs.GameInterface.AwcService.Protos;
 
 namespace Tgs.GameInterface.AwcService.Client;
 
-internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
+internal class GameInterfaceAwcServiceClient(
+    GameInterfaceAwcService.GameInterfaceAwcServiceClient client) : IGameInterfaceAwcServiceClient
 {
-    private readonly GameInterfaceAwcService.GameInterfaceAwcServiceClient _client;
-
-    public GameInterfaceAwcServiceClient(GameInterfaceAwcService.GameInterfaceAwcServiceClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<BalanceInfo> AllBalancesAsync(Uri apiUrl, string agentId, string cert, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var request = new AllBalancesRequest
@@ -21,7 +15,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Cert = cert
         };
 
-        var reply = await _client.AllBalancesAsync(
+        var reply = await client.AllBalancesAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -46,7 +40,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             MachineName = machineName,
         };
 
-        var reply = await _client
+        var reply = await client
             .CheckingServiceAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -56,7 +50,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
     }
 
     public async ValueTask<FundReply> FundInAsync(Uri apiUrl, string agentId, string cert, string playerCode, string orderId, decimal amount, CancellationToken cancellationToken = default)
-        => await _client.FundInAsync(new FundRequest()
+        => await client.FundInAsync(new FundRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -67,7 +61,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<FundReply> FundOutAsync(Uri apiUrl, string agentId, string cert, string playerCode, string orderId, decimal amount, CancellationToken cancellationToken = default)
-        => await _client.FundOutAsync(new FundRequest()
+        => await client.FundOutAsync(new FundRequest()
         {
             ApiUrl = apiUrl.ToString(),
             AgentId = agentId,
@@ -87,7 +81,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             OrderId = orderId
         };
 
-        var reply = await _client
+        var reply = await client
             .FundStatusAsync(
             request: request,
             cancellationToken: cancellationToken)
@@ -110,7 +104,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcCockfightAsync(
+        return await client.GameUrlByAwcCockfightAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -130,7 +124,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcFsAsync(
+        return await client.GameUrlByAwcFsAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -150,7 +144,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcKmAsync(
+        return await client.GameUrlByAwcKmAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -170,7 +164,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcLudoAsync(
+        return await client.GameUrlByAwcLudoAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -190,7 +184,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcPgsAsync(
+        return await client.GameUrlByAwcPgsAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -210,7 +204,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcRcbAsync(
+        return await client.GameUrlByAwcRcbAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -230,7 +224,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcSgAsync(
+        return await client.GameUrlByAwcSgAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -250,7 +244,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcSpadeAsync(
+        return await client.GameUrlByAwcSpadeAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -270,7 +264,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcVenusAsync(
+        return await client.GameUrlByAwcVenusAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -290,7 +284,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcYesbingoAsync(
+        return await client.GameUrlByAwcYesbingoAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -310,7 +304,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language,
         };
 
-        return await _client.GameUrlByAwcYlAsync(
+        return await client.GameUrlByAwcYlAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -326,7 +320,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             PlayerCode = playerCode
         };
 
-        return await _client.PlayerBalanceAsync(
+        return await client.PlayerBalanceAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -345,7 +339,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language
         };
 
-        _ = await _client.PlayerCreateAsync(
+        _ = await client.PlayerCreateAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -365,7 +359,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             Language = language
         };
 
-        _ = await _client.PlayerCreateByBetLimitAsync(
+        _ = await client.PlayerCreateByBetLimitAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -381,7 +375,7 @@ internal class GameInterfaceAwcServiceClient : IGameInterfaceAwcServiceClient
             PlayerCode = playerCode,
         };
 
-        _ = await _client.PlayerLogoutAsync(
+        _ = await client.PlayerLogoutAsync(
             request: request,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);

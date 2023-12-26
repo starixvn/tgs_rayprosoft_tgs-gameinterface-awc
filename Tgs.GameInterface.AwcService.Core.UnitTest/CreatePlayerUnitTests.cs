@@ -11,6 +11,10 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
 public class CreatePlayerUnitTests
 {
+    private static readonly string[] _Value = ["280303", "280304", "280305"];
+
+    private static readonly string[] _ValueArray = ["280303", "280304", "280305"];
+
     [Fact]
     public async Task Account_Existed()
     {
@@ -153,7 +157,7 @@ public class CreatePlayerUnitTests
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _Value
                 }
             }
         });
@@ -251,7 +255,7 @@ public class CreatePlayerUnitTests
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _ValueArray
                 }
             }
         });

@@ -30,7 +30,7 @@ public class GameRecordQueryServiceUnitTest
         var fakeClient = Substitute.For<IGameRecordApiClient>();
 
         var transactions = new GetTransactionByTxTimeTransaction[] {
-                new GetTransactionByTxTimeTransaction(){
+                new(){
                     Platform= "SEXYBCRT",
                     PlatformTxId= "BAC-133992630",
                     GameType= "LIVE",
@@ -66,10 +66,13 @@ public class GameRecordQueryServiceUnitTest
 
         var service = new GameRecordQueryService(fakeClient);
 
-        var actual = await service.QueryAsync(query).ToArrayAsync();
+        var actual = await service.QueryAsync(
+            query)
+            .ToArrayAsync()
+            ?? Enumerable.Empty<GameRecordResult>();
 
         Assert.NotNull(actual);
-        Assert.True(transactions.Any());
+        Assert.NotEmpty(transactions);
         Assert.Equal("SEXYBCRT-BAC-133992630", actual!.First().ExternalRoundId);
         Assert.Equal("BAC-133992630", actual!.First().PlatformTxId);
         Assert.Equal("Mexico-01-GA355950059", actual!.First().RoundId);

@@ -10,6 +10,10 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest.ApplicationServices;
 
 public class GameUrlLobbyByLiveGetServiceUnitTest
 {
+    private static readonly string[] _Value = ["280303", "280304", "280305"];
+    private static readonly string[] _ValueArray = ["280303", "280304", "280305"];
+    private static readonly string[] _ValueArray0 = ["280303", "280304", "280305"];
+
     [Fact]
     public async Task Account_Is_Not_Exists()
     {
@@ -24,7 +28,7 @@ public class GameUrlLobbyByLiveGetServiceUnitTest
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _Value
                 }
             }
         });
@@ -84,7 +88,7 @@ public class GameUrlLobbyByLiveGetServiceUnitTest
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _ValueArray
                 }
             }
         });
@@ -137,7 +141,7 @@ public class GameUrlLobbyByLiveGetServiceUnitTest
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _ValueArray0
                 }
             }
         });

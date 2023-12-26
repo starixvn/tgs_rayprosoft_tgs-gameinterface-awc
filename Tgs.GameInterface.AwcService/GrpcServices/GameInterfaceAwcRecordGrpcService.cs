@@ -6,23 +6,11 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.AwcService.GrpcServices;
 
-public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceBase
+public class GameInterfaceAwcRecordGrpcService(
+    IQueryService<GameRecordSettledQuery, GameRecordResult> gameRecordByUpdateSerivce,
+    IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
+    IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> gameRecordUnsettledService) : GameInterfaceAwcRecordService.GameInterfaceAwcRecordServiceBase
 {
-    private readonly IQueryService<GameRecordSettledQuery, GameRecordResult> _gameRecordByUpdateSerivce;
-    private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
-    private readonly IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> _gameRecordUnsettledService;
-
-    public GameInterfaceAwcRecordGrpcService(
-        IQueryService<GameRecordSettledQuery, GameRecordResult> gameRecordByUpdateSerivce,
-        IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
-        IQueryService<GameRecordUnsettledQuery, GameRecordUnsettledResult> gameRecordUnsettledService
-       )
-    {
-        _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
-        _gameRecordUnsettledService = gameRecordUnsettledService ?? throw new ArgumentNullException(nameof(gameRecordUnsettledService));
-        _gameRecordByUpdateSerivce = gameRecordByUpdateSerivce ?? throw new ArgumentNullException(nameof(gameRecordByUpdateSerivce));
-    }
-
     public override async Task<GamePullRecordReply> GamePullRecordByAwcAeLotto(GamePullRecordeRequest request, ServerCallContext context)
     {
         var query = new GameRecordSettledQuery(
@@ -32,7 +20,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_AELOTTO,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -88,7 +76,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_AWS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -144,7 +132,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_COCKFIGHT,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -200,7 +188,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_FACAI,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -256,7 +244,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_FS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -312,7 +300,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_KM,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -368,7 +356,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_LUDO,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -424,7 +412,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_PGS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -480,7 +468,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_RCB,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -536,7 +524,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_SG,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -592,7 +580,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_SPADE,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -648,7 +636,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_VENUS,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -704,7 +692,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_YESBINGO,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -760,7 +748,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             Platform: AwcPlatforms.AWC_YL,
             TimeFrom: request.TimeFrom.ToDateTimeOffset());
 
-        var result = await _gameRecordByUpdateSerivce.QueryAsync(
+        var result = await gameRecordByUpdateSerivce.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -817,7 +805,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -874,7 +862,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -931,7 +919,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -988,7 +976,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1045,7 +1033,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1102,7 +1090,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1159,7 +1147,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1216,7 +1204,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1273,7 +1261,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1330,7 +1318,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1387,7 +1375,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1444,7 +1432,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1501,7 +1489,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1558,7 +1546,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordService.QueryAsync(
+        var result = await gameRecordService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1615,7 +1603,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordUnsettledService.QueryAsync(
+        var result = await gameRecordUnsettledService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1664,7 +1652,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordUnsettledService.QueryAsync(
+        var result = await gameRecordUnsettledService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(
@@ -1713,7 +1701,7 @@ public class GameInterfaceAwcRecordGrpcService : GameInterfaceAwcRecordService.G
             StartTime: request.StartTime.ToDateTimeOffset(),
             EndTime: request.EndTime.ToDateTimeOffset());
 
-        var result = await _gameRecordUnsettledService.QueryAsync(
+        var result = await gameRecordUnsettledService.QueryAsync(
             query: query,
             cancellationToken: context.CancellationToken)
             .ToArrayAsync(

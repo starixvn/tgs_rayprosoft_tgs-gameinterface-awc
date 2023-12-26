@@ -11,6 +11,8 @@ namespace Tgs.GameInterface.AwcService.Core.UnitTest;
 
 public class LoginAndLaunchGameUnitTests
 {
+    private static readonly string[] _Value = ["280303", "280304", "280305"];
+
     [Fact]
     public async Task Account_Is_Not_Exists()
     {
@@ -267,7 +269,7 @@ public class LoginAndLaunchGameUnitTests
             {
                 LIVE = new
                 {
-                    limitId = new[] { "280303", "280304", "280305" }
+                    limitId = _Value
                 }
             }
         });
