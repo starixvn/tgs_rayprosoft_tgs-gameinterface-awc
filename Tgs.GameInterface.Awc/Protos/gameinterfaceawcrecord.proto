@@ -1,0 +1,96 @@
+﻿syntax = "proto3";
+
+import "phoenix/protobuf/decimal.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Tgs.GameInterface.Awc.Protos";
+
+package gameinterfaceawcrecord;
+
+// The greeting service definition.
+service GameInterfaceAwcRecord {
+  // Sends a greeting
+  rpc GamePullRecordByAwcAeLotto (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcAws (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcCockfight (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcFacai (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcFs (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcKm (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcLudo (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcPgs (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcRcb (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcSg (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcSpade (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcVenus (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcYl (GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcYesbingo(GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GamePullRecordByAwcBg(GamePullRecordeRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcAeLotto (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcAws (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcCockfight (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcFacai (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcFs (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcKm (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcLudo (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcPgs (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcRcb (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcSg (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcSpade (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcVenus (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcYl (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcYesbingo (GameSettleRequest) returns (GameWagerReply);
+  rpc GameSettleByAwcBg (GameSettleRequest) returns (GameWagerReply);
+  rpc GameUnsettleByAwcAeLotto (GameUnsettleRequest) returns (GameWagerReply);
+  rpc GameUnsettleByAwcCockfight (GameUnsettleRequest) returns (GameWagerReply);
+  rpc GameUnsettleByAwcRcb (GameUnsettleRequest) returns (GameWagerReply);
+}
+
+// The request message containing the user's name.
+message GameSettleRequest {
+	string api_url = 1 ;
+	string agent_id = 2;
+	string cert = 3;
+	google.protobuf.Timestamp start_time=4; 
+    google.protobuf.Timestamp end_time=5; 
+}
+
+message GameUnsettleRequest {
+	string api_url = 1 ;
+	string agent_id = 2;
+	string cert = 3;
+	google.protobuf.Timestamp start_time=4; 
+    google.protobuf.Timestamp end_time=5; 
+}
+
+message GamePullRecordeRequest {
+	string api_url = 1 ;
+	string agent_id = 2;
+	string cert = 3;
+	google.protobuf.Timestamp time_from=4; 
+}
+
+// The response message containing the greetings.
+message GameWagerReply {
+	repeated GameWagerInfo items = 1;
+}
+
+message GameWagerInfo {
+	string external_round_id = 1;
+	string external_wager_id = 2;
+	string external_game_id = 3;
+	string player_code = 4;
+	bool is_closed = 5;
+	bool is_canceled = 6;
+	bool is_void = 7;
+	bool is_cashout = 8;
+	bool is_resettle = 9;
+	google.protobuf.Timestamp external_created_on = 10;
+	google.protobuf.Timestamp external_closed_on = 11;
+	google.protobuf.Timestamp external_resettle_on = 12;
+	phoenix.protobuf.DecimalValue bet = 13;
+	phoenix.protobuf.DecimalValue valid_bet = 14;
+	phoenix.protobuf.DecimalValue settle = 15;
+	phoenix.protobuf.DecimalValue turnover = 16;
+	phoenix.protobuf.DecimalValue win_loss = 17;
+	string additional_data = 18;
+}

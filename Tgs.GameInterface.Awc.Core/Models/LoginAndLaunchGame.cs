@@ -1,0 +1,10 @@
+﻿namespace Tgs.GameInterface.Awc.Core.Models;
+
+public record LoginAndLaunchGame(
+     string PlayerCode,
+     bool IsMobileLogin,
+     string BackUrl,
+     string Platform,
+     string GameType,
+     string ExternalGameId,
+     string Language);

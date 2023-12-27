@@ -1,8 +1,8 @@
 variables:
-  ImageName: pgtgs/game-gameinterface-awc-service
-  TgsSettingKey: game-gameinterface-awc-service
-  HelmTemplateFolderName: game-gameinterface-awc-service
-  BuildCacheKey: Tgs.GameInterface.AwcService.$CI_PIPELINE_ID
+  ImageName: pgtgs/game-gameinterface-awc
+  TgsSettingKey: game-gameinterface-awc
+  HelmTemplateFolderName: game-gameinterface-awc
+  BuildCacheKey: Tgs.GameInterface.Awc.$CI_PIPELINE_ID
 
 default:
   before_script:
@@ -59,14 +59,14 @@ push-nuget:
   only:
     - main
   script:
-    - dotnet pack -c $BuildConfiguration "Tgs.GameInterface.AwcService.Client/Tgs.GameInterface.AwcService.Client.csproj" --no-restore
-    - dotnet nuget push "Tgs.GameInterface.AwcService.Client/bin/$BuildConfiguration/*.nupkg" -s "raypro-baget" -k $NugetApiKey --skip-duplicate
+    - dotnet pack -c $BuildConfiguration "Tgs.GameInterface.Awc.Client/Tgs.GameInterface.Awc.Client.csproj" --no-restore
+    - dotnet nuget push "Tgs.GameInterface.Awc.Client/bin/$BuildConfiguration/*.nupkg" -s "raypro-baget" -k $NugetApiKey --skip-duplicate
   artifacts:
     name: Nuget
     untracked: false
     expire_in: "30 days"
     paths:
-      - Tgs.GameInterface.AwcService.Client/bin/$BuildConfiguration/*.nupkg
+      - Tgs.GameInterface.Awc.Client/bin/$BuildConfiguration/*.nupkg
 
 push-docker-image:
   stage: publish
@@ -80,8 +80,8 @@ push-docker-image:
     untracked: true   
     policy: pull
   script:
-    #- dotnet build "Tgs.GameInterface.AwcService/Tgs.GameInterface.AwcService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
-    - dotnet publish "Tgs.GameInterface.AwcService" 
+    #- dotnet build "Tgs.GameInterface.Awc/Tgs.GameInterface.Awc.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
+    - dotnet publish "Tgs.GameInterface.Awc" 
        --os linux --arch x64
        /t:PublishContainer
        -c $BuildConfiguration
