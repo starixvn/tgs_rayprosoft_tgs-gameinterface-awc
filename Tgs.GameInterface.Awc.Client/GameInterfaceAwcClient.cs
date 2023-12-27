@@ -90,6 +90,26 @@ internal class GameInterfaceAwcClient(
         return reply.State;
     }
 
+    public async ValueTask<GameUrlReply> GameUrlByAwcBgAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string betLimit, string language, CancellationToken cancellationToken = default)
+    {
+        var request = new GameUrlByLiveLobbyRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AgentId = agentId,
+            Cert = cert,
+            PlayerCode = playerCode,
+            IsMobileLogin = isMobileLogin,
+            BackUrl = backUrl,
+            BetLimit = betLimit,
+            Language = language,
+        };
+
+        return await client.GameUrlByAwcBgAsync(
+            request: request,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public async ValueTask<GameUrlReply> GameUrlByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string betLimit, string language, CancellationToken cancellationToken = default)
     {
         var request = new GameUrlByLiveLobbyRequest

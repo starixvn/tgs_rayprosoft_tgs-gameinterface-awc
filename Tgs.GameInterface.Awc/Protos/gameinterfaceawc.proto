@@ -29,6 +29,7 @@ service GameInterfaceAwc {
   rpc GameUrlByAwcSg (GameUrlByLiveLobbyRequest) returns (GameUrlReply);
   rpc GameUrlByAwcVenus (GameUrlByLiveLobbyRequest) returns (GameUrlReply);
   rpc GameUrlByAwcYesbingo (GameUrlRequest) returns (GameUrlReply);
+  rpc GameUrlByAwcBg (GameUrlByLiveLobbyRequest) returns (GameUrlReply);
   rpc CheckingService(CheckingServiceRequest) returns (CheckingServiceReply);
 }
 

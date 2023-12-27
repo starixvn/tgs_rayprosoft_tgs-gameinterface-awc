@@ -123,6 +123,28 @@ public class GameInterfaceAwcGrpcService(
         };
     }
 
+    public override async Task<GameUrlReply> GameUrlByAwcBg(GameUrlByLiveLobbyRequest request, ServerCallContext context)
+    {
+        var result = await gameUrlByLiveService.GetAsync(new GameUrlLobbyByLiveQuery(
+            ApiUrl: new(request.ApiUrl),
+            AgentId: request.AgentId,
+            Cert: request.Cert,
+            PlayerCode: request.PlayerCode,
+            IsMobileLogin: request.IsMobileLogin,
+            BackUrl: request.BackUrl,
+            Platform: AwcPlatforms.AWC_BG,
+            ExternalGameId: "BG-LIVE-001",
+            BetLimit: request.BetLimit,
+            Language: request.Language
+            )).ConfigureAwait(false);
+
+        return new GameUrlReply()
+        {
+            IsPlayerExist = result.IsPlayerExist,
+            GameUrl = result.GameUrl
+        };
+    }
+
     public override async Task<GameUrlReply> GameUrlByAwcCockfight(GameUrlByLiveLobbyRequest request, ServerCallContext context)
     {
         var result = await gameUrlByLiveService.GetAsync(new GameUrlLobbyByLiveQuery(

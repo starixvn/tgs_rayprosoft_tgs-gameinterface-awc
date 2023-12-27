@@ -14,6 +14,8 @@ public interface IGameInterfaceAwcClient
 
     ValueTask<bool> FundStatusAsync(Uri apiUrl, string agentId, string cert, string orderId, CancellationToken cancellationToken = default);
 
+    ValueTask<GameUrlReply> GameUrlByAwcBgAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string betLimit, string language, CancellationToken cancellationToken = default);
+
     ValueTask<GameUrlReply> GameUrlByAwcCockfightAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string betLimit, string language, CancellationToken cancellationToken = default);
 
     ValueTask<GameUrlReply> GameUrlByAwcFsAsync(Uri apiUrl, string agentId, string cert, string playerCode, bool isMobileLogin, string backUrl, string externalGameId, string language, CancellationToken cancellationToken = default);
