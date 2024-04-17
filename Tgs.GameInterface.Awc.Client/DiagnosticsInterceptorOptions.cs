@@ -5,5 +5,5 @@ namespace Tgs.GameInterface.Awc.Client;
 public class DiagnosticsInterceptorOptions
 {
     public ActivitySource InterceptorActivitySource { get; set; } =
-        new ActivitySource($"Tgs.GameInterface.AwcService.Client.DiagnosticsInterceptor");
+        new ActivitySource($"Tgs.GameInterface.Awc.Client.DiagnosticsInterceptor");
 }
