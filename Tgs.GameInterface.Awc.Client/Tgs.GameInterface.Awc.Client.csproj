@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>Raypro</Authors>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-awc</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-awc.git</RepositoryUrl>
@@ -32,16 +32,17 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="PhoenixToolkits.NuGet.BuildTools" Version="0.0.3">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="PhoenixToolkits.Protobuf.ExtendTypes" Version="0.0.7" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Protobuf Include="..\Tgs.GameInterface.Awc\Protos\gameinterfaceawc.proto">
-	    <Link>gameinterfaceawc.proto</Link>
-	  </Protobuf>
-	  <Protobuf Include="..\Tgs.GameInterface.Awc\Protos\gameinterfaceawcrecord.proto">
-	    <Link>gameinterfaceawcrecord.proto</Link>
-	  </Protobuf>
+	  <ProjectReference Include="..\Tgs.GameInterface.Awc.Protos\Tgs.GameInterface.Awc.Protos.csproj">
+	    <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
 	</ItemGroup>
 
 </Project>
